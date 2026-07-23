@@ -1,0 +1,2807 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SyanaStore.id — Digital Gaming Marketplace</title>
+<meta name="description" content="Digital Gaming Marketplace. Lightning Fast • Trusted Service. Mobile Legends, Free Fire, Roblox, dan lainnya. Proses instan 24/7.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
+<style>
+/* ============================
+   DESIGN TOKENS
+============================= */
+:root {
+  --bg: #060812;
+  --bg2: #0C1024;
+  --surface: #0F1530;
+  --surface2: #161D3E;
+  --surface3: #1D2550;
+  --glass: rgba(15, 21, 48, 0.7);
+  --glass2: rgba(22, 29, 62, 0.5);
+  --line: rgba(108, 124, 209, 0.2);
+  --line2: rgba(108, 124, 209, 0.1);
+  --text: #EDF0FF;
+  --text2: #C5CAE9;
+  --muted: #6E7AB0;
+  --muted2: #4A5480;
+
+  /* Brand Colors */
+  --violet: #7B5CF0;
+  --violet-light: #9B7CF8;
+  --violet-dark: #5B3FD0;
+  --teal: #00E5CC;
+  --teal-dark: #00B8A0;
+  --gold: #FFB800;
+  --pink: #FF4D8D;
+  --pink-dark: #D63571;
+  --blue: #4DA6FF;
+
+  /* Gradients */
+  --grad-primary: linear-gradient(135deg, #7B5CF0 0%, #00E5CC 100%);
+  --grad-violet: linear-gradient(135deg, #7B5CF0, #5B3FD0);
+  --grad-teal: linear-gradient(135deg, #00E5CC, #00B8A0);
+  --grad-pink: linear-gradient(135deg, #FF4D8D, #D63571);
+  --grad-gold: linear-gradient(135deg, #FFB800, #FF8C00);
+  --grad-card: linear-gradient(160deg, rgba(123,92,240,0.08) 0%, rgba(0,229,204,0.04) 100%);
+
+  /* Effects */
+  --glow-violet: 0 0 40px rgba(123, 92, 240, 0.3);
+  --glow-teal: 0 0 40px rgba(0, 229, 204, 0.3);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255,255,255,0.03) inset;
+  --shadow-btn: 0 8px 24px rgba(123, 92, 240, 0.4);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --radius-xs: 8px;
+}
+
+/* ============================
+   RESET & BASE
+============================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+h1, h2, h3, h4, h5 { font-family: 'Space Grotesk', sans-serif; line-height: 1.2; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+img { max-width: 100%; display: block; }
+::selection { background: var(--violet); color: #fff; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--violet-dark); }
+
+/* ============================
+   LAYOUT
+============================= */
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+
+/* ============================
+   NOISE TEXTURE OVERLAY
+============================= */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+}
+
+/* ============================
+   BACKGROUND ORBS
+============================= */
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.12;
+  animation: orbFloat 12s ease-in-out infinite;
+}
+.bg-orb-1 {
+  width: 500px; height: 500px;
+  background: var(--violet);
+  top: -150px; right: -100px;
+  animation-delay: 0s;
+}
+.bg-orb-2 {
+  width: 400px; height: 400px;
+  background: var(--teal);
+  bottom: 10%; left: -150px;
+  animation-delay: -4s;
+}
+.bg-orb-3 {
+  width: 350px; height: 350px;
+  background: var(--pink);
+  top: 50%; right: 20%;
+  animation-delay: -8s;
+}
+@keyframes orbFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-30px) scale(1.05); }
+}
+
+/* ============================
+   HEADER
+============================= */
+header.site {
+  position: sticky; top: 0; z-index: 100;
+  padding: 0 28px;
+  background: rgba(6, 8, 18, 0.75);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--line);
+  transition: all 0.3s ease;
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 1200px; margin: 0 auto; padding: 16px 0;
+}
+.logo {
+  display: flex; align-items: center; gap: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: 19px; letter-spacing: -0.3px;
+  color: var(--text);
+}
+.logo-icon {
+  width: 38px; height: 38px; border-radius: 11px;
+  background: rgba(0, 200, 255, 0.06);
+  border: 1px solid rgba(0, 200, 255, 0.18);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 18px rgba(0, 180, 255, 0.25), inset 0 1px 0 rgba(255,255,255,0.08);
+  flex-shrink: 0;
+  position: relative;
+  overflow: visible;
+}
+.logo-text span { color: var(--teal); }
+
+nav.main-nav {
+  display: flex; gap: 32px;
+  font-size: 14px; font-weight: 500; color: var(--muted);
+}
+nav.main-nav a {
+  transition: color 0.2s ease;
+  position: relative;
+  padding-bottom: 2px;
+}
+nav.main-nav a::after {
+  content: '';
+  position: absolute; bottom: -2px; left: 0;
+  width: 0; height: 1.5px;
+  background: var(--grad-primary);
+  transition: width 0.3s ease;
+  border-radius: 99px;
+}
+nav.main-nav a:hover { color: var(--text); }
+nav.main-nav a:hover::after { width: 100%; }
+
+.header-actions { display: flex; align-items: center; gap: 10px; }
+
+/* ============================
+   BUTTONS
+============================= */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 600;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative; overflow: hidden;
+  white-space: nowrap;
+}
+.btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0.08);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.btn:hover::before { opacity: 1; }
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: var(--grad-violet);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(123, 92, 240, 0.35);
+}
+.btn-primary:hover { box-shadow: 0 8px 28px rgba(123, 92, 240, 0.5); transform: translateY(-1px); }
+
+.btn-ghost {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--line);
+  color: var(--text2);
+}
+.btn-ghost:hover { border-color: rgba(123,92,240,0.4); color: var(--text); background: rgba(123,92,240,0.06); }
+
+.btn-teal {
+  background: var(--grad-teal);
+  color: #021F1B;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(0, 229, 204, 0.3);
+}
+.btn-teal:hover { box-shadow: 0 8px 28px rgba(0, 229, 204, 0.45); transform: translateY(-1px); }
+
+.btn-danger { background: rgba(255,77,141,0.1); border: 1px solid rgba(255,77,141,0.3); color: var(--pink); }
+.btn-danger:hover { background: rgba(255,77,141,0.15); border-color: var(--pink); }
+
+.btn-sm { padding: 8px 14px; font-size: 13px; }
+.btn-block { width: 100%; justify-content: center; }
+.btn-lg { padding: 14px 28px; font-size: 15px; border-radius: var(--radius); }
+
+/* ============================
+   TICKER
+============================= */
+.ticker-wrap {
+  background: rgba(123, 92, 240, 0.06);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden; padding: 10px 0;
+  position: relative;
+}
+.ticker-wrap::before, .ticker-wrap::after {
+  content: '';
+  position: absolute; top: 0; width: 80px; height: 100%; z-index: 1;
+}
+.ticker-wrap::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
+.ticker-wrap::after { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
+
+.ticker-track {
+  display: flex; gap: 48px;
+  white-space: nowrap;
+  animation: scroll-left 35s linear infinite;
+  width: max-content;
+}
+.ticker-track:hover { animation-play-state: paused; }
+@keyframes scroll-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.ticker-item {
+  font-size: 12.5px; color: var(--muted2);
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 500;
+}
+.ticker-item strong { color: var(--text2); font-weight: 600; }
+.dot-live {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 0 3px rgba(0,229,204,0.2);
+  animation: pulse 2s ease infinite;
+  flex-shrink: 0;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(0,229,204,0.2); }
+  50% { box-shadow: 0 0 0 6px rgba(0,229,204,0.1); }
+}
+
+/* ============================
+   HERO
+============================= */
+.hero {
+  padding: 80px 28px 56px;
+  position: relative; overflow: hidden;
+}
+.hero-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 64px; align-items: center; position: relative; z-index: 1;
+}
+
+/* Left side */
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--teal);
+  background: rgba(0,229,204,0.08); border: 1px solid rgba(0,229,204,0.2);
+  padding: 6px 14px; border-radius: 99px; margin-bottom: 24px;
+}
+.hero-eyebrow span { animation: blink 2s step-end infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+.hero h1 {
+  font-size: 48px; font-weight: 800;
+  line-height: 1.1; margin-bottom: 20px;
+  letter-spacing: -1.5px;
+}
+.hero h1 .grad {
+  background: var(--grad-primary);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.hero-desc {
+  color: var(--muted); font-size: 16px; line-height: 1.7;
+  max-width: 450px; margin-bottom: 36px;
+}
+
+.search-hero {
+  display: flex; gap: 0;
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  max-width: 480px;
+  margin-bottom: 44px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-hero:focus-within {
+  border-color: rgba(123,92,240,0.4);
+  box-shadow: 0 0 0 3px rgba(123,92,240,0.08);
+}
+.search-hero input {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: var(--text); padding: 14px 18px; font-size: 14px;
+  font-family: inherit;
+}
+.search-hero input::placeholder { color: var(--muted2); }
+.search-hero button {
+  background: var(--grad-violet); color: #fff;
+  font-family: inherit; font-size: 13px; font-weight: 700;
+  padding: 12px 20px; border: none; cursor: pointer;
+  transition: opacity 0.2s;
+  letter-spacing: 0.3px;
+}
+.search-hero button:hover { opacity: 0.9; }
+
+.hero-stats {
+  display: flex; gap: 40px;
+}
+.hero-stat {}
+.hero-stat-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 28px; font-weight: 700; line-height: 1;
+  margin-bottom: 4px;
+}
+.hero-stat-value.violet { color: var(--violet-light); }
+.hero-stat-value.teal { color: var(--teal); }
+.hero-stat-value.gold { color: var(--gold); }
+.hero-stat-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+
+/* Right side — Visual card */
+.hero-visual {
+  position: relative;
+}
+.hero-card {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+.hero-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(123,92,240,0.5), var(--teal), transparent);
+}
+.hero-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.hero-card-title { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+.status-live {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700; color: var(--teal);
+  background: rgba(0,229,204,0.08); border: 1px solid rgba(0,229,204,0.2);
+  padding: 4px 10px; border-radius: 99px;
+}
+
+.mini-game-row {
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(255,255,255,0.03); border: 1px solid var(--line2);
+  border-radius: 14px; padding: 14px 16px; margin-bottom: 10px;
+  transition: all 0.25s ease; cursor: default;
+}
+.mini-game-row:last-child { margin-bottom: 0; }
+.mini-game-row:hover { background: rgba(123,92,240,0.05); border-color: rgba(123,92,240,0.2); }
+.mini-game-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--grad-card);
+  border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.mini-game-info { flex: 1; }
+.mini-game-name { font-size: 13.5px; font-weight: 700; margin-bottom: 2px; }
+.mini-game-sub { font-size: 11px; color: var(--muted); }
+.mini-game-price { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--teal); }
+
+.hero-floating-badge {
+  position: absolute;
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12.5px; font-weight: 600;
+  box-shadow: var(--shadow-card);
+  animation: floatBadge 4s ease-in-out infinite;
+  white-space: nowrap;
+}
+.hero-floating-badge.badge-left {
+  bottom: -20px; left: -30px;
+  animation-delay: 0s;
+}
+.hero-floating-badge.badge-right {
+  top: -20px; right: -20px;
+  animation-delay: -2s;
+}
+@keyframes floatBadge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.badge-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+
+/* ============================
+   SECTIONS
+============================= */
+.section { padding: 64px 28px; position: relative; z-index: 1; }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+
+.section-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--violet-light);
+  margin-bottom: 10px;
+}
+.section-label::before {
+  content: '';
+  width: 20px; height: 2px;
+  background: var(--grad-primary); border-radius: 99px;
+}
+
+.section-head {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 32px; flex-wrap: wrap; gap: 16px;
+}
+.section-head-left h2 {
+  font-size: 28px; font-weight: 800;
+  letter-spacing: -0.5px; margin-bottom: 6px;
+}
+.section-head-left p { color: var(--muted); font-size: 14px; }
+
+/* ============================
+   CATEGORY PILLS
+============================= */
+.cat-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill {
+  padding: 8px 18px; border-radius: 99px;
+  border: 1px solid var(--line); font-size: 13px; font-weight: 600;
+  color: var(--muted); background: rgba(255,255,255,0.02);
+  cursor: pointer; transition: all 0.2s ease;
+}
+.pill:hover { color: var(--text); border-color: rgba(123,92,240,0.35); background: rgba(123,92,240,0.05); }
+.pill.active {
+  background: rgba(123,92,240,0.15);
+  color: var(--violet-light);
+  border-color: rgba(123,92,240,0.4);
+}
+
+/* ============================
+   GAME GRID
+============================= */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.game-card {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex; flex-direction: column;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+              border-color 0.3s ease,
+              box-shadow 0.35s ease;
+  position: relative;
+}
+.game-card::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(180deg, transparent 40%, rgba(6,8,18,0.85) 100%);
+  pointer-events: none;
+  opacity: 0; transition: opacity 0.3s ease;
+}
+.game-card:hover {
+  transform: translateY(-8px) scale(1.01);
+  border-color: rgba(var(--accent-rgb, 123, 92, 240), 0.45);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(var(--accent-rgb, 123, 92, 240), 0.15);
+}
+.game-card:hover::before { opacity: 1; }
+
+.game-card-img-wrapper {
+  width: 100%; aspect-ratio: 3/4;
+  overflow: hidden; background: var(--surface2);
+}
+.game-card-img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.game-card:hover .game-card-img { transform: scale(1.1); }
+
+.game-card-body {
+  padding: 18px;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface2) 100%);
+  border-top: 1px solid var(--line2);
+  flex-grow: 1;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.game-card h4 { font-size: 14.5px; font-weight: 700; color: var(--text); }
+.game-card p { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+.game-card .btn {
+  margin-top: auto; width: 100%; justify-content: center;
+  font-size: 13px; font-weight: 700; padding: 10px;
+  border-radius: var(--radius-sm);
+  background: var(--grad-violet); color: #fff;
+  box-shadow: 0 4px 14px rgba(123,92,240,0.3);
+}
+.game-card .btn:hover { box-shadow: 0 8px 24px rgba(123,92,240,0.45); }
+
+/* ============================
+   FEATURES STRIP
+============================= */
+.features-strip {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 32px 28px;
+  margin: 0;
+}
+.features-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.feature-item {
+  display: flex; align-items: flex-start; gap: 16px;
+}
+.feature-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.feature-icon.violet { background: rgba(123,92,240,0.1); border: 1px solid rgba(123,92,240,0.2); }
+.feature-icon.teal { background: rgba(0,229,204,0.08); border: 1px solid rgba(0,229,204,0.2); }
+.feature-icon.gold { background: rgba(255,184,0,0.08); border: 1px solid rgba(255,184,0,0.2); }
+.feature-icon.pink { background: rgba(255,77,141,0.08); border: 1px solid rgba(255,77,141,0.2); }
+.feature-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.feature-desc { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+
+/* ============================
+   TESTIMONIALS
+============================= */
+.testi-carousel-wrap {
+  overflow: hidden;
+  position: relative;
+  padding: 16px 0;
+  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+}
+.testi-track {
+  display: flex; gap: 16px;
+  width: max-content;
+  animation: scroll-left 40s linear infinite;
+}
+.testi-track.reverse { animation: scroll-right 40s linear infinite; margin-top: 16px; }
+.testi-track:hover { animation-play-state: paused; }
+@keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes scroll-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.testi-card {
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+  border-radius: 20px; padding: 22px 24px;
+  width: 300px; flex-shrink: 0;
+  transition: all 0.25s ease;
+  position: relative; overflow: hidden;
+}
+.testi-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--grad-primary); opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.testi-card:hover { transform: translateY(-4px); border-color: rgba(123,92,240,0.25); }
+.testi-card:hover::before { opacity: 1; }
+.testi-quote-icon { font-size: 28px; color: var(--violet-light); opacity: 0.5; margin-bottom: 10px; }
+.stars { color: var(--gold); font-size: 13px; margin-bottom: 10px; letter-spacing: 2px; }
+.testi-text { font-size: 13px; color: var(--text2); margin-bottom: 18px; line-height: 1.65; font-style: italic; }
+.testi-footer { display: flex; align-items: center; gap: 12px; }
+.avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--grad-primary);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; color: #fff; flex-shrink: 0;
+}
+.testi-name { font-size: 13px; font-weight: 700; }
+.testi-game { font-size: 11px; color: var(--muted); }
+
+/* ============================
+   ORDER TRACKING
+ ============================= */
+.track-section {
+  padding: 80px 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: 70vh;
+}
+.track-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.track-hero {
+  text-align: center;
+}
+.track-hero-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+.track-hero h1 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.track-hero p {
+  color: var(--muted);
+  font-size: 15px;
+}
+.track-search-box {
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+  padding: 32px;
+  border-radius: 24px;
+  box-shadow: var(--glow-violet);
+}
+.track-input-wrap {
+  display: flex;
+  gap: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--line);
+  padding: 6px 6px 6px 16px;
+  border-radius: 16px;
+  align-items: center;
+}
+.track-input-icon {
+  font-size: 18px;
+  opacity: 0.6;
+}
+.track-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  flex: 1;
+  font-size: 15px;
+}
+.track-hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 10px;
+  margin-left: 4px;
+}
+.track-loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--muted);
+}
+.track-empty {
+  text-align: center;
+  background: var(--glass);
+  border: 1px solid var(--line);
+  padding: 60px 24px;
+  border-radius: 24px;
+}
+.track-empty-icon {
+  font-size: 40px;
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+.track-empty h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.track-empty p {
+  color: var(--muted);
+  font-size: 14px;
+}
+.track-results-count {
+  font-size: 14px;
+  color: var(--muted);
+}
+.track-results-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.track-card {
+  background: var(--glass);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 20px 24px;
+}
+.track-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+}
+.track-ref {
+  font-weight: 700;
+  color: var(--teal);
+  font-family: 'Space Grotesk', sans-serif;
+}
+.track-status {
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.track-status.status-paid {
+  background: rgba(0,229,204,0.1);
+  color: var(--teal);
+  border: 1px solid rgba(0,229,204,0.2);
+}
+.track-status.status-pending {
+  background: rgba(255,180,0,0.1);
+  color: #FFAA00;
+  border: 1px solid rgba(255,180,0,0.2);
+}
+.track-status.status-cancel {
+  background: rgba(255,77,109,0.1);
+  color: #FF4D6D;
+  border: 1px solid rgba(255,77,109,0.2);
+}
+.track-detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13.5px;
+  padding: 4px 0;
+}
+.track-label {
+  color: var(--muted);
+}
+.track-value {
+  font-weight: 600;
+}
+@media(max-width: 600px) {
+  .track-search-box {
+    padding: 20px;
+  }
+  .track-input-wrap {
+    flex-direction: column;
+    padding: 16px;
+    align-items: stretch;
+  }
+  .track-input-icon {
+    display: none;
+  }
+  .track-input {
+    text-align: center;
+    padding-bottom: 12px;
+  }
+}
+
+/* ============================
+   FOOTER
+============================= */
+footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--line);
+  padding: 60px 28px 32px;
+  position: relative; z-index: 1;
+}
+.footer-inner { max-width: 1200px; margin: 0 auto; }
+.footer-grid {
+  display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 40px; margin-bottom: 48px;
+}
+.footer-brand .logo { margin-bottom: 14px; }
+.footer-brand p {
+  font-size: 13.5px; color: var(--muted); line-height: 1.7;
+  max-width: 260px; margin-bottom: 20px;
+}
+.footer-socials { display: flex; gap: 10px; }
+.social-btn {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; transition: all 0.2s; cursor: pointer;
+}
+.social-btn:hover { background: rgba(123,92,240,0.1); border-color: rgba(123,92,240,0.3); }
+.footer-col h5 {
+  font-size: 12px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--muted2);
+  margin-bottom: 16px;
+}
+.footer-col a, .footer-col p {
+  font-size: 13.5px; color: var(--muted);
+  display: block; margin-bottom: 10px;
+  transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--text); }
+.footer-bottom {
+  padding-top: 24px; border-top: 1px solid var(--line);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px;
+  font-size: 12.5px; color: var(--muted2);
+}
+.footer-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.03); border: 1px solid var(--line);
+  padding: 5px 12px; border-radius: 99px; font-size: 12px;
+}
+
+/* ============================
+   GAME DETAIL PAGE
+============================= */
+.back-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 14px; font-weight: 600; color: var(--muted);
+  margin: 32px 28px 0; transition: all 0.2s;
+}
+.back-link:hover { color: var(--violet-light); gap: 12px; }
+.back-link svg { transition: transform 0.2s; }
+.back-link:hover svg { transform: translateX(-3px); }
+
+.detail-hero-wrap {
+  max-width: 1200px; margin: 0 auto;
+  padding: 24px 28px 32px;
+  display: flex; align-items: center; gap: 24px;
+}
+.detail-hero-img {
+  width: 88px; height: 118px; border-radius: 16px;
+  object-fit: cover; border: 1px solid var(--line);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  flex-shrink: 0;
+}
+.detail-hero-info h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+.detail-hero-info p { color: var(--muted); font-size: 14px; }
+.detail-hero-info .badge-cat {
+  display: inline-block;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.8px;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 99px;
+  background: rgba(123,92,240,0.1); border: 1px solid rgba(123,92,240,0.25);
+  color: var(--violet-light); margin-bottom: 8px;
+}
+
+.form-block {
+  max-width: 1200px; margin: 0 auto 24px; padding: 0 28px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.field label {
+  display: block; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  margin-bottom: 10px; color: var(--muted);
+}
+.field input, .field select {
+  width: 100%;
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: 14px 16px;
+  color: var(--text); font-size: 14px; font-family: inherit;
+  outline: none; transition: all 0.2s;
+}
+.field input:focus, .field select:focus {
+  border-color: rgba(123,92,240,0.5);
+  box-shadow: 0 0 0 3px rgba(123,92,240,0.1);
+  background: rgba(22,29,62,0.8);
+}
+.field input::placeholder { color: var(--muted2); }
+.field select option { background: var(--surface2); }
+
+.product-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 14px; padding: 0 28px;
+  max-width: 1200px; margin: 0 auto 32px;
+}
+.product-card {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  border-radius: 16px; padding: 18px;
+  cursor: pointer; transition: all 0.25s ease;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between;
+  min-height: 95px;
+}
+.product-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: var(--grad-teal); opacity: 0;
+  transition: opacity 0.2s;
+}
+.product-card:hover { border-color: rgba(0,229,204,0.3); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,229,204,0.1); }
+.product-card:hover::before { opacity: 1; }
+.product-card.selected {
+  border-color: var(--violet);
+  background: rgba(123,92,240,0.1);
+  box-shadow: 0 0 0 1px rgba(123,92,240,0.3), 0 8px 24px rgba(123,92,240,0.15);
+}
+.product-card.selected::before { background: var(--grad-violet); opacity: 1; }
+.product-card h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13.5px; font-weight: 700; color: var(--text); margin-bottom: 10px;
+}
+.product-card .price {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--teal); font-weight: 700; font-size: 15px;
+}
+.check-badge {
+  position: absolute; top: 12px; right: 12px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--grad-violet); color: #fff;
+  display: none; align-items: center; justify-content: center;
+  font-size: 11px;
+}
+.product-card.selected .check-badge { display: flex; }
+
+.sticky-buy {
+  position: sticky; bottom: 0;
+  background: rgba(6,8,18,0.9);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--line);
+  padding: 16px 28px;
+  display: flex; justify-content: space-between; align-items: center;
+  z-index: 20;
+}
+.sticky-total-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.sticky-total-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px; font-weight: 700; color: var(--teal);
+}
+
+/* ============================
+   MODAL / OVERLAY
+============================= */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(4, 6, 16, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 300; padding: 20px;
+  animation: overlayIn 0.2s ease;
+}
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  max-width: 440px; width: 100%;
+  padding: 32px;
+  max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+  position: relative;
+  animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.modal::before {
+  content: '';
+  position: absolute; top: 0; left: 20px; right: 20px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(123,92,240,0.5), var(--teal), transparent);
+}
+.modal h3 { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+.modal .sub { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+
+.order-detail {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--line2);
+  border-radius: var(--radius-sm);
+  overflow: hidden; margin-bottom: 20px;
+}
+.order-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; font-size: 13.5px;
+  border-bottom: 1px solid var(--line2);
+}
+.order-row:last-child { border-bottom: none; }
+.order-row span { color: var(--muted); }
+.order-row b { font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
+.order-row.total b { color: var(--teal); font-size: 15px; }
+
+.qr-container {
+  background: #fff; padding: 20px; border-radius: 16px;
+  display: flex; justify-content: center; margin: 20px 0;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.status-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px; border-radius: 99px;
+  font-size: 12px; font-weight: 700;
+}
+.status-pending { background: rgba(255,184,0,0.12); color: var(--gold); border: 1px solid rgba(255,184,0,0.25); }
+.status-success { background: rgba(0,229,204,0.12); color: var(--teal); border: 1px solid rgba(0,229,204,0.25); }
+.status-failed { background: rgba(255,77,141,0.12); color: var(--pink); border: 1px solid rgba(255,77,141,0.25); }
+
+.countdown-wrap {
+  text-align: center; margin: 4px 0 16px;
+  font-size: 13px; color: var(--muted);
+}
+.countdown-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px; font-weight: 700; color: var(--text);
+}
+
+/* ============================
+   ADMIN
+============================= */
+.admin-shell { display: flex; min-height: 100vh; }
+.admin-side {
+  width: 240px; background: var(--bg2); border-right: 1px solid var(--line);
+  padding: 28px 16px; flex-shrink: 0; display: flex; flex-direction: column;
+}
+.admin-side .logo { margin-bottom: 36px; padding-left: 4px; }
+.admin-nav { flex: 1; }
+.admin-nav-item {
+  display: flex; align-items: center; gap: 11px;
+  padding: 11px 14px; border-radius: 12px;
+  font-size: 14px; font-weight: 600; color: var(--muted);
+  margin-bottom: 4px; cursor: pointer;
+  transition: all 0.2s;
+}
+.admin-nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.admin-nav-item.active { background: rgba(123,92,240,0.12); color: var(--violet-light); }
+.admin-nav-item span { font-size: 16px; }
+.admin-nav-divider { height: 1px; background: var(--line); margin: 12px 4px; }
+
+.admin-main { flex: 1; padding: 40px 48px; overflow: auto; }
+.admin-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+.admin-topbar h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.3px; }
+
+.stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+.stat-card {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  border-radius: 18px; padding: 22px;
+  position: relative; overflow: hidden;
+  transition: all 0.25s;
+}
+.stat-card:hover { transform: translateY(-2px); border-color: rgba(123,92,240,0.25); }
+.stat-card .stat-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+  margin-bottom: 16px;
+}
+.stat-card .stat-label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.stat-card .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; }
+
+.panel {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  border-radius: 20px; padding: 28px; margin-bottom: 20px;
+}
+.panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.panel h3 { font-size: 16px; font-weight: 700; }
+
+.bar-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; font-size: 13px; }
+.bar-name { width: 140px; flex-shrink: 0; color: var(--muted); font-weight: 500; }
+.bar-track { flex: 1; height: 6px; background: var(--bg); border-radius: 99px; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--grad-primary); border-radius: 99px; transition: width 0.8s cubic-bezier(0.25, 0.8, 0.25, 1); }
+.bar-val { width: 110px; text-align: right; font-family: 'JetBrains Mono'; font-size: 12px; flex-shrink: 0; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  text-align: left; color: var(--muted2); font-weight: 600;
+  padding: 10px 12px; border-bottom: 1px solid var(--line);
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px;
+}
+td { padding: 13px 12px; border-bottom: 1px solid var(--line2); color: var(--text2); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.01); }
+.price-input {
+  width: 130px; background: var(--bg);
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 12px; color: var(--text);
+  font-family: 'JetBrains Mono'; font-size: 13px;
+  transition: border-color 0.2s;
+}
+.price-input:focus { outline: none; border-color: rgba(123,92,240,0.4); }
+
+/* Login */
+.login-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; position: relative; z-index: 1; }
+.login-card {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--line);
+  border-radius: 28px; padding: 44px;
+  max-width: 400px; width: 100%; text-align: center;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+  position: relative;
+}
+.login-card::before {
+  content: ''; position: absolute; top: 0; left: 20%; right: 20%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--violet), transparent);
+}
+.login-card .logo-icon { margin: 0 auto 20px; width: 56px; height: 56px; font-size: 20px; }
+.login-card h3 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.login-card p { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+.login-card .field { text-align: left; margin-bottom: 16px; }
+.hint {
+  font-size: 12px; color: var(--muted); margin-top: 16px;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--line);
+  padding: 12px 16px; border-radius: var(--radius-sm);
+  text-align: left;
+}
+.hint b { color: var(--violet-light); }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 28px; right: 28px;
+  background: var(--surface3);
+  border: 1px solid rgba(0,229,204,0.3);
+  color: var(--text); padding: 14px 20px;
+  border-radius: 14px; font-size: 13.5px; z-index: 500;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,229,204,0.1);
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 500;
+  animation: toastIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-width: 320px;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(20px) scale(0.95); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.empty { text-align: center; color: var(--muted); padding: 48px; font-size: 14px; }
+.empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.5; }
+
+/* ============================
+   RESPONSIVE
+============================= */
+@media (max-width: 1024px) {
+  .game-grid { grid-template-columns: repeat(3, 1fr); }
+  .testi-grid { grid-template-columns: repeat(2, 1fr); }
+  .features-inner { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .stat-cards { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 34px; }
+  .hero-visual { display: none; }
+  .game-grid { grid-template-columns: repeat(2, 1fr); }
+  .product-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-block { grid-template-columns: 1fr; }
+  nav.main-nav { display: none; }
+  .admin-side { display: none; }
+  .admin-main { padding: 24px 20px; }
+  .testi-grid { grid-template-columns: 1fr; }
+  .features-inner { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .game-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .hero h1 { font-size: 28px; }
+}
+</style>
+</head>
+<body>
+<div class="bg-orbs" aria-hidden="true">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+</div>
+
+<div id="app"></div>
+
+<script>
+/* ===================== DATA / STORAGE ===================== */
+const DEFAULT_CATALOG = [
+  {id:'ml', name:'Mobile Legends', publisher:'Moonton', category:'Top Up Game', color:'#7B5CF0', image: '/images/ml.png', products:[
+    {id:'ml-86', name:'86 Diamonds', price:20000},
+    {id:'ml-172', name:'172 Diamonds', price:40000},
+    {id:'ml-257', name:'257 Diamonds', price:60000},
+    {id:'ml-706', name:'706 Diamonds', price:150000},
+  ]},
+  {id:'ff', name:'Free Fire', publisher:'Garena', category:'Top Up Game', color:'#FF4D8D', image: '/images/ff.png', products:[
+    {id:'ff-70', name:'70 Diamond', price:10000},
+    {id:'ff-140', name:'140 Diamond', price:20000},
+    {id:'ff-355', name:'355 Diamond', price:50000},
+    {id:'ff-720', name:'720 Diamond', price:100000},
+  ]},
+  {id:'hok', name:'Honor of Kings', publisher:'Level Infinite', category:'Top Up Game', color:'#00E5CC', image: '/images/hok.png', products:[
+    {id:'hok-60', name:'60 Token', price:16000},
+    {id:'hok-300', name:'300 Token', price:79000},
+    {id:'hok-620', name:'620 Token', price:158000},
+  ]},
+  {id:'roblox', name:'Roblox', publisher:'Roblox Corp', category:'Top Up Game', color:'#FFB800', image: '/images/roblox.png', products:[
+    {id:'roblox-80', name:'80 Robux', price:16000},
+    {id:'roblox-400', name:'400 Robux', price:79000},
+    {id:'roblox-800', name:'800 Robux', price:150000},
+  ]},
+];
+
+const DEFAULT_CONFIG = { storeName:'SyanaStore.id', tagline:'Lightning Fast • Trusted Service', wa:'6281234567890', instagram:'syanastore.id' };
+const DEFAULT_TESTIMONIALS = [
+  {name:'Aditya P.', game:'Mobile Legends', text:'Diamond masuk kurang dari 3 menit! Udah coba beberapa tempat sebelumnya tapi yang ini paling ngebut. Recommended banget buat yang butuh top up cepet.', rating:5},
+  {name:'Nabila R.', game:'Free Fire', text:'Harganya emang paling bersahabat sih. Udah langganan sini dari lama, nggak pernah kecewa. Admin juga fast response kalau ada kendala.', rating:5},
+  {name:'Rizky M.', game:'Mobile Legends', text:'Awalnya ragu mau top up online, tapi temen rekomendasiin sini. Ternyata beneran aman dan cepet. 85 diamond masuk dalam hitungan menit.', rating:5},
+  {name:'Desi K.', game:'Roblox', text:'Login Roblox-nya gampang banget, admin langsung handle. Robux udah masuk sebelum aku sempet refresh halaman 😂 mantap lah pokoknya.', rating:5},
+  {name:'Farhan S.', game:'Honor of Kings', text:'Proses gampang banget, tinggal scan QRIS terus tunggu notif. Admin fast response 24 jam. Highly recommended buat yang sering top up!', rating:5},
+  {name:'Putri A.', game:'Free Fire', text:'Lumayan lah, harga murah dan proses nggak lama. Pernah sekali nunggu agak lama tapi langsung direspon adminnya. Overall oke.', rating:4},
+  {name:'Bagas W.', game:'Mobile Legends', text:'Top up 296 diamond buat ranked season. Masuk instant, harga juga lebih murah dari toko lain yang biasa aku pake. Pindah sini aja deh.', rating:5},
+  {name:'Clarissa N.', game:'Honor of Kings', text:'Beli token HoK disini udah beberapa kali. Sistemnya simpel, bayar QRIS langsung done. Nggak perlu repot isi form panjang-panjang.', rating:4},
+  {name:'Yoga D.', game:'Mobile Legends', text:'Gak nyangka se-mudah ini top up ML. Scan QR, bayar, done. Diamond langsung masuk akun. Mau top up lagi deh next time.', rating:5},
+  {name:'Sinta R.', game:'Free Fire', text:'Baru pertama coba disini karena di-tag temen. Ternyata emang worth it. Harga 355 diamond lebih murah dari yang biasa aku beli.', rating:5},
+  {name:'Dion P.', game:'Roblox', text:'Pesen 500 Robux via login, prosesnya sekitar 10 menit. Admin kooperatif dan minta konfirmasi dulu sebelum login. Aman dan terpercaya.', rating:4},
+  {name:'Anggi F.', game:'Mobile Legends', text:'Top up 875 diamond buat beli skin legend. Prosesnya cepet dan harganya worth it banget. Paling suka sistemnya yang gampang dipahami.', rating:5},
+  {name:'Hendra K.', game:'Free Fire', text:'Mantap. 1.450 diamond masuk setelah bayar, ga lama. Support juga gercep kalau ditanya soal status transaksi. Udah jadi langganan tetap.', rating:5},
+  {name:'Lina S.', game:'Honor of Kings', text:'Harga 2.400 token di sini lebih murah sekitar 15rb dari marketplace lain. Udah dibandingin sendiri. Worth pindah ke sini.', rating:4},
+  {name:'Wahyu T.', game:'Mobile Legends', text:'Pertama kali top up online pake sini. Prosesnya gampang banget buat yang belum pernah. Tinggal pilih nominal, isi ID, bayar, selesai!', rating:5},
+  {name:'Mira D.', game:'Roblox', text:'Recommended! Anak saya minta Robux, langsung pesen sini. Proses via login cepet dan aman. Adminnya ramah dan bantu sampai selesai.', rating:5},
+];
+
+let state = {
+  route: '#/',
+  config: null,
+  catalog: null,
+  testimonials: null,
+  transactions: [],
+  recentSales: [],
+  adminPass: 'admin123',
+  isAdmin: false,
+  currentGame: null,
+  selectedProduct: null,
+  activeCategory: 'Semua',
+  searchQuery: '',
+  checkoutStep: null,
+  checkoutData: null,
+  adminTab: 'overview',
+  toast: null,
+};
+
+let qrTimerInterval = null;
+let statusPollInterval = null;
+
+async function loadAll(){
+  try{
+    const r = await fetch('/api/config');
+    const d = await r.json();
+    state.config = d.success ? d.config : DEFAULT_CONFIG;
+  } catch(e){ state.config = DEFAULT_CONFIG; }
+
+  try{
+    const r = await fetch('/api/catalog');
+    const d = await r.json();
+    state.catalog = d.success ? d.catalog : DEFAULT_CATALOG;
+  } catch(e){ state.catalog = DEFAULT_CATALOG; }
+
+  try{
+    const r = await fetch('/api/testimonials');
+    const d = await r.json();
+    state.testimonials = d.success ? d.testimonials : DEFAULT_TESTIMONIALS;
+  } catch(e){ state.testimonials = DEFAULT_TESTIMONIALS; }
+
+  await loadRecentSales();
+
+  const storedPass = sessionStorage.getItem("syanastore_admin_pw");
+  if(storedPass){
+    try{
+      const res = await fetch("/api/admin/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: storedPass })
+      });
+      const d = await res.json();
+      if(d.success){
+        state.adminPass = storedPass;
+        state.isAdmin = true;
+        await loadTransactions();
+      } else {
+        sessionStorage.removeItem("syanastore_admin_pw");
+      }
+    } catch(e){}
+  }
+
+  render();
+}
+
+async function loadRecentSales(){
+  try{
+    const r = await fetch('/api/sales/recent');
+    const d = await r.json();
+    state.recentSales = d.success ? d.recent : [];
+  } catch(e){}
+}
+
+async function loadTransactions(){
+  if(!state.isAdmin) return;
+  try{
+    const r = await fetch('/api/sales', { headers: { 'X-Admin-Password': state.adminPass } });
+    const d = await r.json();
+    if(d.success) state.transactions = d.sales;
+  } catch(e){}
+}
+
+function fmtRupiah(n){ return 'Rp' + Number(n).toLocaleString('id-ID'); }
+function fmtTime(ts){ const d = new Date(ts); return d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'2-digit'}) + ' ' + d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); }
+function initials(name){ return (name || 'SS').split(/[\s.]/g).filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+function diamondLogo(size=22){
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="dg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#80E8FF"/><stop offset="100%" stop-color="#0088FF"/></linearGradient>
+      <linearGradient id="dg2" x1="1" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00E5CC"/><stop offset="100%" stop-color="#0055CC"/></linearGradient>
+      <linearGradient id="dg3" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#003399"/><stop offset="100%" stop-color="#0099EE"/></linearGradient>
+    </defs>
+    <path d="M7 3H17L22 9L12 21L2 9L7 3Z" fill="url(#dg1)" fill-opacity="0.15"/>
+    <path d="M7 3H12V9H2L7 3Z" fill="url(#dg2)" fill-opacity="0.85"/>
+    <path d="M12 3H17L22 9H12V3Z" fill="url(#dg1)" fill-opacity="0.95"/>
+    <path d="M2 9H12L12 21L2 9Z" fill="url(#dg3)" fill-opacity="0.9"/>
+    <path d="M12 9H22L12 21V9Z" fill="url(#dg2)" fill-opacity="0.8"/>
+    <path d="M7 3H17L22 9L12 21L2 9L7 3Z" stroke="#4DC8FF" stroke-width="1" stroke-linejoin="round"/>
+    <path d="M2 9H22" stroke="#80DDFF" stroke-width="0.6" opacity="0.6"/>
+    <path d="M12 3L12 21" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+  </svg>`;
+}
+
+function showToast(msg, isError = false){
+  state.toast = { msg, isError }; render();
+  setTimeout(()=>{ state.toast=null; render(); }, 3000);
+}
+
+/* ===================== ROUTER ===================== */
+window.addEventListener('hashchange', ()=>{
+  state.route = location.hash || '#/';
+  state.checkoutStep=null;
+  clearInterval(qrTimerInterval);
+  clearInterval(statusPollInterval);
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+/* ===================== RENDER ===================== */
+function render(){
+  const app = document.getElementById('app');
+  if(!state.config){ app.innerHTML = '<div style="padding:80px;text-align:center;color:#6E7AB0;font-size:15px">Memuat SyanaStore.id...</div>'; return; }
+
+  let html = '';
+  if(state.route.startsWith('#/admin')){
+    html = state.isAdmin ? renderAdmin() : renderAdminLogin();
+  } else if(state.route.startsWith('#/game/')){
+    html = renderHeader() + renderTicker() + renderGameDetail(state.route.replace('#/game/','')) + renderFooter();
+  } else if(state.route === '#/track'){
+    html = renderHeader() + renderTrackOrder() + renderFooter();
+  } else {
+    html = renderHeader() + renderTicker() + renderHero() + renderFeaturesStrip() + renderCatalogSection() + renderTestimonials() + renderFooter();
+  }
+
+  if(state.checkoutStep) html += renderCheckoutModal();
+  if(state.toast) html += renderToast();
+
+  app.innerHTML = html;
+  attachEvents();
+
+  // Selalu gambar ulang QR Code setelah DOM direset (mencegah hilang saat polling/timer update)
+  if(state.checkoutStep === 'qr' && state.checkoutData){
+    const el = document.getElementById('qrcodeCanvas');
+    if(el){
+      if(state.checkoutData.isMock){
+        el.innerHTML = '<canvas id="qrisCanvasElement" style="width:180px;height:180px;display:block;margin:0 auto;"></canvas>';
+        const canvas = document.getElementById('qrisCanvasElement');
+        if(canvas && window.QRCode){
+          window.QRCode.toCanvas(canvas, state.checkoutData.qrText, {
+            width: 180,
+            margin: 1,
+            color: {
+              dark: '#060812',
+              light: '#ffffff'
+            }
+          }, function(err) {
+            if(err) console.error('QR generation error:', err);
+          });
+        }
+      } else {
+        el.innerHTML = `<img src="${state.checkoutData.qrUrl}" alt="QRIS" style="width:180px;height:180px;display:block;margin:0 auto;" />`;
+      }
+    }
+  }
+}
+
+function renderToast(){
+  const icon = state.toast.isError ? '❌' : '✅';
+  return `<div class="toast" role="alert">${icon} <span>${state.toast.msg}</span></div>`;
+}
+
+function renderHeader(){
+  const n = state.config.storeName;
+  return `
+  <header class="site" id="site-header">
+    <div class="header-inner">
+      <a href="#/" class="logo">
+        <div class="logo-icon">${diamondLogo(22)}</div>
+        <span class="logo-text">${n.replace('.id', '<span>.id</span>')}</span>
+      </a>
+      <nav class="main-nav">
+        <a href="#/">Beranda</a>
+        <a href="#/" onclick="event.preventDefault();scrollToSection('produk-section')">Produk</a>
+        <a href="#/track">📦 Cek Pesanan</a>
+      </nav>
+      <div class="header-actions">
+        <a href="https://wa.me/${state.config.wa}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">💬 CS Online</a>
+        <a href="#/admin" class="btn btn-primary btn-sm">Admin</a>
+      </div>
+    </div>
+  </header>`;
+}
+
+function scrollToSection(id){
+  if(location.hash !== '#/' && location.hash !== ''){
+    location.hash = '#/';
+    setTimeout(()=> document.getElementById(id)?.scrollIntoView({behavior:'smooth'}), 120);
+  } else {
+    document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+  }
+}
+
+function renderTicker(){
+  const items = state.recentSales && state.recentSales.length ? state.recentSales : [
+    {buyer:'Rian_88', product:'172 Diamonds', game:'Mobile Legends'},
+    {buyer:'Wulan_02', product:'140 Diamond', game:'Free Fire'},
+    {buyer:'Doni_X', product:'300 Token', game:'Honor of Kings'},
+    {buyer:'Laila_7', product:'400 Robux', game:'Roblox'},
+  ];
+  const strip = items.map(t=>`<div class="ticker-item"><span class="dot-live" aria-hidden="true"></span><strong>${t.buyer}</strong> baru saja top up <strong>${t.product}</strong> — ${t.game}</div>`).join('');
+  return `<div class="ticker-wrap" aria-hidden="true"><div class="ticker-track">${strip}${strip}${strip}</div></div>`;
+}
+
+function renderHero(){
+  const totalTx = state.transactions.length || 12480;
+  const totalGames = state.catalog.length;
+  return `
+  <section class="hero" id="hero-section">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow"><span>⚡</span> Lightning Fast · Trusted Service</div>
+        <h1>Digital Gaming <br><span class="grad">Marketplace</span></h1>
+        <p class="hero-desc">Top up game favoritmu instan 24/7. Transaksi aman, harga bersahabat, dan status real-time — semua dalam satu tempat.</p>
+        <div class="search-hero">
+          <input id="heroSearch" placeholder="Cari game favoritmu…" value="${state.searchQuery || ''}" autocomplete="off" />
+          <button onclick="scrollToSection('produk-section')">Temukan →</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-value violet">${totalGames}+</div>
+            <div class="hero-stat-label">Game & Layanan</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value teal">${(totalTx).toLocaleString('id-ID')}+</div>
+            <div class="hero-stat-label">Transaksi Sukses</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value gold">24/7</div>
+            <div class="hero-stat-label">Layanan Aktif</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-card">
+          <div class="hero-card-header">
+            <span class="hero-card-title">Top Games</span>
+            <span class="status-live"><span class="dot-live"></span> Live</span>
+          </div>
+          ${state.catalog.slice(0,3).map(g=>`
+          <div class="mini-game-row">
+            <div class="mini-game-icon">${getGameEmoji(g.id)}</div>
+            <div class="mini-game-info">
+              <div class="mini-game-name">${g.name}</div>
+              <div class="mini-game-sub">${g.publisher}</div>
+            </div>
+            <div class="mini-game-price">mulai ${fmtRupiah(Math.min(...(g.products ? g.products.map(p=>p.price) : [0])))}</div>
+          </div>`).join('')}
+        </div>
+        <div class="hero-floating-badge badge-right">
+          <div class="badge-icon" style="background:rgba(0,229,204,0.1)">⚡</div>
+          <div>
+            <div style="font-size:11px;color:var(--muted);font-weight:500">Proses</div>
+            <div style="color:var(--teal)">Instan</div>
+          </div>
+        </div>
+        <div class="hero-floating-badge badge-left">
+          <div class="badge-icon" style="background:rgba(255,184,0,0.1)">🔒</div>
+          <div>
+            <div style="font-size:11px;color:var(--muted);font-weight:500">Dijamin</div>
+            <div style="color:var(--gold)">Aman</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
+function getGameEmoji(id){
+  const map = { ml:'⚔️', ff:'🔥', hok:'👑', roblox:'🎮', genshin:'✨', pubg:'🎯', valorant:'🎯' };
+  return map[id] || '🎮';
+}
+
+function renderFeaturesStrip(){
+  return `
+  <div class="features-strip">
+    <div class="features-inner">
+      <div class="feature-item">
+        <div class="feature-icon violet">⚡</div>
+        <div>
+          <div class="feature-title">Proses Instan</div>
+          <div class="feature-desc">Diamond & item masuk dalam hitungan detik setelah pembayaran.</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon teal">🔐</div>
+        <div>
+          <div class="feature-title">QRIS Resmi</div>
+          <div class="feature-desc">Pembayaran aman via QRIS yang terverifikasi oleh Bank Indonesia.</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon gold">💰</div>
+        <div>
+          <div class="feature-title">Harga Terbaik</div>
+          <div class="feature-desc">Harga transparan, tidak ada biaya tersembunyi, dijamin terjangkau.</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon pink">🕐</div>
+        <div>
+          <div class="feature-title">Support 24/7</div>
+          <div class="feature-desc">Tim kami siap membantu kamu kapan saja, termasuk hari libur.</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderCatalogSection(){
+  const cats = ['Semua', ...new Set(state.catalog.map(g=>g.category))];
+  return `
+  <section class="section" id="produk-section">
+    <div class="section-inner">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="section-label">Katalog Produk</div>
+          <h2>Pilih Game Favoritmu</h2>
+          <p>Harga terjangkau, proses kilat, semua ada di sini.</p>
+        </div>
+        <div class="cat-pills">
+          ${cats.map(c=>`<div class="pill ${c===state.activeCategory?'active':''}" data-cat="${c}" role="button" tabindex="0">${c}</div>`).join('')}
+        </div>
+      </div>
+      ${renderGamesGrid()}
+    </div>
+  </section>`;
+}
+
+function renderGamesGrid(){
+  let list = state.catalog;
+  if(state.activeCategory !== 'Semua') list = list.filter(g=>g.category===state.activeCategory);
+  if(state.searchQuery){
+    list = list.filter(g=>g.name.toLowerCase().includes(state.searchQuery) || g.publisher.toLowerCase().includes(state.searchQuery));
+  }
+  if(!list.length) return `<div class="empty"><div class="empty-icon">🔍</div>Belum ada produk di kategori ini.</div>`;
+  const cards = list.map(g=>`
+    <div class="game-card" data-game="${g.id}" role="button" tabindex="0" aria-label="Top up ${g.name}">
+      <div class="game-card-img-wrapper">
+        <img class="game-card-img" src="${g.image || '/images/ml.png'}" alt="${g.name}" loading="lazy" />
+      </div>
+      <div class="game-card-body">
+        <h4>${g.name}</h4>
+        <p>${g.publisher}</p>
+        <button class="btn">Lihat Harga →</button>
+      </div>
+    </div>`).join('');
+  return `<div class="game-grid" id="gamesGridContainer">${cards}</div>`;
+}
+
+function renderTestimonials(){
+  const list = state.testimonials;
+  const half1 = list.slice(0, Math.ceil(list.length / 2));
+  const half2 = list.slice(Math.ceil(list.length / 2));
+
+  function cardHtml(t){
+    return `
+      <div class="testi-card">
+        <div class="testi-quote-icon">"</div>
+        <div class="stars">${'★'.repeat(t.rating)}${'☆'.repeat(5-t.rating)}</div>
+        <p class="testi-text">${t.text}</p>
+        <div class="testi-footer">
+          <div class="avatar">${initials(t.name)}</div>
+          <div>
+            <div class="testi-name">${t.name}</div>
+            <div class="testi-game">${t.game}</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  const row1 = [...half1, ...half1].map(cardHtml).join('');
+  const row2 = [...half2, ...half2].map(cardHtml).join('');
+
+  return `
+  <section class="section" id="testi-section">
+    <div class="section-inner">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="section-label">Testimoni</div>
+          <h2>Kata Pelanggan Kami</h2>
+          <p>Ribuan pelanggan puas bertransaksi di ${state.config.storeName}</p>
+        </div>
+      </div>
+    </div>
+    <div class="testi-carousel-wrap">
+      <div class="testi-track">${row1}</div>
+      <div class="testi-track reverse">${row2}</div>
+    </div>
+  </section>`;
+}
+
+function renderTrackOrder(){
+  const results = state.trackResults || null;
+  const loading = state.trackLoading || false;
+  const query = state.trackQuery || '';
+
+  let resultsHtml = '';
+  if(loading){
+    resultsHtml = `<div class="track-loading"><div class="spinner"></div><p>Mencari pesanan...</p></div>`;
+  } else if(results && results.length === 0){
+    resultsHtml = `
+      <div class="track-empty">
+        <div class="track-empty-icon">🔍</div>
+        <h3>Pesanan Tidak Ditemukan</h3>
+        <p>Pastikan nomor WhatsApp atau Order ID yang kamu masukkan sudah benar.</p>
+      </div>`;
+  } else if(results && results.length > 0){
+    resultsHtml = `
+      <div class="track-results-count">Ditemukan <strong>${results.length}</strong> pesanan</div>
+      <div class="track-results-list">
+        ${results.map(r => {
+          const statusClass = r.status === 'Lunas' ? 'status-paid' : r.status === 'Batal' ? 'status-cancel' : 'status-pending';
+          const statusIcon = r.status === 'Lunas' ? '✅' : r.status === 'Batal' ? '❌' : '⏳';
+          const dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('id-ID', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '-';
+          return `
+          <div class="track-card">
+            <div class="track-card-header">
+              <div class="track-ref">#${r.reference || '-'}</div>
+              <div class="track-status ${statusClass}">${statusIcon} ${r.status}</div>
+            </div>
+            <div class="track-card-body">
+              <div class="track-detail-row">
+                <span class="track-label">🎮 Game</span>
+                <span class="track-value">${r.game}</span>
+              </div>
+              <div class="track-detail-row">
+                <span class="track-label">💎 Item</span>
+                <span class="track-value">${r.item}</span>
+              </div>
+              <div class="track-detail-row">
+                <span class="track-label">💰 Harga</span>
+                <span class="track-value">${fmtRupiah(r.price)}</span>
+              </div>
+              <div class="track-detail-row">
+                <span class="track-label">📅 Tanggal</span>
+                <span class="track-value">${dateStr}</span>
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+  }
+
+  return `
+  <section class="track-section">
+    <div class="track-inner">
+      <div class="track-hero">
+        <div class="track-hero-icon">📦</div>
+        <h1>Cek Status Pesanan</h1>
+        <p>Masukkan nomor WhatsApp atau Order ID untuk melihat status pesananmu</p>
+      </div>
+      <div class="track-search-box">
+        <div class="track-input-wrap">
+          <span class="track-input-icon">🔎</span>
+          <input type="text" id="trackInput" class="track-input" placeholder="Nomor WhatsApp atau Order ID..." value="${query}" autocomplete="off" />
+          <button class="btn btn-primary" id="trackBtn" ${loading ? 'disabled' : ''}>Cari Pesanan</button>
+        </div>
+        <div class="track-hint">Contoh: 08123456789 atau ORDER-20250715-xxx</div>
+      </div>
+      ${resultsHtml}
+    </div>
+  </section>`;
+}
+
+function renderFooter(){
+  const n = state.config.storeName;
+  return `
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#/" class="logo" style="margin-bottom:14px">
+            <div class="logo-icon">${diamondLogo(22)}</div>
+            <span class="logo-text">${n.replace('.id', '<span>.id</span>')}</span>
+          </a>
+          <p>${state.config.tagline}. Transaksi aman, harga bersahabat, proses kilat untuk semua gamer Indonesia.</p>
+          <div class="footer-socials">
+            <a href="https://wa.me/${state.config.wa}" target="_blank" rel="noopener" class="social-btn" title="WhatsApp">💬</a>
+            <a href="https://instagram.com/${state.config.instagram}" target="_blank" rel="noopener" class="social-btn" title="Instagram">📸</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Navigasi</h5>
+          <a href="#/">Beranda</a>
+          <a href="#/" onclick="event.preventDefault();scrollToSection('produk-section')">Daftar Harga</a>
+          <a href="#/" onclick="event.preventDefault();scrollToSection('testi-section')">Testimoni</a>
+        </div>
+        <div class="footer-col">
+          <h5>Dukungan</h5>
+          <a href="https://wa.me/${state.config.wa}" target="_blank" rel="noopener">Hubungi CS</a>
+          <a href="#/admin">Dashboard Admin</a>
+        </div>
+        <div class="footer-col">
+          <h5>Kontak</h5>
+          <p>+${state.config.wa}</p>
+          <p>@${state.config.instagram}</p>
+          <p>Operasional: 24/7</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© ${new Date().getFullYear()} ${state.config.storeName} · Hak Cipta Dilindungi</span>
+      </div>
+    </div>
+  </footer>`;
+}
+
+/* ===================== GAME DETAIL ===================== */
+function renderGameDetail(gameId){
+  const game = state.catalog.find(g=>g.id===gameId);
+  if(!game) return `<div class="empty" style="min-height:50vh"><div class="empty-icon">😕</div>Game tidak ditemukan.</div>`;
+  const isRoblox = gameId === 'roblox';
+
+  return `
+  <a href="#/" class="back-link">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    Kembali ke Beranda
+  </a>
+  <div class="detail-hero-wrap">
+    <img class="detail-hero-img" src="${game.image || '/images/ml.png'}" alt="${game.name}" />
+    <div class="detail-hero-info">
+      <span class="badge-cat">${game.category}</span>
+      <h1>${game.name}</h1>
+      <p>${game.publisher}</p>
+    </div>
+  </div>
+  <div class="form-block" style="margin-bottom: 20px;">
+    <div class="field">
+      <label>${isRoblox ? 'Username Roblox' : 'ID Pengguna / User ID'}</label>
+      <input id="userIdInput" placeholder="${isRoblox ? 'Masukkan Username Roblox kamu' : 'Masukkan User ID kamu'}" autocomplete="off" />
+    </div>
+    <div class="field">
+      <label>${isRoblox ? 'Password Roblox' : 'Server ID <span style="font-weight:400;text-transform:none;letter-spacing:0">(opsional)</span>'}</label>
+      <input id="serverIdInput" type="${isRoblox ? 'text' : 'text'}" placeholder="${isRoblox ? 'Masukkan Password Roblox kamu' : 'Contoh: 2001'}" autocomplete="off" />
+    </div>
+  </div>
+  <div class="form-block" style="grid-template-columns: 1fr; margin-bottom: 32px;">
+    <div class="field">
+      <label>Nomor WhatsApp</label>
+      <input id="whatsappInput" type="tel" placeholder="Contoh: 081234567890 (Wajib untuk update status transaksi)" autocomplete="off" />
+    </div>
+  </div>
+  <div class="product-grid" id="productGrid">
+    ${game.products ? game.products.map(p=>`
+      <div class="product-card" data-pid="${p.id}" role="button" tabindex="0" aria-label="${p.name} seharga ${fmtRupiah(p.price)}">
+        <div class="check-badge">✓</div>
+        <h4>${p.name}</h4>
+        <div class="price">${fmtRupiah(p.price)}</div>
+      </div>`).join('') : '<div class="empty">Belum ada produk.</div>'}
+  </div>
+  <div class="sticky-buy">
+    <div>
+      <div class="sticky-total-label">Total Pembayaran</div>
+      <div class="sticky-total-value" id="totalDisplay">${fmtRupiah(0)}</div>
+    </div>
+    <button class="btn btn-primary btn-lg" id="buyBtn">Bayar dengan QRIS ⚡</button>
+  </div>`;
+}
+
+/* ===================== CHECKOUT MODAL ===================== */
+function renderCheckoutModal(){
+  if(state.checkoutStep === 'form'){
+    const isRoblox = state.checkoutData.gameName.toLowerCase().includes('roblox');
+    return `
+    <div class="overlay" id="checkoutOverlay">
+      <div class="modal">
+        <h3>Konfirmasi Pesanan</h3>
+        <p class="sub">Periksa kembali detail pesananmu sebelum melanjutkan.</p>
+        <div class="order-detail">
+          <div class="order-row"><span>Produk</span><b>${state.checkoutData.productName}</b></div>
+          <div class="order-row"><span>Game</span><b>${state.checkoutData.gameName}</b></div>
+          <div class="order-row"><span>${isRoblox ? 'Username' : 'User ID'}</span><b>${state.checkoutData.userId || '-'}</b></div>
+          <div class="order-row"><span>${isRoblox ? 'Password' : 'Server ID'}</span><b>${state.checkoutData.server || '-'}</b></div>
+          <div class="order-row"><span>No. WhatsApp</span><b>${state.checkoutData.whatsapp || '-'}</b></div>
+          <div class="order-row total"><span>Total</span><b>${fmtRupiah(state.checkoutData.price)}</b></div>
+        </div>
+        <button class="btn btn-primary btn-block btn-lg" id="genQrBtn">⚡ Buat QRIS Sekarang</button>
+        <button class="btn btn-ghost btn-block" style="margin-top:10px" id="cancelCheckoutBtn">Batal</button>
+      </div>
+    </div>`;
+  }
+  if(state.checkoutStep === 'qr'){
+    return `
+    <div class="overlay" id="checkoutOverlay">
+      <div class="modal" style="text-align:center">
+        <span class="status-pill status-pending">⏳ Menunggu Pembayaran</span>
+        <h3 style="margin-top:16px">Scan QRIS untuk Membayar</h3>
+        <p class="sub">Order ID: <span class="mono" style="color:var(--violet-light)">${state.checkoutData.orderId}</span></p>
+
+        ${state.checkoutData.isMock ? `
+        <!-- QRIS DINAMIS NAAA STORE -->
+        <div class="qr-container"><div id="qrcodeCanvas"></div></div>
+        <div style="background:rgba(0,229,204,0.08);border:1px solid rgba(0,229,204,0.25);border-radius:14px;padding:16px;margin:0 0 16px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px">Jumlah yang Harus Dibayar</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:800;color:var(--teal)">${fmtRupiah(state.checkoutData.price)}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Nominal akan terisi otomatis saat discan</div>
+        </div>
+        ` : `
+        <div class="qr-container"><div id="qrcodeCanvas"></div></div>
+        <div class="order-detail" style="text-align:left;margin-bottom:16px">
+          <div class="order-row total"><span>Total</span><b>${fmtRupiah(state.checkoutData.price)}</b></div>
+        </div>
+        `}
+
+        <div class="countdown-wrap" ${state.checkoutData.isMock ? 'style="margin-bottom:16px"' : ''}>
+          Berlaku selama <span class="countdown-value" id="qrTimerDisplay">60:00</span>
+        </div>
+        <button class="btn btn-teal btn-block btn-lg" id="confirmPayBtn">✅ Saya Sudah Bayar</button>
+        <p style="font-size:11.5px;color:var(--muted);margin-top:12px;line-height:1.7">
+          ${state.checkoutData.isMock
+            ? 'Scan QRIS di atas dengan aplikasi e-wallet / m-banking, masukkan nominal <b style="color:var(--teal)">' + fmtRupiah(state.checkoutData.price) + '</b> lalu bayar. Klik tombol di atas setelah selesai.'
+            : 'Buka aplikasi e-wallet atau m-banking kamu, pilih menu QRIS, lalu scan kode di atas untuk membayar.'}
+        </p>
+      </div>
+    </div>`;
+  }
+  if(state.checkoutStep === 'success'){
+    return `
+    <div class="overlay" id="checkoutOverlay">
+      <div class="modal" style="text-align:center">
+        <div style="font-size:56px;margin-bottom:8px;animation:modalIn 0.4s ease">🎉</div>
+        <span class="status-pill status-success">✅ Pembayaran Berhasil</span>
+        <h3 style="margin-top:16px">Terima Kasih!</h3>
+        <p class="sub">Pesananmu sedang diproses secara otomatis.</p>
+        <div class="order-detail" style="text-align:left">
+          <div class="order-row"><span>Order ID</span><b class="mono" style="font-size:12px">${state.checkoutData.orderId}</b></div>
+          <div class="order-row"><span>Produk</span><b>${state.checkoutData.productName}</b></div>
+          <div class="order-row total"><span>Total</span><b>${fmtRupiah(state.checkoutData.price)}</b></div>
+        </div>
+        <button class="btn btn-primary btn-block btn-lg" style="margin-top:4px" id="successCloseBtn">Selesai</button>
+      </div>
+    </div>`;
+  }
+  return '';
+}
+
+/* ===================== ADMIN ===================== */
+function renderAdminLogin(){
+  const n = state.config.storeName;
+  return `
+  <div class="login-shell">
+    <div class="login-card">
+      <div class="logo-icon">${diamondLogo(22)}</div>
+      <h3>Masuk Dashboard</h3>
+      <p>${state.config.storeName}</p>
+      <div class="field">
+        <label>Password Admin</label>
+        <input type="password" id="adminPassInput" placeholder="Masukkan password" />
+      </div>
+      <button class="btn btn-primary btn-block btn-lg" id="adminLoginBtn">Masuk →</button>
+      <a href="#/" class="btn btn-ghost btn-block" style="margin-top:10px">← Kembali ke Toko</a>
+      <div class="hint">Password default: <b>admin123</b> — Ubah setelah login di menu Pengaturan.</div>
+    </div>
+  </div>`;
+}
+
+function renderAdmin(){
+  const paidSales = state.transactions.filter(t=>t.status==='Lunas');
+  const totalRevenue = paidSales.reduce((s,t)=>s+t.price,0);
+  const totalTx = state.transactions.length;
+  const pendingTx = state.transactions.filter(t=>t.status==='Menunggu Pembayaran').length;
+  const bestProduct = (()=>{
+    const count={};
+    paidSales.forEach(t=>count[t.item]=(count[t.item]||0)+1);
+    const arr = Object.entries(count).sort((a,b)=>b[1]-a[1]);
+    return arr.length ? arr[0][0] : '-';
+  })();
+
+  const revenueByGame = {};
+  paidSales.forEach(t=>{ revenueByGame[t.game] = (revenueByGame[t.game]||0) + t.price; });
+  const maxRev = Math.max(1, ...Object.values(revenueByGame));
+
+  let body = '';
+  if(state.adminTab === 'overview'){
+    body = `
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(0,229,204,0.1);color:var(--teal)">💰</div>
+        <div class="stat-label">Total Pendapatan</div>
+        <div class="stat-value" style="color:var(--teal)">${fmtRupiah(totalRevenue)}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(123,92,240,0.1);color:var(--violet-light)">🧾</div>
+        <div class="stat-label">Total Transaksi</div>
+        <div class="stat-value">${totalTx}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(255,184,0,0.1);color:var(--gold)">⏳</div>
+        <div class="stat-label">Menunggu Bayar</div>
+        <div class="stat-value" style="color:var(--gold)">${pendingTx}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(255,77,141,0.1);color:var(--pink)">🏆</div>
+        <div class="stat-label">Produk Terlaris</div>
+        <div class="stat-value" style="font-size:16px;line-height:1.4">${bestProduct}</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><h3>📊 Pendapatan per Game</h3></div>
+      ${Object.keys(revenueByGame).length ? Object.entries(revenueByGame).sort((a,b)=>b[1]-a[1]).map(([g,v])=>`
+        <div class="bar-row">
+          <div class="bar-name">${g}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${(v/maxRev*100).toFixed(1)}%"></div></div>
+          <div class="bar-val">${fmtRupiah(v)}</div>
+        </div>
+      `).join('') : '<div class="empty">Belum ada transaksi.</div>'}
+    </div>
+    <div class="panel">
+      <div class="panel-header"><h3>🕐 Transaksi Terbaru</h3><a href="#" onclick="event.preventDefault();state.adminTab='transactions';render()" class="btn btn-ghost btn-sm">Lihat Semua</a></div>
+      ${renderTxTable(state.transactions.slice(-5).reverse())}
+    </div>`;
+  } else if(state.adminTab === 'transactions'){
+    body = `<div class="panel">
+      <div class="panel-header">
+        <h3>🧾 Semua Transaksi (${state.transactions.length})</h3>
+        <button class="btn btn-danger btn-sm" id="resetSalesBtn">🗑 Kosongkan Riwayat</button>
+      </div>
+      ${renderTxTable([...state.transactions].reverse())}
+    </div>`;
+  } else if(state.adminTab === 'products'){
+    body = `
+      <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+        <button class="btn btn-ghost btn-sm" id="resetCatalogBtn">↩ Reset ke Default</button>
+      </div>
+      ${state.catalog.map(g=>`
+      <div class="panel">
+        <div class="panel-header">
+          <h3>${g.name} <span style="color:var(--muted);font-weight:400;font-size:13px">· ${g.publisher}</span></h3>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Nama Produk / Nominal</th><th>Harga (Rp)</th><th>Aksi</th></tr>
+          </thead>
+          <tbody>
+            ${g.products ? g.products.map(p=>`
+              <tr>
+                <td style="font-weight:600">${p.name}</td>
+                <td><input class="price-input" data-game="${g.id}" data-pid="${p.id}" type="number" value="${p.price}" style="width:140px" /></td>
+                <td>
+                  <div style="display:flex;gap:6px">
+                    <button class="btn btn-teal btn-sm" data-save-price data-game="${g.id}" data-pid="${p.id}" style="padding:6px 12px">Simpan</button>
+                    <button class="btn btn-danger btn-sm" data-delete-product data-game="${g.id}" data-pid="${p.id}" style="padding:6px 10px" title="Hapus Produk">🗑 Hapus</button>
+                  </div>
+                </td>
+              </tr>`).join('') : ''}
+            
+            <!-- Form Tambah Produk Baru -->
+            <tr style="background:rgba(0,180,255,0.02);border-top:2px solid var(--line)">
+              <td>
+                <input class="add-name-input" data-game="${g.id}" type="text" placeholder="Contoh: 140 Diamond" style="width:100%" />
+              </td>
+              <td>
+                <input class="add-price-input" data-game="${g.id}" type="number" placeholder="Contoh: 35000" style="width:140px" />
+              </td>
+              <td>
+                <button class="btn btn-primary btn-sm" data-add-product data-game="${g.id}" style="padding:6px 14px">➕ Tambah</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>`).join('')}`;
+  } else if(state.adminTab === 'settings'){
+    body = `
+    <div class="panel">
+      <div class="panel-header"><h3>🏪 Identitas Toko</h3></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+        <div class="field"><label>Nama Toko</label><input id="settingStoreName" value="${state.config.storeName}" /></div>
+        <div class="field"><label>Tagline</label><input id="settingTagline" value="${state.config.tagline}" /></div>
+        <div class="field"><label>WhatsApp CS (format 62xxx)</label><input id="settingWa" value="${state.config.wa}" /></div>
+        <div class="field"><label>Instagram (tanpa @)</label><input id="settingIg" value="${state.config.instagram}" /></div>
+      </div>
+      <button class="btn btn-primary" id="saveSettingsBtn">Simpan Pengaturan</button>
+    </div>
+    
+    <div class="panel">
+      <div class="panel-header"><h3>📸 Upload QRIS Toko</h3></div>
+      <p class="sub">Unggah file QRIS statis toko kamu di sini untuk menampilkan pembayaran otomatis ke pembeli.</p>
+      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:16px">
+        <div style="width:120px;height:120px;border-radius:12px;border:1px dashed var(--line);background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;overflow:hidden" id="qrisPreviewContainer">
+          <img id="qrisPreviewImg" src="/images/qris.png?t=${Date.now()}" style="width:100%;height:100%;object-fit:contain" onerror="this.style.display='none';document.getElementById('qrisPlaceholderText').style.display='block'" />
+          <span id="qrisPlaceholderText" style="font-size:12px;color:var(--muted);display:none">Belum ada QRIS</span>
+        </div>
+        <div>
+          <input type="file" id="qrisFileInput" accept="image/*" style="display:none" />
+          <button class="btn btn-teal" onclick="document.getElementById('qrisFileInput').click()">Pilih File Gambar</button>
+          <p style="font-size:11px;color:var(--muted);margin-top:8px">Format: PNG, JPG, JPEG (Maks. 5MB)</p>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="uploadQrisBtn" disabled>Upload QRIS</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header"><h3>🔐 Keamanan</h3></div>
+      <div class="field" style="max-width:320px;margin-bottom:16px"><label>Password Admin Baru</label><input id="newPassInput" type="password" placeholder="Minimal 4 karakter" /></div>
+      <button class="btn btn-teal" id="savePassBtn">Ubah Password</button>
+    </div>`;
+  }
+
+  const navItems = [
+    { tab:'overview', icon:'📊', label:'Ringkasan' },
+    { tab:'transactions', icon:'🧾', label:'Transaksi' },
+    { tab:'products', icon:'💰', label:'Produk & Harga' },
+    { tab:'settings', icon:'⚙️', label:'Pengaturan' },
+  ];
+
+  return `
+  <div class="admin-shell">
+    <div class="admin-side">
+      <a href="#/" class="logo" style="text-decoration:none">
+        <div class="logo-icon">${diamondLogo(22)}</div>
+        <span class="logo-text">${state.config.storeName.replace('.id', '<span>.id</span>')}</span>
+      </a>
+      <nav class="admin-nav">
+        ${navItems.map(item=>`
+          <div class="admin-nav-item ${state.adminTab===item.tab?'active':''}" data-tab="${item.tab}" role="button" tabindex="0">
+            <span>${item.icon}</span> ${item.label}
+          </div>`).join('')}
+        <div class="admin-nav-divider"></div>
+        <div class="admin-nav-item" id="viewStoreBtn"><span>🔗</span> Lihat Toko</div>
+        <div class="admin-nav-item" id="logoutBtn" style="color:var(--pink)"><span>🚪</span> Keluar</div>
+      </nav>
+    </div>
+    <div class="admin-main">
+      <div class="admin-topbar">
+        <h2>${{overview:'Ringkasan Penjualan', transactions:'Riwayat Transaksi', products:'Kelola Produk & Harga', settings:'Pengaturan Toko'}[state.adminTab]||''}</h2>
+        <div style="font-size:13px;color:var(--muted)">Selamat datang, Admin 👋</div>
+      </div>
+      ${body}
+    </div>
+  </div>`;
+}
+
+function renderTxTable(list){
+  if(!list.length) return '<div class="empty"><div class="empty-icon">📭</div>Belum ada transaksi.</div>';
+  return `<div style="overflow-x:auto"><table>
+    <tr><th>Order ID</th><th>User ID / Username</th><th>Server / Password</th><th>No. WA</th><th>Game</th><th>Produk</th><th>Total</th><th>Waktu</th><th>Status</th><th>Aksi</th></tr>
+    ${list.map(t=>{
+      const isPending = t.status === 'Menunggu Pembayaran';
+      const statusClass = t.status === 'Lunas' ? 'success' : (t.status === 'Batal' || t.status === 'Kadaluarsa' || t.status === 'Gagal' ? 'failed' : 'pending');
+      const isRoblox = (t.game || '').toLowerCase().includes('roblox');
+      return `
+      <tr>
+        <td class="mono" style="font-size:12px">${t.reference || t.orderId || '-'}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:28px;height:28px;border-radius:8px;background:rgba(123,92,240,0.12);border:1px solid rgba(123,92,240,0.2);display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">👤</span>
+            <span class="mono" style="font-size:13px;font-weight:600;color:var(--text)" title="${isRoblox ? 'Roblox Username' : 'User ID'}">${t.buyerId || t.buyer || '-'}</span>
+          </div>
+        </td>
+        <td>
+          <span class="mono" style="font-size:12.5px;color:${(t.server && t.server !== '-') ? 'var(--teal)' : 'var(--muted2)'}">
+            ${isRoblox ? `<span style="background:rgba(0,229,204,0.1);padding:2px 6px;border-radius:4px;font-size:11.5px">${t.server || '—'}</span>` : (t.server || '—')}
+          </span>
+        </td>
+        <td>
+          ${t.whatsapp ? `<a href="https://wa.me/${t.whatsapp}" target="_blank" rel="noopener" class="mono" style="color:var(--teal);text-decoration:underline">0${t.whatsapp.replace(/^0|^62/, '')}</a>` : '—'}
+        </td>
+        <td>${t.game || '-'}</td>
+        <td>${t.item || t.productName || '-'}</td>
+        <td class="mono">${fmtRupiah(t.price)}</td>
+        <td style="white-space:nowrap">${fmtTime(t.createdAt || t.time)}</td>
+        <td><span class="status-pill status-${statusClass}">${t.status}</span></td>
+        <td>
+          ${isPending ? `
+          <div style="display:flex;gap:6px;flex-wrap:nowrap">
+            <button class="btn btn-teal btn-sm" style="font-size:11px;padding:6px 10px;white-space:nowrap" data-confirm-tx="${t.merchantRef}">✅ Lunas</button>
+            <button class="btn btn-danger btn-sm" style="font-size:11px;padding:6px 10px;white-space:nowrap" data-cancel-tx="${t.merchantRef}">❌ Batal</button>
+          </div>` : `<span style="font-size:12px;color:var(--muted2)">—</span>`}
+        </td>
+      </tr>`;
+    }).join('')}
+  </table></div>`;
+}
+
+/* ===================== EVENTS ===================== */
+function attachEvents(){
+  // Category filter
+  document.querySelectorAll('[data-cat]').forEach(el=>{
+    el.onclick = ()=>{
+      state.activeCategory = el.dataset.cat;
+      render();
+      document.getElementById('produk-section')?.scrollIntoView({behavior:'smooth'});
+    };
+  });
+
+  // Game card navigation
+  document.querySelectorAll('[data-game]').forEach(el=>{
+    el.onclick = ()=>{ location.hash = '#/game/'+el.dataset.game; };
+    el.onkeydown = (e)=>{ if(e.key === 'Enter') location.hash = '#/game/'+el.dataset.game; };
+  });
+
+  // Search
+  const heroSearch = document.getElementById('heroSearch');
+  if(heroSearch){
+    heroSearch.oninput = (e)=>{
+      state.searchQuery = e.target.value.trim().toLowerCase();
+      refreshGamesGrid();
+    };
+    heroSearch.onkeydown = (e)=>{
+      if(e.key === 'Enter') document.getElementById('produk-section')?.scrollIntoView({behavior:'smooth'});
+    };
+  }
+
+  // Product select
+  let selectedProduct = null;
+  document.querySelectorAll('.product-card').forEach(el=>{
+    el.onclick = ()=>{
+      document.querySelectorAll('.product-card').forEach(c=>c.classList.remove('selected'));
+      el.classList.add('selected');
+      const gameId = location.hash.replace('#/game/','');
+      const game = state.catalog.find(g=>g.id===gameId);
+      if(!game) return;
+      const prod = game.products.find(p=>p.id===el.dataset.pid);
+      if(!prod) return;
+      selectedProduct = {game, prod};
+      document.getElementById('totalDisplay').textContent = fmtRupiah(prod.price);
+    };
+  });
+
+  // Buy button
+  const buyBtn = document.getElementById('buyBtn');
+  if(buyBtn) buyBtn.onclick = ()=>{
+    if(!selectedProduct){ showToast('Pilih produk terlebih dahulu', true); return; }
+    
+    const userId = document.getElementById('userIdInput').value.trim();
+    const serverVal = document.getElementById('serverIdInput').value.trim();
+    const whatsapp = document.getElementById('whatsappInput').value.trim();
+    
+    const isRoblox = selectedProduct.game.id === 'roblox';
+    
+    if(!userId){ 
+      document.getElementById('userIdInput').focus(); 
+      showToast(isRoblox ? 'Masukkan Username Roblox dulu' : 'Masukkan User ID dulu', true); 
+      return; 
+    }
+    
+    if(isRoblox && !serverVal){
+      document.getElementById('serverIdInput').focus();
+      showToast('Masukkan Password Roblox dulu (Via Login)', true);
+      return;
+    }
+    
+    if(!whatsapp){
+      document.getElementById('whatsappInput').focus();
+      showToast('Masukkan Nomor WhatsApp kamu', true);
+      return;
+    }
+
+    state.checkoutData = {
+      gameId: selectedProduct.game.id,
+      gameName: selectedProduct.game.name,
+      productName: selectedProduct.prod.name,
+      price: selectedProduct.prod.price,
+      productId: selectedProduct.prod.id,
+      userId,
+      server: serverVal,
+      whatsapp,
+      orderId: '',
+    };
+    state.checkoutStep = 'form';
+    render();
+  };
+
+  // Overlay close
+  document.querySelectorAll('#checkoutOverlay').forEach(el=>{
+    el.onclick = (e)=>{
+      if(e.target === el){
+        state.checkoutStep=null;
+        clearInterval(qrTimerInterval);
+        clearInterval(statusPollInterval);
+        render();
+      }
+    };
+  });
+
+  // Cancel checkout button
+  const cancelBtn = document.getElementById('cancelCheckoutBtn');
+  if(cancelBtn) cancelBtn.onclick = ()=>{
+    state.checkoutStep=null; render();
+  };
+
+  // Success close
+  const successCloseBtn = document.getElementById('successCloseBtn');
+  if(successCloseBtn) successCloseBtn.onclick = ()=>{
+    state.checkoutStep=null; render();
+  };
+
+  // Generate QR
+  const genQrBtn = document.getElementById('genQrBtn');
+  if(genQrBtn) genQrBtn.onclick = async ()=>{
+    genQrBtn.textContent = '⏳ Membuat QRIS…';
+    genQrBtn.disabled = true;
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          productId: state.checkoutData.productId, 
+          buyerId: state.checkoutData.userId, 
+          server: state.checkoutData.server, 
+          whatsapp: state.checkoutData.whatsapp 
+        })
+      });
+      const data = await res.json();
+      if(data.success){
+        state.checkoutData.orderId = data.reference;
+        state.checkoutData.merchantRef = data.merchantRef;
+        state.checkoutData.isMock = data.isMock;
+        state.checkoutData.qrText = data.qrText;
+        state.checkoutData.qrUrl = data.qrUrl;
+        state.checkoutData.expiredTime = data.expiredTime;
+        state.checkoutStep = 'qr';
+        render();
+
+        startCountdown(data.expiredTime);
+        startStatusPolling();
+      } else {
+        showToast(data.message || 'Gagal membuat QRIS', true);
+        genQrBtn.textContent = '⚡ Buat QRIS Sekarang';
+        genQrBtn.disabled = false;
+      }
+    } catch(e) {
+      showToast('Gagal menghubungi server', true);
+      genQrBtn.textContent = '⚡ Buat QRIS Sekarang';
+      genQrBtn.disabled = false;
+    }
+  };
+
+  // Confirm payment
+  const confirmPayBtn = document.getElementById('confirmPayBtn');
+  if(confirmPayBtn) confirmPayBtn.onclick = async ()=>{
+    if(state.checkoutData.isMock){
+      confirmPayBtn.textContent = '⏳ Memproses…';
+      confirmPayBtn.disabled = true;
+      try {
+        await fetch(`/api/sales/confirm-mock/${state.checkoutData.merchantRef}`, { method: "POST" });
+        setTimeout(()=>{
+          clearInterval(statusPollInterval);
+          clearInterval(qrTimerInterval);
+          state.checkoutStep = 'success'; render();
+          loadRecentSales();
+          if(state.isAdmin) loadTransactions();
+        }, 1000);
+      } catch(e) {
+        showToast('Gagal memproses pembayaran', true);
+        confirmPayBtn.disabled = false;
+        confirmPayBtn.textContent = '✅ Saya Sudah Bayar';
+      }
+    } else {
+      confirmPayBtn.textContent = '🔄 Mengecek…';
+      confirmPayBtn.disabled = true;
+      try {
+        const res = await fetch(`/api/sales/status/${state.checkoutData.merchantRef}`);
+        const data = await res.json();
+        if(data.success && data.status === "Lunas"){
+          clearInterval(statusPollInterval); clearInterval(qrTimerInterval);
+          state.checkoutStep = 'success'; render();
+          loadRecentSales();
+          if(state.isAdmin) loadTransactions();
+        } else {
+          showToast('Pembayaran belum diterima, coba lagi', true);
+          confirmPayBtn.disabled = false;
+          confirmPayBtn.textContent = '🔄 Cek Status Pembayaran';
+        }
+      } catch(e) {
+        confirmPayBtn.disabled = false;
+        confirmPayBtn.textContent = '🔄 Cek Status Pembayaran';
+      }
+    }
+  };
+
+  // Admin login
+  const loginBtn = document.getElementById('adminLoginBtn');
+  if(loginBtn) loginBtn.onclick = async ()=>{
+    const val = document.getElementById('adminPassInput').value;
+    loginBtn.textContent = 'Memeriksa…'; loginBtn.disabled = true;
+    try {
+      const res = await fetch("/api/admin/verify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password: val }) });
+      const data = await res.json();
+      if(data.success){
+        sessionStorage.setItem("syanastore_admin_pw", val);
+        state.adminPass = val; state.isAdmin = true; state.adminTab = 'overview';
+        await loadTransactions(); render();
+      } else {
+        showToast('Password salah, coba lagi.', true);
+        loginBtn.textContent = 'Masuk →'; loginBtn.disabled = false;
+      }
+    } catch(e) {
+      showToast('Gagal menghubungi server', true);
+      loginBtn.textContent = 'Masuk →'; loginBtn.disabled = false;
+    }
+  };
+
+  const adminPassInput = document.getElementById('adminPassInput');
+  if(adminPassInput) adminPassInput.onkeydown = (e)=>{ if(e.key === 'Enter') document.getElementById('adminLoginBtn')?.click(); };
+
+  // Admin nav tabs
+  document.querySelectorAll('[data-tab]').forEach(el=>{
+    el.onclick = ()=>{ state.adminTab = el.dataset.tab; render(); };
+  });
+
+  const logoutBtn = document.getElementById('logoutBtn');
+  if(logoutBtn) logoutBtn.onclick = ()=>{
+    if(confirm('Yakin mau keluar dari dashboard?')){
+      sessionStorage.removeItem("syanastore_admin_pw");
+      state.isAdmin=false; render();
+    }
+  };
+
+  const viewStoreBtn = document.getElementById('viewStoreBtn');
+  if(viewStoreBtn) viewStoreBtn.onclick = ()=>{ location.hash = '#/'; };
+
+  // Price save and instant state binding
+  document.querySelectorAll('.price-input').forEach(input => {
+    input.oninput = () => {
+      const gameId = input.dataset.game, pid = input.dataset.pid;
+      const val = parseInt(input.value, 10);
+      if(!isNaN(val) && val >= 0){
+        const game = state.catalog.find(g=>g.id===gameId);
+        if(game){
+          const prod = game.products.find(p=>p.id===pid);
+          if(prod) prod.price = val;
+        }
+      }
+    };
+  });
+
+  document.querySelectorAll('[data-save-price]').forEach(btn=>{
+    btn.onclick = async ()=>{
+      const gameId = btn.dataset.game, pid = btn.dataset.pid;
+      const input = document.querySelector(`.price-input[data-game="${gameId}"][data-pid="${pid}"]`);
+      const newPrice = parseInt(input.value, 10);
+      if(isNaN(newPrice) || newPrice < 0){ showToast('Harga tidak valid', true); return; }
+      const game = state.catalog.find(g=>g.id===gameId);
+      const prod = game.products.find(p=>p.id===pid);
+      const oldPrice = prod.price; prod.price = newPrice;
+      try {
+        const res = await fetch("/api/admin/catalog", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Admin-Password": state.adminPass },
+          body: JSON.stringify({ catalog: state.catalog })
+        });
+        const data = await res.json();
+        if(data.success){ showToast(`Harga ${prod.name} diperbarui ✓`); }
+        else { prod.price = oldPrice; showToast(data.message || 'Gagal menyimpan', true); }
+      } catch(e) { prod.price = oldPrice; showToast('Gagal menghubungi server', true); }
+    };
+  });
+
+  // Delete product
+  document.querySelectorAll('[data-delete-product]').forEach(btn=>{
+    btn.onclick = async ()=>{
+      const gameId = btn.dataset.game, pid = btn.dataset.pid;
+      const game = state.catalog.find(g=>g.id===gameId);
+      if(!game) return;
+      const prod = game.products.find(p=>p.id===pid);
+      if(!prod) return;
+      if(!confirm(`Yakin ingin menghapus produk "${prod.name}" dari game ${game.name}?`)) return;
+      
+      const originalProducts = [...game.products];
+      game.products = game.products.filter(p=>p.id!==pid);
+      
+      try {
+        const res = await fetch("/api/admin/catalog", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Admin-Password": state.adminPass },
+          body: JSON.stringify({ catalog: state.catalog })
+        });
+        const data = await res.json();
+        if(data.success){
+          showToast(`Produk "${prod.name}" berhasil dihapus ✓`);
+          render();
+        } else {
+          game.products = originalProducts;
+          showToast(data.message || 'Gagal menghapus produk', true);
+        }
+      } catch(e) {
+        game.products = originalProducts;
+        showToast('Gagal menghubungi server', true);
+      }
+    };
+  });
+
+  // Add product
+  document.querySelectorAll('[data-add-product]').forEach(btn=>{
+    btn.onclick = async ()=>{
+      const gameId = btn.dataset.game;
+      const nameInput = document.querySelector(`.add-name-input[data-game="${gameId}"]`);
+      const priceInput = document.querySelector(`.add-price-input[data-game="${gameId}"]`);
+      if(!nameInput || !priceInput) return;
+      
+      const newName = nameInput.value.trim();
+      const newPrice = parseInt(priceInput.value, 10);
+      
+      if(!newName){ showToast('Masukkan nama produk terlebih dahulu', true); nameInput.focus(); return; }
+      if(isNaN(newPrice) || newPrice < 0){ showToast('Harga produk tidak valid', true); priceInput.focus(); return; }
+      
+      const game = state.catalog.find(g=>g.id===gameId);
+      if(!game) return;
+      
+      const newPid = `prod_${Date.now()}`;
+      const newProd = { id: newPid, name: newName, price: newPrice };
+      
+      if(!game.products) game.products = [];
+      game.products.push(newProd);
+      
+      btn.disabled = true;
+      btn.textContent = '⏳';
+      
+      try {
+        const res = await fetch("/api/admin/catalog", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Admin-Password": state.adminPass },
+          body: JSON.stringify({ catalog: state.catalog })
+        });
+        const data = await res.json();
+        if(data.success){
+          showToast(`Produk "${newName}" ditambahkan ke ${game.name} ✓`);
+          render();
+        } else {
+          game.products.pop(); // Revert
+          showToast(data.message || 'Gagal menambahkan produk', true);
+          btn.disabled = false;
+          btn.textContent = '➕ Tambah';
+        }
+      } catch(e) {
+        game.products.pop(); // Revert
+        showToast('Gagal menghubungi server', true);
+        btn.disabled = false;
+        btn.textContent = '➕ Tambah';
+      }
+    };
+  });
+
+
+  // Reset catalog
+  const resetCatalogBtn = document.getElementById('resetCatalogBtn');
+  if(resetCatalogBtn) resetCatalogBtn.onclick = async ()=>{
+    if(!confirm("Kembalikan katalog ke daftar & harga default? Semua perubahan akan hilang.")) return;
+    try {
+      const res = await fetch("/api/admin/catalog/reset", { method: "POST", headers: { "X-Admin-Password": state.adminPass } });
+      const data = await res.json();
+      if(data.success){ state.catalog = data.catalog; showToast('Katalog direset ke default'); render(); }
+    } catch(e) { showToast('Gagal menghubungi server', true); }
+  };
+
+  // Reset sales
+  const resetSalesBtn = document.getElementById('resetSalesBtn');
+  if(resetSalesBtn) resetSalesBtn.onclick = async ()=>{
+    if(!confirm("Hapus seluruh riwayat transaksi? Data tidak bisa dikembalikan.")) return;
+    try {
+      const res = await fetch("/api/sales/reset", { method: "POST", headers: { "X-Admin-Password": state.adminPass } });
+      const data = await res.json();
+      if(data.success){ state.transactions = []; showToast('Riwayat dikosongkan'); render(); }
+    } catch(e) { showToast('Gagal menghubungi server', true); }
+  };
+
+  // Konfirmasi Lunas manual (admin)
+  document.querySelectorAll('[data-confirm-tx]').forEach(btn => {
+    btn.onclick = async () => {
+      const mRef = btn.dataset.confirmTx;
+      if(!confirm('Tandai transaksi ini sebagai LUNAS?')) return;
+      btn.textContent = '⏳'; btn.disabled = true;
+      try {
+        const res = await fetch(`/api/admin/sales/confirm/${mRef}`, {
+          method: 'POST',
+          headers: { 'X-Admin-Password': state.adminPass }
+        });
+        const data = await res.json();
+        if(data.success){
+          showToast('Transaksi ditandai Lunas ✓');
+          await loadTransactions(); render();
+        } else {
+          showToast(data.message || 'Gagal', true);
+          btn.textContent = '✅ Lunas'; btn.disabled = false;
+        }
+      } catch(e) {
+        showToast('Gagal menghubungi server', true);
+        btn.textContent = '✅ Lunas'; btn.disabled = false;
+      }
+    };
+  });
+
+  // Batalkan transaksi manual (admin)
+  document.querySelectorAll('[data-cancel-tx]').forEach(btn => {
+    btn.onclick = async () => {
+      const mRef = btn.dataset.cancelTx;
+      if(!confirm('Batalkan transaksi ini?')) return;
+      btn.textContent = '⏳'; btn.disabled = true;
+      try {
+        const res = await fetch(`/api/admin/sales/cancel/${mRef}`, {
+          method: 'POST',
+          headers: { 'X-Admin-Password': state.adminPass }
+        });
+        const data = await res.json();
+        if(data.success){
+          showToast('Transaksi dibatalkan');
+          await loadTransactions(); render();
+        } else {
+          showToast(data.message || 'Gagal', true);
+          btn.textContent = '❌ Batal'; btn.disabled = false;
+        }
+      } catch(e) {
+        showToast('Gagal menghubungi server', true);
+        btn.textContent = '❌ Batal'; btn.disabled = false;
+      }
+    };
+  });
+
+
+  // Save settings
+  const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+  if(saveSettingsBtn) saveSettingsBtn.onclick = async ()=>{
+    const storeName = document.getElementById('settingStoreName').value.trim();
+    const tagline = document.getElementById('settingTagline').value.trim();
+    const wa = document.getElementById('settingWa').value.trim();
+    const instagram = document.getElementById('settingIg').value.trim();
+    try {
+      const res = await fetch("/api/admin/config", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Admin-Password": state.adminPass },
+        body: JSON.stringify({ storeName, tagline, wa, instagram })
+      });
+      const data = await res.json();
+      if(data.success){
+        state.config.storeName = storeName || state.config.storeName;
+        state.config.tagline = tagline; state.config.wa = wa; state.config.instagram = instagram;
+        showToast('Pengaturan toko disimpan ✓'); render();
+      } else { showToast(data.message || 'Gagal menyimpan', true); }
+    } catch(e) { showToast('Gagal menghubungi server', true); }
+  };
+
+  // Save password
+  const savePassBtn = document.getElementById('savePassBtn');
+  if(savePassBtn) savePassBtn.onclick = async ()=>{
+    const np = document.getElementById('newPassInput').value;
+    if(np.length < 4){ showToast('Password minimal 4 karakter', true); return; }
+    try {
+      const res = await fetch("/api/admin/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Admin-Password": state.adminPass },
+        body: JSON.stringify({ newPassword: np })
+      });
+      const data = await res.json();
+      if(data.success){
+        sessionStorage.setItem("syanastore_admin_pw", np); state.adminPass = np;
+        showToast('Password admin diubah ✓');
+        document.getElementById('newPassInput').value = "";
+      } else { showToast(data.message || 'Gagal mengubah password', true); }
+    } catch(e) { showToast('Gagal menghubungi server', true); }
+  };
+
+  // QRIS File Input & Upload
+  const qrisFileInput = document.getElementById('qrisFileInput');
+  const uploadQrisBtn = document.getElementById('uploadQrisBtn');
+  let selectedQrisBase64 = null;
+
+  if (qrisFileInput) {
+    qrisFileInput.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('Ukuran file maksimal 5MB', true);
+        qrisFileInput.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        selectedQrisBase64 = reader.result;
+        
+        // Update preview
+        const previewImg = document.getElementById('qrisPreviewImg');
+        const placeholderText = document.getElementById('qrisPlaceholderText');
+        if (previewImg) {
+          previewImg.src = selectedQrisBase64;
+          previewImg.style.display = 'block';
+        }
+        if (placeholderText) {
+          placeholderText.style.display = 'none';
+        }
+
+        if (uploadQrisBtn) {
+          uploadQrisBtn.disabled = false;
+        }
+      };
+      reader.readAsDataURL(file);
+    };
+  }
+
+  if (uploadQrisBtn) {
+    uploadQrisBtn.onclick = async () => {
+      if (!selectedQrisBase64) return;
+      uploadQrisBtn.textContent = '⏳ Mengupload...';
+      uploadQrisBtn.disabled = true;
+
+      try {
+        const res = await fetch('/api/admin/upload-qris', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Admin-Password': state.adminPass
+          },
+          body: JSON.stringify({ image: selectedQrisBase64 })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Gambar QRIS berhasil diunggah ✓');
+          qrisFileInput.value = '';
+          selectedQrisBase64 = null;
+          uploadQrisBtn.textContent = 'Upload QRIS';
+        } else {
+          showToast(data.message || 'Gagal mengupload QRIS', true);
+          uploadQrisBtn.textContent = 'Upload QRIS';
+          uploadQrisBtn.disabled = false;
+        }
+      } catch (e) {
+        showToast('Gagal menghubungi server', true);
+        uploadQrisBtn.textContent = 'Upload QRIS';
+        uploadQrisBtn.disabled = false;
+      }
+    };
+  }
+
+  // Lacak pesanan handler
+  const trackBtn = document.getElementById('trackBtn');
+  const trackInput = document.getElementById('trackInput');
+  
+  const performTrack = async () => {
+    if(!trackInput) return;
+    const val = trackInput.value.trim();
+    if(!val) { showToast('Masukkan nomor WA atau Order ID dulu', true); return; }
+    
+    state.trackQuery = val;
+    state.trackLoading = true;
+    render();
+    
+    try {
+      const res = await fetch(`/api/sales/track?q=${encodeURIComponent(val)}`);
+      const data = await res.json();
+      if(data.success){
+        state.trackResults = data.results;
+      } else {
+        state.trackResults = [];
+        showToast(data.message || 'Gagal mencari pesanan', true);
+      }
+    } catch(e) {
+      state.trackResults = [];
+      showToast('Gagal menghubungi server', true);
+    } finally {
+      state.trackLoading = false;
+      render();
+    }
+  };
+
+  if(trackBtn) trackBtn.onclick = performTrack;
+  if(trackInput) trackInput.onkeydown = (e) => { if(e.key === 'Enter') performTrack(); };
+}
+
+/* ===================== HELPERS ===================== */
+function refreshGamesGrid(){
+  const container = document.getElementById('gamesGridContainer');
+  if(!container) return;
+  let list = state.catalog;
+  if(state.activeCategory !== 'Semua') list = list.filter(g=>g.category===state.activeCategory);
+  if(state.searchQuery) list = list.filter(g=>g.name.toLowerCase().includes(state.searchQuery) || g.publisher.toLowerCase().includes(state.searchQuery));
+  if(!list.length){ container.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div>Tidak ditemukan.</div>'; return; }
+  container.innerHTML = list.map(g=>`
+    <div class="game-card" data-game="${g.id}" role="button" tabindex="0">
+      <div class="game-card-img-wrapper"><img class="game-card-img" src="${g.image || '/images/ml.png'}" alt="${g.name}" loading="lazy" /></div>
+      <div class="game-card-body"><h4>${g.name}</h4><p>${g.publisher}</p><button class="btn">Lihat Harga →</button></div>
+    </div>`).join('');
+  container.querySelectorAll('[data-game]').forEach(el=>{
+    el.onclick = ()=>{ location.hash = '#/game/'+el.dataset.game; };
+  });
+}
+
+function startCountdown(expiredUnix){
+  clearInterval(qrTimerInterval);
+  qrTimerInterval = setInterval(()=>{
+    const seconds = Math.max(0, Math.floor(expiredUnix - Date.now()/1000));
+    const m = String(Math.floor(seconds/60)).padStart(2,"0");
+    const s = String(seconds%60).padStart(2,"0");
+    const el = document.getElementById("qrTimerDisplay");
+    if(el) el.textContent = `${m}:${s}`;
+    if(seconds<=0){
+      clearInterval(qrTimerInterval);
+      clearInterval(statusPollInterval);
+      state.checkoutStep = null; render();
+    }
+  }, 1000);
+}
+
+function startStatusPolling(){
+  clearInterval(statusPollInterval);
+  statusPollInterval = setInterval(async ()=>{
+    try{
+      const res = await fetch(`/api/sales/status/${state.checkoutData.merchantRef}`);
+      const data = await res.json();
+      if(data.success && data.status === "Lunas"){
+        clearInterval(statusPollInterval); clearInterval(qrTimerInterval);
+        state.checkoutStep = 'success'; render();
+        loadRecentSales();
+        if(state.isAdmin) loadTransactions();
+      }
+    }catch(e){}
+  }, 4000);
+}
+
+/* ===================== INIT ===================== */
+loadAll();
+</script>
+</body>
+</html>

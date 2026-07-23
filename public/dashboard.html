@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYANASTORE — Dashboard Penjualan</title>
+<style>
+  :root{
+    --bg: #F6F7FB;
+    --surface: #FFFFFF;
+    --surface-2: #ECEEF6;
+    --ink: #14151E;
+    --muted: #6B6F80;
+    --line: #E3E5EF;
+    --accent: #4A3AFF;
+    --accent-soft: #ECEAFF;
+    --amber: #FFB020;
+    --green: #1FAE5C;
+    --red: #E23D64;
+    --radius: 14px;
+    --radius-lg: 20px;
+    --shadow: 0 1px 2px rgba(20,21,30,0.04), 0 8px 24px -12px rgba(20,21,30,0.12);
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14.5px;
+  }
+  h1,h2,h3{ font-family:'Space Grotesk','Inter',sans-serif; letter-spacing:-0.02em; margin:0; }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; }
+  button{ font-family: inherit; cursor:pointer; }
+  input, select{ font-family: inherit; }
+
+  /* ---- login gate ---- */
+  #gate{
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .gate-box{
+    background: var(--surface); border:1px solid var(--line); border-radius: var(--radius-lg);
+    padding: 32px; max-width: 340px; width:100%; text-align:center; box-shadow: var(--shadow);
+  }
+  .gate-box .mark{
+    width:44px; height:44px; border-radius:12px; margin: 0 auto 16px;
+    background: linear-gradient(145deg, var(--accent), #7A6CFF);
+    display:flex; align-items:center; justify-content:center; color:white; font-weight:800;
+  }
+  .gate-box input{
+    width:100%; padding:11px 12px; border-radius:10px; border:1px solid var(--line);
+    margin: 16px 0 10px; font-size:14px;
+  }
+  .gate-box button{
+    width:100%; background: var(--ink); color:white; border:none; padding:11px; border-radius:10px; font-weight:600;
+  }
+  .gate-box button:hover{ background: var(--accent); }
+  .gate-error{ color: var(--red); font-size:12.5px; min-height:16px; }
+  .gate-note{ color: var(--muted); font-size: 11.5px; margin-top: 14px; line-height:1.5; }
+
+  /* ---- dashboard ---- */
+  #app{ display:none; }
+  header{
+    background: var(--surface); border-bottom:1px solid var(--line);
+    position: sticky; top:0; z-index:10;
+  }
+  .nav{
+    max-width: 1120px; margin:0 auto; padding: 0 20px; height:64px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:700; font-size:17px; }
+  .brand .mark{
+    width:28px; height:28px; border-radius:8px;
+    background: linear-gradient(145deg, var(--accent), #7A6CFF);
+    display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:800;
+  }
+  .nav-actions{ display:flex; gap:10px; align-items:center; }
+  .btn-ghost-sm{
+    background: var(--surface); border:1px solid var(--line); color:var(--ink);
+    padding: 8px 14px; border-radius:999px; font-size:12.5px; font-weight:600;
+  }
+  .btn-ghost-sm:hover{ border-color: var(--accent); color: var(--accent); }
+  .back-link{ font-size:13px; color:var(--muted); font-weight:600; }
+  .back-link:hover{ color: var(--ink); }
+
+  .wrap{ max-width: 1120px; margin: 0 auto; padding: 28px 20px 60px; }
+
+  .cards{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr));
+    gap: 14px; margin-bottom: 26px;
+  }
+  .kpi{
+    background: var(--surface); border:1px solid var(--line); border-radius: var(--radius-lg);
+    padding: 18px 20px;
+  }
+  .kpi .label{ font-size:12px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+  .kpi .value{ font-family:'Space Grotesk',sans-serif; font-size:26px; margin-top:8px; }
+  .kpi .sub{ font-size:11.5px; color:var(--muted); margin-top:4px; }
+
+  .panel{
+    background: var(--surface); border:1px solid var(--line); border-radius: var(--radius-lg);
+    padding: 22px; margin-bottom: 20px;
+  }
+  .panel-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px; }
+  .panel-head h2{ font-size:16px; }
+
+  .bars{ display:flex; flex-direction:column; gap:12px; }
+  .bar-row{ display:grid; grid-template-columns: 110px 1fr 90px; align-items:center; gap:12px; font-size:12.5px; }
+  .bar-track{ background: var(--surface-2); border-radius: 999px; height:10px; overflow:hidden; }
+  .bar-fill{ height:100%; border-radius:999px; }
+
+  .filters{ display:flex; gap:10px; flex-wrap:wrap; }
+  .filters select, .filters input{
+    padding: 8px 12px; border-radius:9px; border:1px solid var(--line); font-size:12.5px; background:var(--surface);
+  }
+
+  table{ width:100%; border-collapse: collapse; font-size:13px; }
+  thead th{
+    text-align:left; color:var(--muted); font-weight:600; font-size:11.5px;
+    text-transform:uppercase; letter-spacing:.04em; padding: 10px 12px; border-bottom:1px solid var(--line);
+  }
+  tbody td{ padding: 12px; border-bottom:1px solid var(--line); }
+  tbody tr:hover{ background: var(--surface-2); }
+  .status-pill{
+    background:#E7F7ED; color:var(--green); font-size:11px; font-weight:700;
+    padding:3px 9px; border-radius:999px;
+  }
+  .status-pill.status-wait{ background:#FFF4E0; color:#9A6400; }
+  .empty-state{
+    text-align:center; padding: 50px 20px; color: var(--muted);
+  }
+  .empty-state .ic{ font-size:34px; margin-bottom:10px; }
+
+  .table-scroll{ overflow-x:auto; }
+  .danger-link{ color: var(--red); font-size:12px; font-weight:600; background:none; border:none; }
+  .danger-link:hover{ text-decoration: underline; }
+
+  /* ---- kelola produk ---- */
+  .pm-form{
+    display:grid; grid-template-columns: 1fr 1fr 1.4fr 1fr 1fr auto auto;
+    gap:8px; margin-bottom:16px;
+  }
+  .pm-form input, .pm-form select{
+    padding: 9px 11px; border-radius:9px; border:1px solid var(--line); font-size:12.5px; background:var(--surface);
+  }
+  @media (max-width: 860px){ .pm-form{ grid-template-columns: 1fr 1fr; } }
+  .pm-error{ color: var(--red); font-size:12.5px; min-height:18px; }
+  .pm-price-input{
+    width:110px; padding:7px 9px; border-radius:8px; border:1px solid var(--line); font-size:13px; font-family:'JetBrains Mono',monospace;
+  }
+  .pm-price-input:focus{ border-color: var(--accent); outline:none; }
+  .pm-save-btn{
+    background: var(--accent-soft); color: var(--accent); border:none; font-size:11.5px; font-weight:700;
+    padding: 6px 11px; border-radius:8px; margin-left:8px;
+  }
+  .pm-save-btn:hover{ background: var(--accent); color:white; }
+  .pm-save-btn:disabled{ opacity:0.5; cursor:default; }
+  .pm-del-btn{
+    background:none; border:none; color: var(--red); font-size:12px; font-weight:600;
+  }
+  .pm-del-btn:hover{ text-decoration: underline; }
+  .pm-saved-tag{ color: var(--green); font-size:11px; font-weight:700; margin-left:6px; }
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-box">
+    <div class="mark">S</div>
+    <h1 style="font-size:18px;">Masuk Dashboard</h1>
+    <p style="color:var(--muted); font-size:12.5px; margin-top:6px;">Khusus admin SYANASTORE</p>
+    <input type="password" id="pwInput" placeholder="Password admin" autocomplete="off">
+    <button id="loginBtn">Masuk</button>
+    <div class="gate-error" id="gateError"></div>
+    <div class="gate-note">Password diverifikasi di server (bukan di browser). Atur / ganti password lewat ADMIN_PASSWORD di file .env pada server.</div>
+  </div>
+</div>
+
+<div id="app">
+  <header>
+    <div class="nav">
+      <div class="brand"><div class="mark">S</div> Dashboard Penjualan</div>
+      <div class="nav-actions">
+        <a class="back-link" href="index.html">← Kembali ke toko</a>
+        <button class="btn-ghost-sm" id="refreshBtn">Muat ulang</button>
+        <button class="btn-ghost-sm" id="logoutBtn">Keluar</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="cards" id="kpiCards"></div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Omzet per game</h2>
+      </div>
+      <div class="bars" id="gameBars"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Kelola Produk &amp; Harga</h2>
+        <div class="filters">
+          <select id="pmFilterGame"><option value="all">Semua game</option></select>
+          <button class="btn-ghost-sm" id="pmAddBtn">+ Tambah produk</button>
+          <button class="danger-link" id="pmResetBtn">Reset ke default</button>
+        </div>
+      </div>
+      <p style="color:var(--muted); font-size:12.5px; margin:-8px 0 16px;">
+        Ubah harga kapan saja di sini — perubahan langsung tampil di toko, tanpa perlu edit kode atau restart server.
+      </p>
+      <div id="pmAddForm" class="pm-form" style="display:none;">
+        <input type="text" id="pmNewId" placeholder="ID unik (mis. ff-500)">
+        <select id="pmNewGame"></select>
+        <input type="text" id="pmNewTitle" placeholder="Nama item (mis. 500 Diamond)">
+        <input type="text" id="pmNewBonus" placeholder="Bonus (opsional)">
+        <input type="number" id="pmNewPrice" placeholder="Harga (Rp)" min="0">
+        <button class="btn-ghost-sm" id="pmSaveNewBtn">Simpan produk</button>
+        <button class="btn-ghost-sm" id="pmCancelNewBtn">Batal</button>
+      </div>
+      <div class="pm-error" id="pmError"></div>
+      <div class="table-scroll">
+        <table id="pmTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Game</th>
+              <th>Nama Item</th>
+              <th>Bonus</th>
+              <th>Harga (Rp)</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="pmBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Riwayat transaksi</h2>
+        <div class="filters">
+          <select id="filterGame"><option value="all">Semua game</option></select>
+          <select id="filterRange">
+            <option value="all">Semua waktu</option>
+            <option value="today">Hari ini</option>
+            <option value="7d">7 hari terakhir</option>
+          </select>
+          <button class="danger-link" id="resetBtn">Kosongkan data demo</button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table id="salesTable">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Waktu</th>
+              <th>Game</th>
+              <th>Item</th>
+              <th>ID Pembeli</th>
+              <th>Harga</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="salesBody"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <div class="ic">🧾</div>
+        Belum ada transaksi masuk. Transaksi akan muncul otomatis di sini setelah pembeli menyelesaikan checkout di toko.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const GAME_COLORS = {
+    "Free Fire": "#FF6B35",
+    "Mobile Legends": "#4A3AFF",
+    "PUBG Mobile": "#F5A623",
+    "Honor of Kings": "#E23D64"
+  };
+
+  const fmtIDR = n => "Rp" + n.toLocaleString("id-ID");
+  const fmtTime = iso => new Date(iso).toLocaleString("id-ID", { dateStyle:"medium", timeStyle:"short" });
+
+  function adminPassword(){
+    return sessionStorage.getItem("syanastore_admin_pw") || "";
+  }
+
+  async function getSales(){
+    try{
+      const res = await fetch("/api/sales", { headers: { "X-Admin-Password": adminPassword() } });
+      if(res.status === 401){ doLogout(); return []; }
+      const data = await res.json();
+      return data.success ? data.sales : [];
+    }catch(e){ return []; }
+  }
+
+  function isToday(iso){
+    const d = new Date(iso), n = new Date();
+    return d.toDateString() === n.toDateString();
+  }
+  function isWithinDays(iso, days){
+    const d = new Date(iso).getTime();
+    return (Date.now() - d) <= days*24*60*60*1000;
+  }
+
+  function populateGameFilter(sales){
+    const sel = document.getElementById("filterGame");
+    const games = [...new Set(sales.map(s=>s.game))];
+    sel.innerHTML = `<option value="all">Semua game</option>` +
+      games.map(g=>`<option value="${g}">${g}</option>`).join("");
+  }
+
+  async function render(){
+    const all = await getSales();
+    populateGameFilter(all);
+
+    const gameFilter = document.getElementById("filterGame").value;
+    const rangeFilter = document.getElementById("filterRange").value;
+
+    let sales = all;
+    if(gameFilter !== "all") sales = sales.filter(s=>s.game===gameFilter);
+    if(rangeFilter === "today") sales = sales.filter(s=>isToday(s.createdAt));
+    if(rangeFilter === "7d") sales = sales.filter(s=>isWithinDays(s.createdAt,7));
+
+    // KPI (omzet cuma dihitung dari transaksi yang statusnya Lunas)
+    const paid = all.filter(s=>s.status==="Lunas");
+    const totalOmzet = paid.reduce((a,s)=>a+s.price,0);
+    const totalTrx = all.length;
+    const todayPaid = paid.filter(s=>isToday(s.createdAt));
+    const todayOmzet = todayPaid.reduce((a,s)=>a+s.price,0);
+    const counts = {};
+    paid.forEach(s=>{ counts[s.item] = (counts[s.item]||0)+1; });
+    const top = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
+
+    document.getElementById("kpiCards").innerHTML = `
+      <div class="kpi"><div class="label">Total omzet</div><div class="value mono">${fmtIDR(totalOmzet)}</div><div class="sub">Dari transaksi lunas</div></div>
+      <div class="kpi"><div class="label">Lunas hari ini</div><div class="value mono">${todayPaid.length}</div><div class="sub">${fmtIDR(todayOmzet)}</div></div>
+      <div class="kpi"><div class="label">Total percobaan bayar</div><div class="value mono">${totalTrx}</div><div class="sub">Termasuk belum/gagal bayar</div></div>
+      <div class="kpi"><div class="label">Produk terlaris</div><div class="value" style="font-size:16px;">${top ? top[0] : "-"}</div><div class="sub">${top ? top[1]+" kali terjual" : "Belum ada data"}</div></div>
+    `;
+
+    // bars per game (dari transaksi lunas)
+    const perGame = {};
+    paid.forEach(s=>{ perGame[s.game] = (perGame[s.game]||0) + s.price; });
+    const maxVal = Math.max(1, ...Object.values(perGame));
+    const barsEl = document.getElementById("gameBars");
+    const entries = Object.entries(perGame);
+    barsEl.innerHTML = entries.length ? entries.map(([g,val])=>`
+      <div class="bar-row">
+        <span>${g}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${(val/maxVal*100).toFixed(1)}%; background:${GAME_COLORS[g]||'#4A3AFF'}"></div></div>
+        <span class="mono" style="text-align:right;">${fmtIDR(val)}</span>
+      </div>
+    `).join("") : `<div style="color:var(--muted); font-size:13px;">Belum ada transaksi lunas.</div>`;
+
+    // table
+    const body = document.getElementById("salesBody");
+    document.getElementById("emptyState").style.display = sales.length ? "none" : "block";
+    document.getElementById("salesTable").style.display = sales.length ? "table" : "none";
+    body.innerHTML = sales.map(s=>`
+      <tr>
+        <td class="mono">${s.reference || s.merchantRef}</td>
+        <td>${fmtTime(s.createdAt)}</td>
+        <td>${s.game}</td>
+        <td>${s.item}</td>
+        <td class="mono">${s.buyerId}${s.server && s.server!=="-" ? " / "+s.server : ""}</td>
+        <td class="mono">${fmtIDR(s.price)}</td>
+        <td><span class="status-pill status-${s.status==='Lunas'?'ok':'wait'}">${s.status}</span></td>
+      </tr>
+    `).join("");
+  }
+
+  document.getElementById("filterGame").addEventListener("change", render);
+  document.getElementById("filterRange").addEventListener("change", render);
+  document.getElementById("refreshBtn").addEventListener("click", render);
+  document.getElementById("resetBtn").addEventListener("click", async ()=>{
+    if(confirm("Hapus semua data transaksi?")){
+      await fetch("/api/sales/reset", { method:"POST", headers:{ "X-Admin-Password": adminPassword() } });
+      render();
+    }
+  });
+
+  // ================= KELOLA PRODUK & HARGA =================
+  let PM_GAMES = [];
+  let PM_PRODUCTS = [];
+
+  async function pmFetchProducts(){
+    try{
+      const res = await fetch("/api/admin/products", { headers: { "X-Admin-Password": adminPassword() } });
+      if(res.status === 401){ doLogout(); return; }
+      const data = await res.json();
+      if(data.success){
+        PM_GAMES = data.games || [];
+        PM_PRODUCTS = data.products || [];
+      }
+    }catch(e){ /* diam saja, coba lagi saat refresh berikutnya */ }
+  }
+
+  function pmGameName(gameId){
+    const g = PM_GAMES.find(g=>g.id===gameId);
+    return g ? g.name : gameId;
+  }
+
+  function pmSetError(msg){
+    document.getElementById("pmError").textContent = msg || "";
+  }
+
+  function pmPopulateGameSelects(){
+    const opts = PM_GAMES.map(g=>`<option value="${g.id}">${g.name}</option>`).join("");
+    document.getElementById("pmFilterGame").innerHTML = `<option value="all">Semua game</option>` + opts;
+    document.getElementById("pmNewGame").innerHTML = opts;
+  }
+
+  function pmRenderTable(){
+    const filter = document.getElementById("pmFilterGame").value;
+    const list = filter === "all" ? PM_PRODUCTS : PM_PRODUCTS.filter(p=>p.game===filter);
+    const body = document.getElementById("pmBody");
+    body.innerHTML = list.map(p => `
+      <tr data-id="${p.id}">
+        <td class="mono">${p.id}</td>
+        <td>${pmGameName(p.game)}</td>
+        <td>
+          <input type="text" class="pm-price-input" style="width:170px;" value="${p.title.replace(/"/g,'&quot;')}" data-field="title">
+        </td>
+        <td>
+          <input type="text" class="pm-price-input" style="width:120px;" value="${p.bonus ? p.bonus.replace(/"/g,'&quot;') : ""}" placeholder="-" data-field="bonus">
+        </td>
+        <td>
+          <input type="number" min="0" class="pm-price-input" value="${p.price}" data-field="price">
+        </td>
+        <td style="white-space:nowrap;">
+          <button class="pm-save-btn" data-action="save">Simpan</button>
+          <button class="pm-del-btn" data-action="delete">Hapus</button>
+          <span class="pm-saved-tag" data-role="saved-tag" style="display:none;">Tersimpan ✓</span>
+        </td>
+      </tr>
+    `).join("");
+  }
+
+  async function pmRender(){
+    await pmFetchProducts();
+    pmPopulateGameSelects();
+    pmRenderTable();
+  }
+
+  document.getElementById("pmFilterGame").addEventListener("change", pmRenderTable);
+
+  document.getElementById("pmBody").addEventListener("click", async (e)=>{
+    const btn = e.target.closest("button");
+    if(!btn) return;
+    const row = btn.closest("tr");
+    const id = row.dataset.id;
+    pmSetError("");
+
+    if(btn.dataset.action === "save"){
+      const title = row.querySelector('[data-field="title"]').value.trim();
+      const bonus = row.querySelector('[data-field="bonus"]').value.trim();
+      const price = row.querySelector('[data-field="price"]').value;
+      btn.disabled = true; btn.textContent = "Menyimpan...";
+      try{
+        const res = await fetch(`/api/admin/products/${encodeURIComponent(id)}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json", "X-Admin-Password": adminPassword() },
+          body: JSON.stringify({ title, bonus, price }),
+        });
+        const data = await res.json();
+        if(!data.success){ pmSetError(data.message || "Gagal menyimpan."); }
+        else{
+          const idx = PM_PRODUCTS.findIndex(p=>p.id===id);
+          if(idx !== -1) PM_PRODUCTS[idx] = data.product;
+          const tag = row.querySelector('[data-role="saved-tag"]');
+          tag.style.display = "inline";
+          setTimeout(()=>{ tag.style.display = "none"; }, 2000);
+        }
+      }catch(err){ pmSetError("Tidak bisa menghubungi server."); }
+      finally{ btn.disabled = false; btn.textContent = "Simpan"; }
+    }
+
+    if(btn.dataset.action === "delete"){
+      const p = PM_PRODUCTS.find(p=>p.id===id);
+      if(!confirm(`Hapus produk "${p ? p.title : id}"?`)) return;
+      try{
+        const res = await fetch(`/api/admin/products/${encodeURIComponent(id)}`, {
+          method: "DELETE",
+          headers: { "X-Admin-Password": adminPassword() },
+        });
+        const data = await res.json();
+        if(!data.success){ pmSetError(data.message || "Gagal menghapus."); }
+        else{
+          PM_PRODUCTS = PM_PRODUCTS.filter(p=>p.id!==id);
+          pmRenderTable();
+        }
+      }catch(err){ pmSetError("Tidak bisa menghubungi server."); }
+    }
+  });
+
+  document.getElementById("pmAddBtn").addEventListener("click", ()=>{
+    const form = document.getElementById("pmAddForm");
+    form.style.display = form.style.display === "none" ? "grid" : "none";
+  });
+  document.getElementById("pmCancelNewBtn").addEventListener("click", ()=>{
+    document.getElementById("pmAddForm").style.display = "none";
+    pmSetError("");
+  });
+  document.getElementById("pmSaveNewBtn").addEventListener("click", async ()=>{
+    pmSetError("");
+    const id = document.getElementById("pmNewId").value.trim();
+    const game = document.getElementById("pmNewGame").value;
+    const title = document.getElementById("pmNewTitle").value.trim();
+    const bonus = document.getElementById("pmNewBonus").value.trim();
+    const price = document.getElementById("pmNewPrice").value;
+    if(!id || !title || !price){ pmSetError("ID, nama item, dan harga wajib diisi."); return; }
+
+    try{
+      const res = await fetch("/api/admin/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Admin-Password": adminPassword() },
+        body: JSON.stringify({ id, game, title, bonus, price }),
+      });
+      const data = await res.json();
+      if(!data.success){ pmSetError(data.message || "Gagal menambah produk."); return; }
+      PM_PRODUCTS.push(data.product);
+      pmRenderTable();
+      ["pmNewId","pmNewTitle","pmNewBonus","pmNewPrice"].forEach(id=>document.getElementById(id).value="");
+      document.getElementById("pmAddForm").style.display = "none";
+    }catch(err){ pmSetError("Tidak bisa menghubungi server."); }
+  });
+
+  document.getElementById("pmResetBtn").addEventListener("click", async ()=>{
+    if(!confirm("Kembalikan seluruh katalog produk ke harga & daftar default? Perubahan yang sudah dibuat akan hilang.")) return;
+    try{
+      const res = await fetch("/api/admin/products/reset", { method:"POST", headers:{ "X-Admin-Password": adminPassword() } });
+      const data = await res.json();
+      if(data.success){ pmRender(); }
+    }catch(err){ pmSetError("Tidak bisa menghubungi server."); }
+  });
+
+  // auto refresh tiap 8 detik supaya transaksi baru dari toko langsung kelihatan
+  let autoRefresh = null;
+  function startAutoRefresh(){
+    clearInterval(autoRefresh);
+    autoRefresh = setInterval(render, 8000);
+  }
+
+  // ---- gate ----
+  async function tryLogin(){
+    const val = document.getElementById("pwInput").value;
+    const res = await fetch("/api/admin/verify", {
+      method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ password: val })
+    });
+    const data = await res.json();
+    if(data.success){
+      sessionStorage.setItem("syanastore_admin_pw", val);
+      document.getElementById("gate").style.display = "none";
+      document.getElementById("app").style.display = "block";
+      render();
+      pmRender();
+      startAutoRefresh();
+    } else {
+      document.getElementById("gateError").textContent = "Password salah, coba lagi.";
+    }
+  }
+  function doLogout(){
+    sessionStorage.removeItem("syanastore_admin_pw");
+    clearInterval(autoRefresh);
+    document.getElementById("app").style.display = "none";
+    document.getElementById("gate").style.display = "flex";
+    document.getElementById("pwInput").value = "";
+  }
+  document.getElementById("loginBtn").addEventListener("click", tryLogin);
+  document.getElementById("pwInput").addEventListener("keydown", e=>{ if(e.key==="Enter") tryLogin(); });
+  document.getElementById("logoutBtn").addEventListener("click", doLogout);
+
+  if(sessionStorage.getItem("syanastore_admin_pw")){
+    document.getElementById("gate").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    render();
+    pmRender();
+    startAutoRefresh();
+  }
+</script>
+</body>
+</html>
