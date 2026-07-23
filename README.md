@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # SYANASTORE — Backend Toko Top Up dengan QRIS Otomatis (Tripay)
 
 Backend ini menghubungkan toko top up SYANASTORE ke pembayaran **QRIS asli** lewat
@@ -141,3 +142,6 @@ syanastore-backend/
   (https://tripay.co.id/developer) dan sesuaikan.
 - **Jangan upload file `.env` ke GitHub / tempat publik** — isinya kredensial
   yang bisa dipakai orang lain untuk membuat transaksi atas nama tokomu.
+=======
+# syanastore
+>>>>>>> ed28f8bda57d241476e8c9c79411cb9ceb4a7e8f

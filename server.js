@@ -283,7 +283,7 @@ app.post("/api/admin/verify", (req, res) => {
   const config = db.getConfig();
   let adminPassword = process.env.ADMIN_PASSWORD;
   if(!adminPassword || adminPassword === "ganti_password_ini"){
-    adminPassword = config.adminPassword || "admin123";
+    adminPassword = config.adminPassword || "syanastore2026";
   }
   res.json({ success: password === adminPassword });
 });
@@ -292,7 +292,7 @@ function requireAdmin(req, res, next){
   const config = db.getConfig();
   let adminPassword = process.env.ADMIN_PASSWORD;
   if(!adminPassword || adminPassword === "ganti_password_ini"){
-    adminPassword = config.adminPassword || "admin123";
+    adminPassword = config.adminPassword || "syanastore2026";
   }
 
   if(req.headers["x-admin-password"] !== adminPassword){

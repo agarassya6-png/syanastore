@@ -16,7 +16,7 @@ const DEFAULT_CONFIG = {
   tagline: "Lightning Fast Trusted Service",
   wa: "62895423096125",
   instagram: "syanastore.id",
-  adminPassword: "admin123"
+  adminPassword: "syanastore2026"
 };
 
 function ensureFile(){
