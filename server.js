@@ -77,7 +77,9 @@ app.get("/api/catalog", (req, res) => {
 
 // ---------- PUBLIK: customer testimonials ----------
 app.get("/api/testimonials", (req, res) => {
-  const testimonialsPath = path.join(__dirname, "data", "testimonials.json");
+  const testimonialsPath = process.env.VERCEL
+    ? path.join("/tmp", "data", "testimonials.json")
+    : path.join(__dirname, "data", "testimonials.json");
   const DEFAULT_TESTIMONIALS = [
     {name:'Aditya P.', game:'Mobile Legends', text:'Diamond masuk kurang dari 3 menit, mantap!', rating:5},
     {name:'Nabila R.', game:'Free Fire', text:'Harga paling bersahabat dibanding tempat lain.', rating:5},
@@ -363,7 +365,9 @@ app.post("/api/admin/upload-qris", requireAdmin, (req, res) => {
   const ext = match[1] === "jpeg" ? "jpg" : match[1];
   const buf = Buffer.from(match[2], "base64");
 
-  const imgDir = path.join(__dirname, "public", "images");
+  const imgDir = process.env.VERCEL
+    ? path.join("/tmp", "public", "images")
+    : path.join(__dirname, "public", "images");
   if(!fs.existsSync(imgDir)) fs.mkdirSync(imgDir, { recursive: true });
 
   // Simpan sebagai qris.png (selalu overwrite)
@@ -376,15 +380,34 @@ app.post("/api/admin/upload-qris", requireAdmin, (req, res) => {
 
 // ---------- ADMIN: cek apakah QRIS sudah diupload ----------
 app.get("/api/admin/qris-status", (req, res) => {
-  const qrisPath = path.join(__dirname, "public", "images", "qris.png");
-  res.json({ success:true, exists: fs.existsSync(qrisPath) });
+  const dynamicQrisPath = path.join(process.env.VERCEL ? "/tmp" : __dirname, "public", "images", "qris.png");
+  const staticQrisPath = path.join(__dirname, "public", "images", "qris.png");
+  const exists = fs.existsSync(dynamicQrisPath) || fs.existsSync(staticQrisPath);
+  res.json({ success:true, exists });
+});
+
+// ---------- Serve dynamic QRIS image if stored in /tmp ----------
+app.get("/images/qris.png", (req, res) => {
+  const dynamicQrisPath = path.join(process.env.VERCEL ? "/tmp" : __dirname, "public", "images", "qris.png");
+  if (fs.existsSync(dynamicQrisPath)) {
+    return res.sendFile(dynamicQrisPath);
+  }
+  const staticQrisPath = path.join(__dirname, "public", "images", "qris.png");
+  if (fs.existsSync(staticQrisPath)) {
+    return res.sendFile(staticQrisPath);
+  }
+  res.status(404).send("QRIS not found");
 });
 
 // ---------- Serve frontend statis ----------
 app.use(express.static(path.join(__dirname, "public")));
 
-app.listen(PORT, () => {
-  console.log(`SYANASTORE backend jalan di http://localhost:${PORT}`);
-  console.log(`Mode Tripay: ${process.env.TRIPAY_MODE || "(belum diset, default sandbox)"}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`SYANASTORE backend jalan di http://localhost:${PORT}`);
+    console.log(`Mode Tripay: ${process.env.TRIPAY_MODE || "(belum diset, default sandbox)"}`);
+  });
+}
+
+module.exports = app;
 

@@ -9,7 +9,9 @@ const fs = require("fs");
 const path = require("path");
 const { GAMES, DEFAULT_PRODUCTS, gameName } = require("./products");
 
-const DATA_DIR = path.join(__dirname, "data");
+const DATA_DIR = process.env.VERCEL
+  ? path.join("/tmp", "data")
+  : path.join(__dirname, "data");
 const DATA_FILE = path.join(DATA_DIR, "products.json");
 
 function ensureFile(){

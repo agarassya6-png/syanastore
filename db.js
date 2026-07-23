@@ -5,7 +5,9 @@
 const fs = require("fs");
 const path = require("path");
 
-const DATA_DIR = path.join(__dirname, "data");
+const DATA_DIR = process.env.VERCEL
+  ? path.join("/tmp", "data")
+  : path.join(__dirname, "data");
 const DATA_FILE = path.join(DATA_DIR, "sales.json");
 const CONFIG_FILE = path.join(DATA_DIR, "config.json");
 
