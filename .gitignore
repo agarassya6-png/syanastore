@@ -22,3 +22,5 @@ Thumbs.db
 # App dynamic runtime data
 data/
 public/images/qris.png
+.vercel
+.env*

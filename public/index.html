@@ -498,13 +498,14 @@ nav.main-nav a:hover::after { width: 100%; }
   padding: 8px 18px; border-radius: 99px;
   border: 1px solid var(--line); font-size: 13px; font-weight: 600;
   color: var(--muted); background: rgba(255,255,255,0.02);
-  cursor: pointer; transition: all 0.2s ease;
+  cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.pill:hover { color: var(--text); border-color: rgba(123,92,240,0.35); background: rgba(123,92,240,0.05); }
+.pill:hover { color: var(--text); border-color: rgba(0,229,204,0.4); background: rgba(0,229,204,0.06); transform: translateY(-1px); }
 .pill.active {
-  background: rgba(123,92,240,0.15);
-  color: var(--violet-light);
-  border-color: rgba(123,92,240,0.4);
+  background: linear-gradient(135deg, rgba(123,92,240,0.2) 0%, rgba(0,229,204,0.15) 100%);
+  color: var(--teal);
+  border-color: rgba(0,229,204,0.5);
+  box-shadow: 0 0 16px rgba(0,229,204,0.15);
 }
 
 /* ============================
@@ -513,13 +514,14 @@ nav.main-nav a:hover::after { width: 100%; }
 .game-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 22px;
 }
 .game-card {
   background: var(--glass);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 22px;
   overflow: hidden;
   cursor: pointer;
   display: flex; flex-direction: column;
@@ -537,39 +539,44 @@ nav.main-nav a:hover::after { width: 100%; }
   opacity: 0; transition: opacity 0.3s ease;
 }
 .game-card:hover {
-  transform: translateY(-8px) scale(1.01);
-  border-color: rgba(var(--accent-rgb, 123, 92, 240), 0.45);
-  box-shadow: 0 20px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(var(--accent-rgb, 123, 92, 240), 0.15);
+  transform: translateY(-8px) scale(1.015);
+  border-color: rgba(0, 229, 204, 0.5);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.5), 0 0 24px rgba(0, 229, 204, 0.15);
 }
 .game-card:hover::before { opacity: 1; }
 
 .game-card-img-wrapper {
   width: 100%; aspect-ratio: 3/4;
   overflow: hidden; background: var(--surface2);
+  position: relative;
 }
 .game-card-img {
   width: 100%; height: 100%; object-fit: cover;
   transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-.game-card:hover .game-card-img { transform: scale(1.1); }
+.game-card:hover .game-card-img { transform: scale(1.08); }
 
 .game-card-body {
-  padding: 18px;
+  padding: 18px 20px;
   background: linear-gradient(180deg, var(--surface) 0%, var(--surface2) 100%);
   border-top: 1px solid var(--line2);
   flex-grow: 1;
   display: flex; flex-direction: column; gap: 4px;
 }
-.game-card h4 { font-size: 14.5px; font-weight: 700; color: var(--text); }
+.game-card h4 { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; }
 .game-card p { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
 .game-card .btn {
   margin-top: auto; width: 100%; justify-content: center;
-  font-size: 13px; font-weight: 700; padding: 10px;
+  font-size: 13px; font-weight: 700; padding: 11px;
   border-radius: var(--radius-sm);
   background: var(--grad-violet); color: #fff;
   box-shadow: 0 4px 14px rgba(123,92,240,0.3);
+  transition: all 0.25s ease;
 }
-.game-card .btn:hover { box-shadow: 0 8px 24px rgba(123,92,240,0.45); }
+.game-card:hover .btn {
+  background: var(--grad-primary);
+  box-shadow: 0 8px 24px rgba(0,229,204,0.4);
+}
 
 /* ============================
    FEATURES STRIP
@@ -579,7 +586,7 @@ nav.main-nav a:hover::after { width: 100%; }
   backdrop-filter: blur(20px);
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  padding: 32px 28px;
+  padding: 36px 28px;
   margin: 0;
 }
 .features-inner {
@@ -591,16 +598,18 @@ nav.main-nav a:hover::after { width: 100%; }
   display: flex; align-items: flex-start; gap: 16px;
 }
 .feature-icon {
-  width: 44px; height: 44px; border-radius: 12px;
+  width: 48px; height: 48px; border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 20px; flex-shrink: 0;
+  font-size: 22px; flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
 }
-.feature-icon.violet { background: rgba(123,92,240,0.1); border: 1px solid rgba(123,92,240,0.2); }
-.feature-icon.teal { background: rgba(0,229,204,0.08); border: 1px solid rgba(0,229,204,0.2); }
-.feature-icon.gold { background: rgba(255,184,0,0.08); border: 1px solid rgba(255,184,0,0.2); }
-.feature-icon.pink { background: rgba(255,77,141,0.08); border: 1px solid rgba(255,77,141,0.2); }
-.feature-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.feature-icon.violet { background: rgba(123,92,240,0.12); border: 1px solid rgba(123,92,240,0.25); color: var(--violet-light); }
+.feature-icon.teal { background: rgba(0,229,204,0.1); border: 1px solid rgba(0,229,204,0.25); color: var(--teal); }
+.feature-icon.gold { background: rgba(255,184,0,0.1); border: 1px solid rgba(255,184,0,0.25); color: var(--gold); }
+.feature-icon.pink { background: rgba(255,77,141,0.1); border: 1px solid rgba(255,77,141,0.25); color: var(--pink); }
+.feature-title { font-size: 14.5px; font-weight: 700; margin-bottom: 2px; }
 .feature-desc { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+
 
 /* ============================
    TESTIMONIALS
@@ -939,35 +948,39 @@ footer {
 }
 .product-card {
   background: var(--glass);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--line);
-  border-radius: 16px; padding: 18px;
-  cursor: pointer; transition: all 0.25s ease;
+  border-radius: 18px; padding: 20px 18px;
+  cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative; overflow: hidden;
   display: flex; flex-direction: column; justify-content: space-between;
-  min-height: 95px;
+  min-height: 98px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
 }
 .product-card::before {
   content: ''; position: absolute;
-  top: 0; left: 0; right: 0; height: 2px;
-  background: var(--grad-teal); opacity: 0;
-  transition: opacity 0.2s;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: var(--grad-primary); opacity: 0;
+  transition: opacity 0.25s;
 }
-.product-card:hover { border-color: rgba(0,229,204,0.3); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,229,204,0.1); }
-.product-card:hover::before { opacity: 1; }
+.product-card:hover { border-color: rgba(0,229,204,0.4); transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,229,204,0.15); }
+.product-card:hover::before { opacity: 0.8; }
 .product-card.selected {
-  border-color: var(--violet);
-  background: rgba(123,92,240,0.1);
-  box-shadow: 0 0 0 1px rgba(123,92,240,0.3), 0 8px 24px rgba(123,92,240,0.15);
+  border-color: var(--teal);
+  background: linear-gradient(145deg, rgba(123,92,240,0.14) 0%, rgba(0,229,204,0.12) 100%);
+  box-shadow: 0 0 0 1px rgba(0,229,204,0.4), 0 10px 30px rgba(0,229,204,0.2);
+  transform: translateY(-2px);
 }
-.product-card.selected::before { background: var(--grad-violet); opacity: 1; }
+.product-card.selected::before { opacity: 1; }
 .product-card h4 {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 13.5px; font-weight: 700; color: var(--text); margin-bottom: 10px;
+  font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px;
+  letter-spacing: -0.2px;
 }
 .product-card .price {
   font-family: 'JetBrains Mono', monospace;
-  color: var(--teal); font-weight: 700; font-size: 15px;
+  color: var(--teal); font-weight: 800; font-size: 15.5px;
 }
 .check-badge {
   position: absolute; top: 12px; right: 12px;
@@ -1207,21 +1220,28 @@ tr:hover td { background: rgba(255,255,255,0.01); }
   .stat-cards { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
-  .hero-inner { grid-template-columns: 1fr; }
+  .hero-inner { grid-template-columns: 1fr; gap: 40px; }
   .hero h1 { font-size: 34px; }
   .hero-visual { display: none; }
-  .game-grid { grid-template-columns: repeat(2, 1fr); }
-  .product-grid { grid-template-columns: repeat(2, 1fr); }
+  .game-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .form-block { grid-template-columns: 1fr; }
   nav.main-nav { display: none; }
   .admin-side { display: none; }
-  .admin-main { padding: 24px 20px; }
+  .admin-main { padding: 20px 16px; }
   .testi-grid { grid-template-columns: 1fr; }
   .features-inner { grid-template-columns: 1fr; }
+  .modal { padding: 20px 16px !important; max-height: 90vh; overflow-y: auto; }
+  .taka-grid-resp { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .sticky-buy { padding: 14px 20px; }
+  .toast { bottom: 20px; right: 20px; left: 20px; max-width: none; }
 }
 @media (max-width: 480px) {
-  .game-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .hero h1 { font-size: 28px; }
+  .game-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .hero h1 { font-size: 26px; }
+  .hero-stats { gap: 20px; }
+  .hero-stat-value { font-size: 22px; }
+  .pill { padding: 6px 14px; font-size: 12px; }
 }
 </style>
 </head>
@@ -1302,6 +1322,25 @@ let state = {
 
 let qrTimerInterval = null;
 let statusPollInterval = null;
+let adminRefreshInterval = null; // auto-refresh dashboard admin
+
+function startAdminAutoRefresh() {
+  stopAdminAutoRefresh();
+  // Refresh data transaksi setiap 20 detik agar data pembeli selalu terbaru
+  adminRefreshInterval = setInterval(async () => {
+    if (!state.isAdmin) { stopAdminAutoRefresh(); return; }
+    const prevCount = state.transactions ? state.transactions.length : -1;
+    await loadTransactions();
+    // Jika ada transaksi baru masuk, render ulang supaya langsung kelihatan
+    if (state.transactions && state.transactions.length !== prevCount) {
+      render();
+    }
+  }, 20000);
+}
+
+function stopAdminAutoRefresh() {
+  if (adminRefreshInterval) { clearInterval(adminRefreshInterval); adminRefreshInterval = null; }
+}
 
 async function loadAll(){
   try{
@@ -1337,6 +1376,7 @@ async function loadAll(){
         state.adminPass = storedPass;
         state.isAdmin = true;
         await loadTransactions();
+        startAdminAutoRefresh();
       } else {
         sessionStorage.removeItem("syanastore_admin_pw");
       }
@@ -1358,9 +1398,24 @@ async function loadTransactions(){
   if(!state.isAdmin) return;
   try{
     const r = await fetch('/api/sales', { headers: { 'X-Admin-Password': state.adminPass } });
+    if(r.status === 401) {
+      // Sesi admin habis
+      console.warn('[Admin] Sesi habis, logout otomatis');
+      sessionStorage.removeItem("syanastore_admin_pw");
+      state.isAdmin = false; state.adminPass = '';
+      stopAdminAutoRefresh();
+      render();
+      return;
+    }
     const d = await r.json();
-    if(d.success) state.transactions = d.sales;
-  } catch(e){}
+    if(d.success) {
+      state.transactions = d.sales;
+    } else {
+      console.warn('[Admin] loadTransactions gagal:', d.message);
+    }
+  } catch(e){
+    console.error('[Admin] loadTransactions error:', e.message);
+  }
 }
 
 function fmtRupiah(n){ return 'Rp' + Number(n).toLocaleString('id-ID'); }
@@ -1820,10 +1875,24 @@ function renderGameDetail(gameId){
     <div class="field">
       <label>${isRoblox ? 'Username Roblox' : 'ID Pengguna / User ID'}</label>
       <input id="userIdInput" placeholder="${isRoblox ? 'Masukkan Username Roblox kamu' : 'Masukkan User ID kamu'}" autocomplete="off" />
+      <div id="playerNameBadge" style="display:none;margin-top:8px;padding:8px 12px;border-radius:10px;font-size:13px;font-weight:600;background:rgba(0,229,204,0.10);border:1px solid rgba(0,229,204,0.30);color:var(--teal, #00E5CC);transition:all 0.3s"></div>
     </div>
     <div class="field">
       <label>${isRoblox ? 'Password Roblox' : 'Server ID <span style="font-weight:400;text-transform:none;letter-spacing:0">(opsional)</span>'}</label>
       <input id="serverIdInput" type="${isRoblox ? 'text' : 'text'}" placeholder="${isRoblox ? 'Masukkan Password Roblox kamu' : 'Contoh: 2001'}" autocomplete="off" />
+    </div>
+    <div class="field" style="grid-column: 1 / -1">
+      <label>Nama Akun / Nickname Game
+        <span style="font-weight:400;text-transform:none;letter-spacing:0;opacity:0.7">
+          ${isRoblox ? '(sama dengan Username Roblox di atas)' : '(isi sesuai nama di game kamu)'}
+        </span>
+      </label>
+      <input id="usernameInput" placeholder="${
+        isRoblox ? 'Terisi otomatis dari Username Roblox' :
+        gameId === 'ff' ? 'Contoh: BTR.Zuxxy' :
+        gameId === 'ml' ? 'Contoh: SpiderSyaa | Bayar | X.X.X' :
+        'Ketik nama akun in-game kamu'
+      }" autocomplete="off" />
     </div>
   </div>
   <div class="form-block" style="grid-template-columns: 1fr; margin-bottom: 32px;">
@@ -1833,93 +1902,267 @@ function renderGameDetail(gameId){
     </div>
   </div>
   <div class="product-grid" id="productGrid">
-    ${game.products ? game.products.map(p=>`
-      <div class="product-card" data-pid="${p.id}" role="button" tabindex="0" aria-label="${p.name} seharga ${fmtRupiah(p.price)}">
+    ${game.products ? game.products.map(p => {
+      const isSel = state.selectedProduct && state.selectedProduct.prod && state.selectedProduct.prod.id === p.id;
+      return `
+      <div class="product-card ${isSel ? 'selected' : ''}" data-pid="${p.id}" role="button" tabindex="0" aria-label="${p.name} seharga ${fmtRupiah(p.price)}">
         <div class="check-badge">✓</div>
         <h4>${p.name}</h4>
         <div class="price">${fmtRupiah(p.price)}</div>
-      </div>`).join('') : '<div class="empty">Belum ada produk.</div>'}
+      </div>`;
+    }).join('') : '<div class="empty">Belum ada produk.</div>'}
   </div>
   <div class="sticky-buy">
     <div>
       <div class="sticky-total-label">Total Pembayaran</div>
-      <div class="sticky-total-value" id="totalDisplay">${fmtRupiah(0)}</div>
+      <div class="sticky-total-value" id="totalDisplay">${fmtRupiah(state.selectedProduct && state.selectedProduct.prod ? state.selectedProduct.prod.price : 0)}</div>
     </div>
     <button class="btn btn-primary btn-lg" id="buyBtn">Bayar dengan QRIS ⚡</button>
   </div>`;
 }
 
 /* ===================== CHECKOUT MODAL ===================== */
+function copyToClipboard(text, label) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(String(text)).then(() => {
+      showToast((label || 'Teks') + ' berhasil disalin!');
+    }).catch(() => {
+      showToast('Gagal menyalin', true);
+    });
+  } else {
+    showToast((label || 'Teks') + ': ' + text);
+  }
+}
+
+function downloadQrCode() {
+  const canvas = document.querySelector('#qrcodeCanvas canvas') || document.querySelector('#qrcodeCanvas img');
+  if (canvas) {
+    const url = canvas.src || (canvas.toDataURL ? canvas.toDataURL('image/png') : null);
+    if (url) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `QRIS-${state.checkoutData.orderId || 'SyanaStore'}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast('Kode QR berhasil diunduh!', false);
+      return;
+    }
+  }
+  showToast('Gagal mengunduh Kode QR. Silakan screenshot QR ini.', true);
+}
+
 function renderCheckoutModal(){
   if(state.checkoutStep === 'form'){
     const isRoblox = state.checkoutData.gameName.toLowerCase().includes('roblox');
     return `
     <div class="overlay" id="checkoutOverlay">
-      <div class="modal">
-        <h3>Konfirmasi Pesanan</h3>
-        <p class="sub">Periksa kembali detail pesananmu sebelum melanjutkan.</p>
-        <div class="order-detail">
-          <div class="order-row"><span>Produk</span><b>${state.checkoutData.productName}</b></div>
-          <div class="order-row"><span>Game</span><b>${state.checkoutData.gameName}</b></div>
-          <div class="order-row"><span>${isRoblox ? 'Username' : 'User ID'}</span><b>${state.checkoutData.userId || '-'}</b></div>
-          <div class="order-row"><span>${isRoblox ? 'Password' : 'Server ID'}</span><b>${state.checkoutData.server || '-'}</b></div>
-          <div class="order-row"><span>No. WhatsApp</span><b>${state.checkoutData.whatsapp || '-'}</b></div>
-          <div class="order-row total"><span>Total</span><b>${fmtRupiah(state.checkoutData.price)}</b></div>
+      <div class="modal" style="max-width:480px;width:100%;background:#1C1E2B;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:32px 28px;text-align:center">
+        
+        <!-- Takapedia Green Check Badge -->
+        <div style="width:64px;height:64px;border-radius:50%;background:#00C853;color:#FFF;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px;box-shadow:0 0 30px rgba(0,200,83,0.4)">
+          ✓
         </div>
-        <button class="btn btn-primary btn-block btn-lg" id="genQrBtn">⚡ Buat QRIS Sekarang</button>
-        <button class="btn btn-ghost btn-block" style="margin-top:10px" id="cancelCheckoutBtn">Batal</button>
+
+        <h3 style="font-size:22px;font-weight:800;color:#FFF;margin-bottom:6px">Buat Pesanan</h3>
+        <p style="color:#A0A6C0;font-size:13px;line-height:1.5;margin-bottom:20px">Pastikan data akun Kamu dan produk yang Kamu pilih valid dan sesuai.</p>
+
+        <!-- Takapedia Dark Table Panel -->
+        <div style="background:#141520;border-radius:16px;padding:16px 20px;margin-bottom:20px;text-align:left">
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13.5px">
+            <span style="color:#8F95B2">Username</span>
+            <b style="color:#FFF;font-weight:700">${state.checkoutData.playerName || state.checkoutData.userId || '-'}</b>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13.5px">
+            <span style="color:#8F95B2">ID</span>
+            <b style="color:#FFF;font-weight:700">${state.checkoutData.userId || '-'}</b>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13.5px">
+            <span style="color:#8F95B2">${isRoblox ? 'Password' : 'Server'}</span>
+            <b style="color:#FFF;font-weight:700">${state.checkoutData.server || '-'}</b>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13.5px">
+            <span style="color:#8F95B2">Item</span>
+            <b style="color:#FFF;font-weight:700">${state.checkoutData.productName}</b>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13.5px">
+            <span style="color:#8F95B2">Product</span>
+            <b style="color:#FFF;font-weight:700">${state.checkoutData.gameName}</b>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;font-size:13.5px">
+            <span style="color:#8F95B2">Payment</span>
+            <b style="color:#FFF;font-weight:700">QRIS (All Payment Method)</b>
+          </div>
+        </div>
+
+        <!-- Terms Checkbox -->
+        <label style="display:flex;align-items:center;gap:10px;font-size:12px;color:#A0A6C0;margin-bottom:24px;text-align:left;cursor:pointer;line-height:1.4">
+          <input type="checkbox" checked style="width:16px;height:16px;accent-color:#FFE600;flex-shrink:0" />
+          <span>Dengan mengklik <b style="color:#FFF">Pesan Sekarang!</b>, kamu sudah menyetujui <b style="color:#FFE600">Syarat & Ketentuan</b> yang berlaku</span>
+        </label>
+
+        <!-- Takapedia Buttons -->
+        <div style="display:flex;gap:12px">
+          <button class="btn btn-block btn-lg" id="genQrBtn" style="background:#FFE600;color:#000;font-weight:800;border-radius:14px;flex:1.2;font-size:14px">Pesan Sekarang!</button>
+          <button class="btn btn-block btn-lg" id="cancelCheckoutBtn" style="background:#12131C;color:#FFF;font-weight:700;border-radius:14px;flex:0.8;font-size:14px;border:1px solid rgba(255,255,255,0.1)">Batalkan</button>
+        </div>
       </div>
     </div>`;
   }
+
   if(state.checkoutStep === 'qr'){
+    const isRoblox = state.checkoutData.gameName.toLowerCase().includes('roblox');
     return `
     <div class="overlay" id="checkoutOverlay">
-      <div class="modal" style="text-align:center">
-        <span class="status-pill status-pending">⏳ Menunggu Pembayaran</span>
-        <h3 style="margin-top:16px">Scan QRIS untuk Membayar</h3>
-        <p class="sub">Order ID: <span class="mono" style="color:var(--violet-light)">${state.checkoutData.orderId}</span></p>
+      <div class="modal" style="max-width:880px;width:100%;background:#1C1E2B;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:28px">
+        
+        <!-- Timer Badge -->
+        <div style="display:flex;justify-content:flex-start;margin-bottom:20px">
+          <span style="background:#FF4D6D;color:#FFF;font-weight:800;font-size:14px;padding:8px 22px;border-radius:12px;display:inline-flex;align-items:center;gap:8px">
+            <span id="qrTimerDisplay">Batas Pembayaran: 01j 00m 00s</span>
+          </span>
+        </div>
 
-        ${state.checkoutData.isMock ? `
-        <!-- QRIS DINAMIS NAAA STORE -->
-        <div class="qr-container"><div id="qrcodeCanvas"></div></div>
-        <div style="background:rgba(0,229,204,0.08);border:1px solid rgba(0,229,204,0.25);border-radius:14px;padding:16px;margin:0 0 16px">
-          <div style="font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px">Jumlah yang Harus Dibayar</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:800;color:var(--teal)">${fmtRupiah(state.checkoutData.price)}</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">Nominal akan terisi otomatis saat discan</div>
-        </div>
-        ` : `
-        <div class="qr-container"><div id="qrcodeCanvas"></div></div>
-        <div class="order-detail" style="text-align:left;margin-bottom:16px">
-          <div class="order-row total"><span>Total</span><b>${fmtRupiah(state.checkoutData.price)}</b></div>
-        </div>
-        `}
+        <!-- 2 Column Takapedia Grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px" class="taka-grid-resp">
+          
+          <!-- LEFT COLUMN -->
+          <div>
+            <!-- Card 1: Informasi Akun -->
+            <div style="background:#252838;border-radius:18px;padding:20px;margin-bottom:16px">
+              <div style="font-size:14px;font-weight:700;color:#FFF;margin-bottom:14px">Informasi Akun</div>
+              <div style="display:flex;gap:16px;align-items:center">
+                <img src="${state.checkoutData.gameImage || '/images/ml.png'}" style="width:72px;height:94px;object-fit:cover;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.3);flex-shrink:0" />
+                <div style="font-size:13px;color:#A0A6C0;display:flex;flex-direction:column;gap:6px;flex:1">
+                  <div style="color:#FFF;font-weight:800;font-size:15px;margin-bottom:2px">${state.checkoutData.gameName}</div>
+                  <div><span style="display:inline-block;width:70px;color:#8F95B2">Nickname</span> : <b style="color:#FFF">${state.checkoutData.playerName || '-'}</b></div>
+                  <div><span style="display:inline-block;width:70px;color:#8F95B2">ID</span> : <b style="color:#FFF">${state.checkoutData.userId}</b></div>
+                  <div><span style="display:inline-block;width:70px;color:#8F95B2">Server</span> : <b style="color:#FFF">${state.checkoutData.server || '-'}</b></div>
+                </div>
+              </div>
+            </div>
 
-        <div class="countdown-wrap" ${state.checkoutData.isMock ? 'style="margin-bottom:16px"' : ''}>
-          Berlaku selama <span class="countdown-value" id="qrTimerDisplay">60:00</span>
+            <!-- Card 2: Rincian Pembayaran -->
+            <div style="background:#252838;border-radius:18px;padding:20px;margin-bottom:16px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <span style="font-size:14px;font-weight:700;color:#FFF">Rincian Pembayaran</span>
+                <span style="font-size:12px;color:#8F95B2">▼</span>
+              </div>
+              <div style="font-size:13px;color:#A0A6C0;display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;justify-content:space-between"><span>Harga</span><b style="color:#FFF">${fmtRupiah(state.checkoutData.price)}</b></div>
+                <div style="display:flex;justify-content:space-between"><span>Jumlah</span><b style="color:#FFF">1x</b></div>
+                <div style="display:flex;justify-content:space-between"><span>Subtotal</span><b style="color:#FFF">${fmtRupiah(state.checkoutData.price)}</b></div>
+                <div style="display:flex;justify-content:space-between"><span>Biaya</span><b style="color:#FFF">Rp0</b></div>
+              </div>
+            </div>
+
+            <!-- Card 3: Total Pembayaran -->
+            <div style="background:#161722;border:1px solid #FFE600;border-radius:18px;padding:18px 20px;display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:14px;font-weight:700;color:#FFF">Total Pembayaran</span>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:800;color:#FFE600">${fmtRupiah(state.checkoutData.price)}</span>
+                <button onclick="copyToClipboard('${state.checkoutData.price}', 'Total Pembayaran')" style="background:rgba(255,230,0,0.15);border:none;color:#FFE600;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:14px">📋</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN -->
+          <div>
+            <div style="background:#252838;border-radius:18px;padding:22px;height:100%;display:flex;flex-direction:column">
+              
+              <div style="font-size:12px;color:#8F95B2;margin-bottom:2px">Metode Pembayaran</div>
+              <div style="font-size:16px;font-weight:800;color:#FFF;margin-bottom:16px">QRIS (All Payment Method)</div>
+
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <span style="font-size:13px;color:#8F95B2">Nomor Invoice</span>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span class="mono" style="font-size:12.5px;font-weight:700;color:#FFF">${state.checkoutData.orderId}</span>
+                  <button onclick="copyToClipboard('${state.checkoutData.orderId}', 'Nomor Invoice')" style="background:none;border:none;color:#A0A6C0;cursor:pointer">📋</button>
+                </div>
+              </div>
+
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <span style="font-size:13px;color:#8F95B2">Status Pembayaran</span>
+                <span style="background:#FF4D6D;color:#FFF;font-size:11px;font-weight:800;padding:4px 12px;border-radius:6px">UNPAID</span>
+              </div>
+
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <span style="font-size:13px;color:#8F95B2">Status Transaksi</span>
+                <span style="background:#FFC107;color:#000;font-size:11px;font-weight:800;padding:4px 12px;border-radius:6px">PENDING</span>
+              </div>
+
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+                <span style="font-size:13px;color:#8F95B2">Pesan</span>
+                <span style="font-size:12px;color:#FFF;font-weight:600">Your order is being processed. Please wait!</span>
+              </div>
+
+              <!-- Auto-check polling indicator badge -->
+              <div style="display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;color:#00E5CC;margin-bottom:12px;background:rgba(0,229,204,0.08);padding:8px 12px;border-radius:10px;border:1px solid rgba(0,229,204,0.2)">
+                <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#00E5CC;box-shadow:0 0 10px #00E5CC;animation:pulse 1.5s infinite"></span>
+                <span>Pengecekan Pembayaran Otomatis Aktif...</span>
+              </div>
+
+              <!-- QR Code Card -->
+              <div style="background:#FFF;padding:16px;border-radius:16px;display:flex;justify-content:center;margin:4px 0 14px">
+                <div id="qrcodeCanvas"></div>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+                <button class="btn btn-block btn-lg" id="confirmPayBtn" style="background:#FFE600;color:#000;font-weight:800;border-radius:14px;font-size:14px">⚡ Saya Sudah Bayar / Cek Status</button>
+                <button class="btn btn-block btn-lg" onclick="downloadQrCode()" style="background:#141520;color:#FFF;font-weight:700;border-radius:14px;font-size:13px;border:1px solid rgba(255,255,255,0.12)">📥 Unduh Kode QR</button>
+              </div>
+              <div style="font-size:11px;color:#8F95B2;text-align:center;margin-bottom:14px">Screenshot atau unduh QR jika ingin membayar lewat galeri HP.</div>
+
+              <a href="https://wa.me/${state.config ? state.config.wa : '62895423096125'}?text=${encodeURIComponent('Halo CS, saya butuh bantuan untuk pesanan ' + state.checkoutData.orderId)}" target="_blank" class="btn btn-block btn-lg" style="background:#12131C;color:#FFE600;font-weight:800;border-radius:14px;font-size:13px;border:1px solid rgba(255,230,0,0.3);margin-top:auto">💬 Hubungi Admin via WA</a>
+            </div>
+          </div>
+
+
         </div>
-        <button class="btn btn-teal btn-block btn-lg" id="confirmPayBtn">✅ Saya Sudah Bayar</button>
-        <p style="font-size:11.5px;color:var(--muted);margin-top:12px;line-height:1.7">
-          ${state.checkoutData.isMock
-            ? 'Scan QRIS di atas dengan aplikasi e-wallet / m-banking, masukkan nominal <b style="color:var(--teal)">' + fmtRupiah(state.checkoutData.price) + '</b> lalu bayar. Klik tombol di atas setelah selesai.'
-            : 'Buka aplikasi e-wallet atau m-banking kamu, pilih menu QRIS, lalu scan kode di atas untuk membayar.'}
-        </p>
       </div>
     </div>`;
   }
-  if(state.checkoutStep === 'success'){
+
+  if(state.checkoutStep === 'awaiting_confirm'){
     return `
     <div class="overlay" id="checkoutOverlay">
-      <div class="modal" style="text-align:center">
-        <div style="font-size:56px;margin-bottom:8px;animation:modalIn 0.4s ease">🎉</div>
-        <span class="status-pill status-success">✅ Pembayaran Berhasil</span>
-        <h3 style="margin-top:16px">Terima Kasih!</h3>
-        <p class="sub">Pesananmu sedang diproses secara otomatis.</p>
-        <div class="order-detail" style="text-align:left">
-          <div class="order-row"><span>Order ID</span><b class="mono" style="font-size:12px">${state.checkoutData.orderId}</b></div>
-          <div class="order-row"><span>Produk</span><b>${state.checkoutData.productName}</b></div>
-          <div class="order-row total"><span>Total</span><b>${fmtRupiah(state.checkoutData.price)}</b></div>
+      <div class="modal" style="max-width:480px;width:100%;background:#1C1E2B;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:32px 28px;text-align:center">
+        <div style="font-size:48px;margin-bottom:12px;animation:pulse 1.5s infinite">⏳</div>
+        <span style="background:#FFC107;color:#000;font-size:12px;font-weight:800;padding:5px 14px;border-radius:99px">Menunggu Konfirmasi Admin</span>
+        <h3 style="margin-top:16px;color:#FFF;font-size:20px;font-weight:800">Pembayaran Sedang Diverifikasi</h3>
+        <p style="color:#A0A6C0;font-size:13px;line-height:1.6;margin-bottom:20px">Tim kami sedang memverifikasi pembayaranmu.<br>Halaman ini akan otomatis update saat dikonfirmasi.</p>
+        
+        <div style="background:#141520;border-radius:16px;padding:16px 20px;margin-bottom:20px;text-align:left;font-size:13px;color:#A0A6C0">
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span>Order ID</span><b class="mono" style="color:#FFF">${state.checkoutData.orderId}</b></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span>Nickname</span><b style="color:#FFE600">🎮 ${state.checkoutData.playerName || '-'}</b></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span>User ID</span><b style="color:#FFF">${state.checkoutData.userId}</b></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0"><span>Total</span><b style="color:#FFE600">${fmtRupiah(state.checkoutData.price)}</b></div>
         </div>
-        <button class="btn btn-primary btn-block btn-lg" style="margin-top:4px" id="successCloseBtn">Selesai</button>
+
+        <a href="https://wa.me/${state.config ? state.config.wa : '62895423096125'}?text=${encodeURIComponent('Halo CS, saya sudah bayar pesanan ' + (state.checkoutData.orderId||state.checkoutData.merchantRef) + ' sebesar ' + fmtRupiah(state.checkoutData.price) + '. Mohon konfirmasi.')}" target="_blank" class="btn btn-block btn-lg" style="background:#FFE600;color:#000;font-weight:800;border-radius:14px">💬 Hubungi Admin via WA</a>
+        <p style="font-size:11px;color:#8F95B2;margin-top:12px">Halaman ini otomatis refresh setiap 3 detik.</p>
+      </div>
+    </div>`;
+  }
+
+  if(state.checkoutStep === 'success'){
+    const displayName = state.checkoutData.playerName || state.checkoutData.userId;
+    return `
+    <div class="overlay" id="checkoutOverlay">
+      <div class="modal" style="max-width:480px;width:100%;background:#1C1E2B;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:32px 28px;text-align:center">
+        <div style="width:64px;height:64px;border-radius:50%;background:#00C853;color:#FFF;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px;box-shadow:0 0 30px rgba(0,200,83,0.4)">🎉</div>
+        <span style="background:#00C853;color:#FFF;font-size:12px;font-weight:800;padding:5px 14px;border-radius:99px">✅ Pembayaran Berhasil</span>
+        <h3 style="margin-top:16px;color:#FFF;font-size:22px;font-weight:800">Terima Kasih, ${displayName}!</h3>
+        <p style="color:#A0A6C0;font-size:13px;margin-bottom:20px">Pesanan sedang diproses. Diamond/item akan segera masuk ke akunmu.</p>
+
+        <div style="background:#141520;border-radius:16px;padding:16px 20px;margin-bottom:20px;text-align:left;font-size:13px;color:#A0A6C0">
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span>Order ID</span><b class="mono" style="color:#FFF">${state.checkoutData.orderId}</b></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span>Nickname</span><b style="color:#FFE600">🎮 ${displayName}</b></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span>Produk</span><b style="color:#FFF">${state.checkoutData.productName}</b></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0"><span>Total</span><b style="color:#FFE600">${fmtRupiah(state.checkoutData.price)}</b></div>
+        </div>
+
+        <button class="btn btn-block btn-lg" id="successCloseBtn" style="background:#FFE600;color:#000;font-weight:800;border-radius:14px">Selesai</button>
       </div>
     </div>`;
   }
@@ -2004,7 +2247,10 @@ function renderAdmin(){
     body = `<div class="panel">
       <div class="panel-header">
         <h3>🧾 Semua Transaksi (${state.transactions.length})</h3>
-        <button class="btn btn-danger btn-sm" id="resetSalesBtn">🗑 Kosongkan Riwayat</button>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-ghost btn-sm" id="refreshSalesBtn">🔄 Refresh</button>
+          <button class="btn btn-danger btn-sm" id="resetSalesBtn">🗑 Kosongkan Riwayat</button>
+        </div>
       </div>
       ${renderTxTable([...state.transactions].reverse())}
     </div>`;
@@ -2126,16 +2372,20 @@ function renderTxTable(list){
   return `<div style="overflow-x:auto"><table>
     <tr><th>Order ID</th><th>User ID / Username</th><th>Server / Password</th><th>No. WA</th><th>Game</th><th>Produk</th><th>Total</th><th>Waktu</th><th>Status</th><th>Aksi</th></tr>
     ${list.map(t=>{
-      const isPending = t.status === 'Menunggu Pembayaran';
+      const isPending = t.status === 'Menunggu Pembayaran' || t.status === 'Menunggu Konfirmasi Admin';
+      const isAwaitingAdmin = t.status === 'Menunggu Konfirmasi Admin';
       const statusClass = t.status === 'Lunas' ? 'success' : (t.status === 'Batal' || t.status === 'Kadaluarsa' || t.status === 'Gagal' ? 'failed' : 'pending');
       const isRoblox = (t.game || '').toLowerCase().includes('roblox');
       return `
-      <tr>
+      <tr ${isAwaitingAdmin ? 'style="background:rgba(255,176,0,0.06)"' : ''}>
         <td class="mono" style="font-size:12px">${t.reference || t.orderId || '-'}</td>
         <td>
           <div style="display:flex;align-items:center;gap:8px">
             <span style="width:28px;height:28px;border-radius:8px;background:rgba(123,92,240,0.12);border:1px solid rgba(123,92,240,0.2);display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">👤</span>
-            <span class="mono" style="font-size:13px;font-weight:600;color:var(--text)" title="${isRoblox ? 'Roblox Username' : 'User ID'}">${t.buyerId || t.buyer || '-'}</span>
+            <div style="display:flex;flex-direction:column">
+              <span class="mono" style="font-size:13px;font-weight:600;color:var(--text)" title="${isRoblox ? 'Roblox Username' : 'User ID'}">${t.buyerId || t.buyer || '-'}</span>
+              ${t.buyerNick && t.buyerNick !== t.buyerId ? `<span style="font-size:11.5px;color:var(--teal);font-weight:600;margin-top:1px">🎮 ${t.buyerNick}</span>` : ''}
+            </div>
           </div>
         </td>
         <td>
@@ -2150,15 +2400,19 @@ function renderTxTable(list){
         <td>${t.item || t.productName || '-'}</td>
         <td class="mono">${fmtRupiah(t.price)}</td>
         <td style="white-space:nowrap">${fmtTime(t.createdAt || t.time)}</td>
-        <td><span class="status-pill status-${statusClass}">${t.status}</span></td>
+        <td>
+          ${isAwaitingAdmin 
+            ? `<span class="status-pill" style="background:#FFF3D6;color:#B76E00;border:1px solid #FFE099;font-weight:700">⚠️ Lapor Bayar</span>` 
+            : `<span class="status-pill status-${statusClass}">${t.status}</span>`}
+        </td>
         <td>
           ${isPending ? `
           <div style="display:flex;gap:6px;flex-wrap:nowrap">
-            <button class="btn btn-teal btn-sm" style="font-size:11px;padding:6px 10px;white-space:nowrap" data-confirm-tx="${t.merchantRef}">✅ Lunas</button>
+            <button class="btn btn-teal btn-sm" style="font-size:11px;padding:6px 10px;white-space:nowrap;font-weight:700" data-confirm-tx="${t.merchantRef}">✅ Lunas</button>
             <button class="btn btn-danger btn-sm" style="font-size:11px;padding:6px 10px;white-space:nowrap" data-cancel-tx="${t.merchantRef}">❌ Batal</button>
           </div>` : `<span style="font-size:12px;color:var(--muted2)">—</span>`}
         </td>
-      </tr>`;
+        </tr>`;
     }).join('')}
   </table></div>`;
 }
@@ -2193,7 +2447,6 @@ function attachEvents(){
   }
 
   // Product select
-  let selectedProduct = null;
   document.querySelectorAll('.product-card').forEach(el=>{
     el.onclick = ()=>{
       document.querySelectorAll('.product-card').forEach(c=>c.classList.remove('selected'));
@@ -2203,21 +2456,182 @@ function attachEvents(){
       if(!game) return;
       const prod = game.products.find(p=>p.id===el.dataset.pid);
       if(!prod) return;
-      selectedProduct = {game, prod};
-      document.getElementById('totalDisplay').textContent = fmtRupiah(prod.price);
+      state.selectedProduct = {game, prod};
+      const totalDisplay = document.getElementById('totalDisplay');
+      if (totalDisplay) totalDisplay.textContent = fmtRupiah(prod.price);
     };
   });
+
+  // === PLAYER NAME LOOKUP (debounced) ===
+  const userIdInput = document.getElementById('userIdInput');
+  const serverIdInput = document.getElementById('serverIdInput');
+  const playerNameBadge = document.getElementById('playerNameBadge');
+  let lookupDebounce = null;
+
+  function showPlayerBadge(msg, isOk) {
+    if (!playerNameBadge) return;
+    playerNameBadge.style.display = 'block';
+    if (isOk === 'info') {
+      // Informasional — amber / oranye untuk isi manual
+      playerNameBadge.style.background  = 'rgba(255,180,60,0.10)';
+      playerNameBadge.style.borderColor = 'rgba(255,180,60,0.40)';
+      playerNameBadge.style.color       = '#FFB43C';
+    } else if (isOk) {
+      playerNameBadge.style.background  = 'rgba(0,229,204,0.10)';
+      playerNameBadge.style.borderColor = 'rgba(0,229,204,0.35)';
+      playerNameBadge.style.color       = 'var(--teal, #00E5CC)';
+    } else {
+      playerNameBadge.style.background  = 'rgba(226,61,100,0.10)';
+      playerNameBadge.style.borderColor = 'rgba(226,61,100,0.35)';
+      playerNameBadge.style.color       = '#E23D64';
+    }
+    playerNameBadge.innerHTML = msg;
+  }
+
+  async function triggerPlayerLookup() {
+    if (!userIdInput || !playerNameBadge) return;
+    const gameId = location.hash.replace('#/game/', '');
+    if (!gameId || gameId === '#/') return;
+    const uid = userIdInput.value.trim();
+    const sid = serverIdInput ? serverIdInput.value.trim() : '';
+    if (!uid || uid.length < 3) { playerNameBadge.style.display = 'none'; return; }
+
+    // ── ROBLOX: username yang diketik = nama akun, langsung isi tanpa API call ──
+    if (gameId === 'roblox') {
+      const unameInput = document.getElementById('usernameInput');
+      // Auto-fill nama sama dengan username
+      showPlayerBadge(`✅ Nama Akun: <b>${uid}</b>`, true);
+      state._playerName = uid;
+      if (unameInput) {
+        unameInput.value = uid;
+        unameInput.style.borderColor = 'rgba(0, 229, 204, 0.5)';
+        unameInput.readOnly = false;
+      }
+      return;
+    }
+
+    playerNameBadge.style.display = 'block';
+    playerNameBadge.style.background = 'rgba(110,122,176,0.08)';
+    playerNameBadge.style.borderColor = 'rgba(110,122,176,0.2)';
+    playerNameBadge.style.color = 'var(--muted)';
+    playerNameBadge.innerHTML = '🔍 Mencari nama akun…';
+
+    const unameInput = document.getElementById('usernameInput');
+    if (unameInput && !unameInput.value) {
+      unameInput.placeholder = '🔍 Mengambil nama akun...';
+    }
+
+    // ── MOBILE LEGENDS & FREE FIRE & OTHER GAMES ─────
+    let name = null;
+    let isManual = false;
+
+    if (gameId === 'ml' || gameId === 'ff') {
+      const zoneId = sid || '2001';
+      if (gameId === 'ml' && !/^\d{5,12}$/.test(uid)) {
+        showPlayerBadge('❌ User ID ML tidak valid (5-12 angka)', false);
+        return;
+      }
+      if (gameId === 'ff' && !/^\d{8,12}$/.test(uid)) {
+        showPlayerBadge('❌ User ID Free Fire tidak valid (8-12 angka)', false);
+        return;
+      }
+
+      // Coba lookup via client-side fetch
+      try {
+        const endpoint = gameId === 'ml' 
+          ? 'https://order.codashop.com/api/confirmable-inquiry/MOBILE_LEGENDS_MLST'
+          : 'https://order.codashop.com/api/confirmable-inquiry/GARENA_FREE_FIRE';
+        const bodyData = gameId === 'ml' ? { userId: uid, zoneId: zoneId } : { userId: uid };
+        const r = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(bodyData)
+        });
+        if (r.ok) {
+          const d = await r.json();
+          name = d?.confirmableInquiry?.fields?.find?.(f => f.name === 'username')?.value
+            || d?.data?.userName || d?.userName || d?.username || d?.nickname;
+        }
+      } catch(_) {}
+    }
+
+    // Jika client-side fetch gagal / kena CORS atau untuk game lain -> Panggil API Server Backend
+    if (!name) {
+      try {
+        const params = new URLSearchParams({ game: gameId, userId: uid });
+        if (sid) params.set('serverId', sid);
+        const res = await fetch(`/api/lookup-player?${params}`);
+        const data = await res.json();
+        if (data.success && data.name) {
+          name = data.name;
+        } else if (data.manual) {
+          isManual = true;
+        }
+      } catch(e) {}
+    }
+
+    if (name) {
+      showPlayerBadge(`✅ Nama Akun: <b>${name}</b>`, true);
+      state._playerName = name;
+      if (unameInput) {
+        unameInput.value = name;
+        unameInput.style.borderColor = 'rgba(0, 229, 204, 0.5)';
+        unameInput.readOnly = false;
+      }
+    } else {
+      showPlayerBadge(`ℹ️ Isi <b>nama akun in-game</b> kamu di kolom di bawah`, 'info');
+      state._playerName = null;
+      if (unameInput) {
+        unameInput.value = '';
+        unameInput.readOnly = false;
+        unameInput.placeholder = 'Tulis nama akun in-game kamu di sini';
+        unameInput.focus();
+        unameInput.style.borderColor = 'rgba(255, 180, 60, 0.5)';
+      }
+    }
+  }
+  }
+
+  if (userIdInput) {
+    userIdInput.oninput = () => {
+      clearTimeout(lookupDebounce);
+      if (playerNameBadge) playerNameBadge.style.display = 'none';
+      state._playerName = null;
+      const unameInput = document.getElementById('usernameInput');
+      if (unameInput) { unameInput.value = ''; unameInput.style.borderColor = ''; }
+      lookupDebounce = setTimeout(triggerPlayerLookup, 600);
+    };
+  }
+  // Sinkronisasi manual: setiap ketik di kolom Nama Akun → perbarui state._playerName
+  const unameInputEl = document.getElementById('usernameInput');
+  if (unameInputEl) {
+    unameInputEl.oninput = () => {
+      state._playerName = unameInputEl.value.trim() || null;
+      if (state._playerName) {
+        unameInputEl.style.borderColor = 'rgba(0, 229, 204, 0.5)';
+      } else {
+        unameInputEl.style.borderColor = '';
+      }
+    };
+  }
+  if (serverIdInput) {
+    serverIdInput.oninput = () => {
+      clearTimeout(lookupDebounce);
+      lookupDebounce = setTimeout(triggerPlayerLookup, 600);
+    };
+  }
 
   // Buy button
   const buyBtn = document.getElementById('buyBtn');
   if(buyBtn) buyBtn.onclick = ()=>{
-    if(!selectedProduct){ showToast('Pilih produk terlebih dahulu', true); return; }
+    if(!state.selectedProduct || !state.selectedProduct.prod){ showToast('Pilih produk terlebih dahulu', true); return; }
     
     const userId = document.getElementById('userIdInput').value.trim();
     const serverVal = document.getElementById('serverIdInput').value.trim();
     const whatsapp = document.getElementById('whatsappInput').value.trim();
+    const customUsername = document.getElementById('usernameInput')?.value.trim();
     
-    const isRoblox = selectedProduct.game.id === 'roblox';
+    const isRoblox = state.selectedProduct.game.id === 'roblox';
     
     if(!userId){ 
       document.getElementById('userIdInput').focus(); 
@@ -2237,16 +2651,27 @@ function attachEvents(){
       return;
     }
 
+    // Username game WAJIB ada — hasil lookup otomatis ATAU diisi manual
+    const finalPlayerName = customUsername || state._playerName || null;
+    if (!finalPlayerName) {
+      const unameInput = document.getElementById('usernameInput');
+      if (unameInput) { unameInput.focus(); unameInput.style.borderColor = '#E23D64'; }
+      showToast('Isi nama akun in-game kamu dulu di kolom "Nama Akun"', true);
+      return;
+    }
+
     state.checkoutData = {
-      gameId: selectedProduct.game.id,
-      gameName: selectedProduct.game.name,
-      productName: selectedProduct.prod.name,
-      price: selectedProduct.prod.price,
-      productId: selectedProduct.prod.id,
+      gameId: state.selectedProduct.game.id,
+      gameName: state.selectedProduct.game.name,
+      gameImage: state.selectedProduct.game.image || '/images/ml.png',
+      productName: state.selectedProduct.prod.name,
+      price: state.selectedProduct.prod.price,
+      productId: state.selectedProduct.prod.id,
       userId,
       server: serverVal,
       whatsapp,
       orderId: '',
+      playerName: finalPlayerName,
     };
     state.checkoutStep = 'form';
     render();
@@ -2288,6 +2713,7 @@ function attachEvents(){
         body: JSON.stringify({ 
           productId: state.checkoutData.productId, 
           buyerId: state.checkoutData.userId, 
+          playerName: state.checkoutData.playerName,
           server: state.checkoutData.server, 
           whatsapp: state.checkoutData.whatsapp 
         })
@@ -2301,6 +2727,8 @@ function attachEvents(){
         state.checkoutData.qrUrl = data.qrUrl;
         state.checkoutData.expiredTime = data.expiredTime;
         state.checkoutStep = 'qr';
+        // 💾 Simpan ke localStorage agar bisa dilanjut kalau refresh
+        savePendingPayment();
         render();
 
         startCountdown(data.expiredTime);
@@ -2321,35 +2749,54 @@ function attachEvents(){
   const confirmPayBtn = document.getElementById('confirmPayBtn');
   if(confirmPayBtn) confirmPayBtn.onclick = async ()=>{
     if(state.checkoutData.isMock){
-      confirmPayBtn.textContent = '⏳ Memproses…';
+      // Mode QRIS statis:
+      // 1. Kirim klaim ke server → status jadi "Menunggu Konfirmasi Admin"
+      // 2. Pindah ke layar awaiting_confirm, polling terus tiap 3 detik
+      // 3. Saat admin klik ✅ Lunas → polling deteksi → otomatis ke success
+      // Buyer TIDAK bisa bypass — harus menunggu verifikasi admin/Tripay
+      confirmPayBtn.textContent = '⏳ Mengirim konfirmasi…';
       confirmPayBtn.disabled = true;
       try {
-        await fetch(`/api/sales/confirm-mock/${state.checkoutData.merchantRef}`, { method: "POST" });
-        setTimeout(()=>{
-          clearInterval(statusPollInterval);
-          clearInterval(qrTimerInterval);
-          state.checkoutStep = 'success'; render();
-          loadRecentSales();
-          if(state.isAdmin) loadTransactions();
-        }, 1000);
-      } catch(e) {
-        showToast('Gagal memproses pembayaran', true);
-        confirmPayBtn.disabled = false;
-        confirmPayBtn.textContent = '✅ Saya Sudah Bayar';
-      }
-    } else {
-      confirmPayBtn.textContent = '🔄 Mengecek…';
-      confirmPayBtn.disabled = true;
-      try {
-        const res = await fetch(`/api/sales/status/${state.checkoutData.merchantRef}`);
-        const data = await res.json();
-        if(data.success && data.status === "Lunas"){
+        const r = await fetch(`/api/sales/confirm-mock/${state.checkoutData.merchantRef}`, { method: 'POST' });
+        const d = await r.json();
+        // Jika ternyata sudah Lunas (misal dari Tripay webhook), langsung sukses
+        if(d.status === 'Lunas') {
           clearInterval(statusPollInterval); clearInterval(qrTimerInterval);
+          clearPendingPayment(); // ✅ hapus sesi tersimpan
           state.checkoutStep = 'success'; render();
           loadRecentSales();
           if(state.isAdmin) loadTransactions();
         } else {
-          showToast('Pembayaran belum diterima, coba lagi', true);
+          // Belum bayar / menunggu admin → tampilkan layar tunggu
+          clearInterval(statusPollInterval); clearInterval(qrTimerInterval);
+          state.checkoutStep = 'awaiting_confirm';
+          savePendingPayment(); // 💾 simpan status menunggu konfirmasi
+          render();
+          // Polling tetap jalan menunggu admin konfirmasi
+          startStatusPolling();
+        }
+      } catch(e) {
+        showToast('Gagal menghubungi server. Coba lagi.', true);
+        confirmPayBtn.disabled = false;
+        confirmPayBtn.textContent = '✅ Saya Sudah Bayar';
+      }
+    } else {
+      // Mode Tripay: cek status pembayaran ke server
+      // Jika sudah PAID (webhook Tripay sudah update) → sukses
+      // Jika belum → tampilkan pesan belum diterima
+      confirmPayBtn.textContent = '🔄 Mengecek pembayaran…';
+      confirmPayBtn.disabled = true;
+      try {
+        const res = await fetch(`/api/sales/status/${state.checkoutData.merchantRef}`);
+        const data = await res.json();
+        if(data.success && data.status === 'Lunas'){
+          clearInterval(statusPollInterval); clearInterval(qrTimerInterval);
+          clearPendingPayment(); // ✅ hapus sesi tersimpan
+          state.checkoutStep = 'success'; render();
+          loadRecentSales();
+          if(state.isAdmin) loadTransactions();
+        } else {
+          showToast('❌ Pembayaran belum terdeteksi. Pastikan sudah scan & bayar, lalu coba lagi.', true);
           confirmPayBtn.disabled = false;
           confirmPayBtn.textContent = '🔄 Cek Status Pembayaran';
         }
@@ -2371,7 +2818,9 @@ function attachEvents(){
       if(data.success){
         sessionStorage.setItem("syanastore_admin_pw", val);
         state.adminPass = val; state.isAdmin = true; state.adminTab = 'overview';
-        await loadTransactions(); render();
+        await loadTransactions();
+        startAdminAutoRefresh(); // mulai auto-refresh setiap 20 detik
+        render();
       } else {
         showToast('Password salah, coba lagi.', true);
         loginBtn.textContent = 'Masuk →'; loginBtn.disabled = false;
@@ -2394,7 +2843,8 @@ function attachEvents(){
   if(logoutBtn) logoutBtn.onclick = ()=>{
     if(confirm('Yakin mau keluar dari dashboard?')){
       sessionStorage.removeItem("syanastore_admin_pw");
-      state.isAdmin=false; render();
+      stopAdminAutoRefresh(); // hentikan auto-refresh saat logout
+      state.isAdmin=false; state.adminPass=''; render();
     }
   };
 
@@ -2535,6 +2985,16 @@ function attachEvents(){
     } catch(e) { showToast('Gagal menghubungi server', true); }
   };
 
+  // Refresh transaksi manual (admin)
+  const refreshSalesBtn = document.getElementById('refreshSalesBtn');
+  if(refreshSalesBtn) refreshSalesBtn.onclick = async ()=>{
+    refreshSalesBtn.textContent = '⏳ Memuat…';
+    refreshSalesBtn.disabled = true;
+    await loadTransactions();
+    render();
+    // render() akan bind ulang, jadi tidak perlu set textContent lagi
+  };
+
   // Reset sales
   const resetSalesBtn = document.getElementById('resetSalesBtn');
   if(resetSalesBtn) resetSalesBtn.onclick = async ()=>{
@@ -2545,6 +3005,7 @@ function attachEvents(){
       if(data.success){ state.transactions = []; showToast('Riwayat dikosongkan'); render(); }
     } catch(e) { showToast('Gagal menghubungi server', true); }
   };
+
 
   // Konfirmasi Lunas manual (admin)
   document.querySelectorAll('[data-confirm-tx]').forEach(btn => {
@@ -2771,10 +3232,13 @@ function startCountdown(expiredUnix){
   clearInterval(qrTimerInterval);
   qrTimerInterval = setInterval(()=>{
     const seconds = Math.max(0, Math.floor(expiredUnix - Date.now()/1000));
-    const m = String(Math.floor(seconds/60)).padStart(2,"0");
-    const s = String(seconds%60).padStart(2,"0");
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    const pad = (n) => String(n).padStart(2, '0');
+    const displayStr = h > 0 ? `${pad(h)}j ${pad(m)}m ${pad(s)}s` : `${pad(m)}m ${pad(s)}s`;
     const el = document.getElementById("qrTimerDisplay");
-    if(el) el.textContent = `${m}:${s}`;
+    if(el) el.textContent = `Batas Pembayaran: ${displayStr}`;
     if(seconds<=0){
       clearInterval(qrTimerInterval);
       clearInterval(statusPollInterval);
@@ -2791,16 +3255,84 @@ function startStatusPolling(){
       const data = await res.json();
       if(data.success && data.status === "Lunas"){
         clearInterval(statusPollInterval); clearInterval(qrTimerInterval);
+        clearPendingPayment(); // ✅ hapus sesi tersimpan
         state.checkoutStep = 'success'; render();
         loadRecentSales();
         if(state.isAdmin) loadTransactions();
+      } else if(data.success && data.status === "Menunggu Konfirmasi Admin" && state.checkoutStep === 'qr'){
+        // Buyer sudah lapor, tapi belum konfirm dari halaman QR — pindah ke awaiting
+        clearInterval(statusPollInterval); clearInterval(qrTimerInterval);
+        state.checkoutStep = 'awaiting_confirm';
+        savePendingPayment(); // 💾 perbarui status tersimpan
+        render();
+        startStatusPolling(); // lanjut polling di state baru
       }
     }catch(e){}
-  }, 4000);
+  }, 3000); // Cek setiap 3 detik (lebih cepat dari default 4 detik)
+}
+
+/* ===================== SIMPAN & PULIHKAN PEMBAYARAN =====================
+   Jika buyer refresh/tutup browser saat proses pembayaran QR berlangsung,
+   halaman akan otomatis memulihkan sesi dari localStorage saat dimuat.
+============================================================================ */
+const PENDING_KEY = 'syanastore_pending_payment';
+
+function savePendingPayment() {
+  if (!state.checkoutData || !state.checkoutData.merchantRef) return;
+  try {
+    localStorage.setItem(PENDING_KEY, JSON.stringify({
+      checkoutData: state.checkoutData,
+      checkoutStep: state.checkoutStep,  // 'qr' atau 'awaiting_confirm'
+      savedAt: Date.now()
+    }));
+  } catch(e) {}
+}
+
+function clearPendingPayment() {
+  try { localStorage.removeItem(PENDING_KEY); } catch(e) {}
+}
+
+async function restorePendingPayment() {
+  try {
+    const raw = localStorage.getItem(PENDING_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    if (!saved || !saved.checkoutData || !saved.checkoutData.merchantRef) { clearPendingPayment(); return; }
+
+    // Cek apakah sudah > 24 jam — kalau iya, hapus saja
+    if (Date.now() - saved.savedAt > 86400000) { clearPendingPayment(); return; }
+
+    // Cek status terkini ke server
+    const res = await fetch(`/api/sales/status/${saved.checkoutData.merchantRef}`);
+    const statusData = await res.json();
+
+    if (!statusData.success) { clearPendingPayment(); return; } // transaksi tidak ditemukan
+    if (statusData.status === 'Lunas' || statusData.status === 'Batal') {
+      clearPendingPayment(); return; // sudah selesai, tidak perlu pulihkan
+    }
+
+    // Masih aktif — pulihkan state
+    state.checkoutData = saved.checkoutData;
+    if (statusData.status === 'Menunggu Konfirmasi Admin') {
+      state.checkoutStep = 'awaiting_confirm';
+    } else {
+      state.checkoutStep = saved.checkoutStep || 'qr';
+    }
+
+    render();
+    showToast('⚡ Melanjutkan sesi pembayaran kamu…', false);
+
+    if (state.checkoutStep === 'qr' && state.checkoutData.expiredTime) {
+      startCountdown(state.checkoutData.expiredTime);
+    }
+    startStatusPolling();
+  } catch(e) {
+    clearPendingPayment();
+  }
 }
 
 /* ===================== INIT ===================== */
-loadAll();
+loadAll().then(() => restorePendingPayment());
 </script>
 </body>
 </html>

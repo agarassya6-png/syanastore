@@ -60,6 +60,10 @@ async function createQrisTransaction({ merchantRef, product, buyerId, callbackUr
  * Verifikasi bahwa webhook benar-benar dari Tripay, bukan pihak lain yang menyamar.
  * rawBody harus berupa string mentah body request (belum di-parse ke object).
  */
+/**
+ * Verifikasi bahwa webhook benar-benar dari Tripay, bukan pihak lain yang menyamar.
+ * rawBody harus berupa string mentah body request (belum di-parse ke object).
+ */
 function verifyCallbackSignature(rawBody, signatureHeader){
   if(!signatureHeader) return false;
   const expected = crypto
@@ -69,4 +73,26 @@ function verifyCallbackSignature(rawBody, signatureHeader){
   return expected === signatureHeader;
 }
 
-module.exports = { createQrisTransaction, verifyCallbackSignature };
+/**
+ * Cek detail/status transaksi secara langsung ke Tripay API
+ */
+async function getTransactionDetail(reference){
+  if(!process.env.TRIPAY_API_KEY || !reference) return null;
+  try {
+    const res = await fetch(`${baseUrl()}/transaction/detail?reference=${reference}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.TRIPAY_API_KEY}`
+      }
+    });
+    const json = await res.json();
+    if(json.success && json.data) {
+      return json.data; // { reference, merchant_ref, status, paid_at, ... }
+    }
+  } catch(e) {
+    console.error("[Tripay] Error getTransactionDetail:", e.message);
+  }
+  return null;
+}
+
+module.exports = { createQrisTransaction, verifyCallbackSignature, getTransactionDetail };
+
