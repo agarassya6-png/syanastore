@@ -1692,17 +1692,24 @@
     function closeDurationModal() {
       if (qrisTimerInterval) clearInterval(qrisTimerInterval);
       if (qrisPollInterval) clearInterval(qrisPollInterval);
+      orderUnlocked = false; // reset for next purchase
+      currentQrisOrder = null;
       document.getElementById('durationOverlay').classList.remove('active');
       document.getElementById('durationModal').classList.remove('active');
       setTimeout(() => {
         document.getElementById('modalStep1').style.display = 'block';
         document.getElementById('modalStep2').style.display = 'none';
         document.getElementById('modalStep3').style.display = 'none';
+        // Reset confirm button
+        const btn = document.getElementById('btnConfirmPaid');
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-check-circle"></i> SAYA SUDAH TRANSFER'; }
       }, 200);
     }
 
     async function startQrisPayment(event) {
       if (event && event.preventDefault) event.preventDefault();
+      orderUnlocked = false; // reset guard for new payment
+      currentQrisOrder = null;
       const pId = parseInt(document.getElementById('selectedProductId').value);
       const products = loadProducts();
       const p = products.find(prod => prod.id === pId);
@@ -1824,7 +1831,10 @@
       }, 1500);
     }
 
+    let orderUnlocked = false; // guard: prevent double-unlock
+
     function confirmPaymentPaid() {
+      if (orderUnlocked) return;
       if (!currentQrisOrder) {
         currentQrisOrder = {
           orderId: 'RXZ-' + Date.now().toString(36).toUpperCase(),
@@ -1834,15 +1844,15 @@
           itemType: 'key'
         };
       }
-      
+
+      // Stop polling immediately
+      if (qrisTimerInterval) clearInterval(qrisTimerInterval);
+      if (qrisPollInterval) clearInterval(qrisPollInterval);
+
       const btn = document.getElementById('btnConfirmPaid');
-      const statusText = document.getElementById('qrisStatusText');
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> MEMVERIFIKASI...';
-      }
-      if (statusText) {
-        statusText.textContent = '✅ Pembayaran terverifikasi! Membuka pesanan...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> MEMPROSES...';
       }
 
       // Generate key locally
@@ -1856,7 +1866,7 @@
         generatedKey = `${pCode || 'RAXZ'}-${r1}-${r2}-${r3}`;
       }
 
-      // Fire and forget backend notification
+      // Notify backend (fire & forget)
       try {
         fetch('/api/check-payment', {
           method: 'POST',
@@ -1875,22 +1885,14 @@
         }).catch(() => {});
       } catch (e) {}
 
-      const orderSnap = {
+      // Unlock instantly — no delay needed
+      unlockPaidOrder({
+        status: 'PAID',
+        key: generatedKey,
         orderId: currentQrisOrder.orderId,
         productName: currentQrisOrder.productName,
-        amount: currentQrisOrder.amount,
-        key: generatedKey
-      };
-
-      setTimeout(() => {
-        unlockPaidOrder({
-          status: 'PAID',
-          key: orderSnap.key,
-          orderId: orderSnap.orderId,
-          productName: orderSnap.productName,
-          amount: orderSnap.amount
-        });
-      }, 400);
+        amount: currentQrisOrder.amount
+      });
     }
 
     function retryTripayCreate() {
@@ -1898,61 +1900,61 @@
     }
 
     function unlockPaidOrder(data) {
+      if (orderUnlocked) return; // prevent double-unlock
+      orderUnlocked = true;
+
       if (qrisTimerInterval) clearInterval(qrisTimerInterval);
       if (qrisPollInterval) clearInterval(qrisPollInterval);
 
-      // 1. Immediately switch DOM screens FIRST so it can NEVER get stuck
-      try {
-        const step1 = document.getElementById('modalStep1');
-        const step2 = document.getElementById('modalStep2');
-        const step3 = document.getElementById('modalStep3');
-        if (step1) step1.style.display = 'none';
-        if (step2) step2.style.display = 'none';
-        if (step3) step3.style.display = 'block';
-        // Scroll modal box to top so Step 3 is always visible
-        const box = document.getElementById('qrisModalBox');
-        if (box) box.scrollTop = 0;
-      } catch (e) {}
+      // Switch to Step 3 immediately
+      const step1 = document.getElementById('modalStep1');
+      const step2 = document.getElementById('modalStep2');
+      const step3 = document.getElementById('modalStep3');
+      if (step1) step1.style.display = 'none';
+      if (step2) step2.style.display = 'none';
+      if (step3) { step3.style.display = 'block'; step3.style.opacity = '1'; }
+
+      // Scroll to top so content is visible
+      const box = document.getElementById('qrisModalBox');
+      if (box) box.scrollTop = 0;
 
       const order = currentQrisOrder || {};
-      const itemType = order.itemType || 'key';
-      const dlLink = order.downloadUrl || 'https://www.mediafire.com/';
+      const itemType = (data && data.itemType) || order.itemType || 'key';
+      const dlLink = (data && data.downloadUrl) || order.downloadUrl || 'https://www.mediafire.com/';
 
-      try {
-        const kCont = document.getElementById('step3KeyContainer');
-        const mCont = document.getElementById('step3MediafireContainer');
-        const pCont = document.getElementById('step3ProxyContainer');
-        if (kCont) kCont.style.display = 'none';
-        if (mCont) mCont.style.display = 'none';
-        if (pCont) pCont.style.display = 'none';
+      const kCont = document.getElementById('step3KeyContainer');
+      const mCont = document.getElementById('step3MediafireContainer');
+      const pCont = document.getElementById('step3ProxyContainer');
+      if (kCont) kCont.style.display = 'none';
+      if (mCont) mCont.style.display = 'none';
+      if (pCont) pCont.style.display = 'none';
 
-        if (itemType === 'mediafire') {
-          const sub = document.getElementById('step3Subtitle');
-          if (sub) sub.textContent = 'File mod permanent kamu siap di-download (tanpa butuh key):';
-          if (mCont) mCont.style.display = 'block';
-          const mfLink = document.getElementById('unlockedMediafireLink');
-          if (mfLink) mfLink.href = dlLink;
-          const mfText = document.getElementById('unlockedMediafireUrlText');
-          if (mfText) mfText.textContent = dlLink;
-        } else if (itemType === 'proxy_wa') {
-          const sub = document.getElementById('step3Subtitle');
-          if (sub) sub.textContent = 'Pembayaran terkonfirmasi! Kirim bukti transfer ke WhatsApp admin:';
-          if (pCont) pCont.style.display = 'block';
-          const s = loadSettings();
-          const cleanWa = (s.whatsappNumber || '6281234567890').replace(/[^0-9]/g, '');
-          const proxyMsg = `Halo Admin, saya sudah transfer untuk pesanan ${order.productName || 'Proxy iOS'} sebesar Rp ${(order.amount || 50000).toLocaleString('id-ID')} (Ref: ${order.orderId || 'RXZ'}). Mohon kirimkan konfigurasi Proxy DNS iPhone saya.`;
-          const proxyLink = document.getElementById('unlockedProxyWaLink');
-          if (proxyLink) proxyLink.href = `https://wa.me/${cleanWa}?text=${encodeURIComponent(proxyMsg)}`;
-        } else {
-          const sub = document.getElementById('step3Subtitle');
-          if (sub) sub.textContent = 'Key lisensi kamu telah otomatis diterbitkan oleh sistem:';
-          if (kCont) kCont.style.display = 'block';
-          const keyDisp = document.getElementById('unlockedKeyDisplay');
-          if (keyDisp) keyDisp.textContent = (data && data.key) || 'RAXZ-PAID-SUCCESS';
-        }
-      } catch (e) {}
+      if (itemType === 'mediafire') {
+        const sub = document.getElementById('step3Subtitle');
+        if (sub) sub.textContent = 'File mod permanent kamu siap di-download (tanpa butuh key):';
+        if (mCont) mCont.style.display = 'block';
+        const mfLink = document.getElementById('unlockedMediafireLink');
+        if (mfLink) mfLink.href = dlLink;
+        const mfText = document.getElementById('unlockedMediafireUrlText');
+        if (mfText) mfText.textContent = dlLink;
+      } else if (itemType === 'proxy_wa') {
+        const sub = document.getElementById('step3Subtitle');
+        if (sub) sub.textContent = 'Pembayaran terkonfirmasi! Kirim bukti transfer ke WhatsApp admin:';
+        if (pCont) pCont.style.display = 'block';
+        const s = loadSettings();
+        const cleanWa = (s.whatsappNumber || '6281234567890').replace(/[^0-9]/g, '');
+        const proxyMsg = `Halo Admin, saya sudah transfer untuk pesanan ${order.productName || 'Proxy iOS'} sebesar Rp ${(order.amount || 50000).toLocaleString('id-ID')} (Ref: ${order.orderId || 'RXZ'}). Mohon kirimkan konfigurasi Proxy DNS iPhone saya.`;
+        const proxyLink = document.getElementById('unlockedProxyWaLink');
+        if (proxyLink) proxyLink.href = `https://wa.me/${cleanWa}?text=${encodeURIComponent(proxyMsg)}`;
+      } else {
+        const sub = document.getElementById('step3Subtitle');
+        if (sub) sub.textContent = 'Key lisensi kamu telah otomatis diterbitkan oleh sistem:';
+        if (kCont) kCont.style.display = 'block';
+        const keyDisp = document.getElementById('unlockedKeyDisplay');
+        if (keyDisp) keyDisp.textContent = (data && data.key) || 'RAXZ-PAID-SUCCESS';
+      }
 
-      // Save to localStorage for sync with admin
+      // Save to localStorage
       try {
         const paidOrders = JSON.parse(localStorage.getItem('raxzy_paid_orders') || '[]');
         paidOrders.unshift({
