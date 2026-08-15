@@ -943,14 +943,14 @@
   </div>
 
   <!-- MULTI-STEP AUTOMATED QRIS & KEY DELIVERY MODAL -->
-  <div class="duration-modal" id="durationModal">
+  <div class="duration-modal" id="durationModal" onclick="if(event.target===this){this.style.display='none';this.classList.remove('active');closeDurationModal();}">
     <div class="duration-box" id="qrisModalBox">
       
       <!-- STEP 1: PILIH PAKET -->
       <div id="modalStep1">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
           <h2 style="font-family:var(--font-mono); font-size:0.9rem; font-weight:900; color:var(--accent-color); letter-spacing:2px; text-transform:uppercase;">Pilih Paket</h2>
-          <button type="button" id="btnCloseStep1" onclick="closeDurationModal()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:1.3rem; line-height:1; cursor:pointer; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:0.2s;">&times;</button>
+          <button type="button" id="btnCloseStep1" onclick="document.getElementById('durationModal').style.display='none';document.getElementById('durationModal').classList.remove('active');closeDurationModal();" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#fff; font-size:1.4rem; line-height:1; cursor:pointer; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:0.2s; -webkit-tap-highlight-color:transparent;">&times;</button>
         </div>
         <div class="pname-badge" id="modalProductName">RAPID CORE</div>
         <form id="durationForm" onsubmit="startQrisPayment(event)">
@@ -991,13 +991,13 @@
       <!-- STEP 2: SCAN & BAYAR QRIS -->
       <div id="modalStep2" style="display:none; text-align:center;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-          <button type="button" id="btnBackStep2" onclick="backToStep1()" title="Kembali" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:0.95rem; cursor:pointer; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:0.2s;">
+          <button type="button" id="btnBackStep2" onclick="document.getElementById('modalStep1').style.display='block';document.getElementById('modalStep2').style.display='none';backToStep1();" title="Kembali" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#fff; font-size:0.95rem; cursor:pointer; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:0.2s; -webkit-tap-highlight-color:transparent;">
             <i class="fas fa-arrow-left"></i>
           </button>
           <div style="font-size:0.85rem; font-weight:900; color:#00ff41; letter-spacing:1.5px; text-transform:uppercase;">
             <i class="fas fa-qrcode"></i> Scan QRIS
           </div>
-          <button type="button" id="btnCloseStep2" onclick="closeDurationModal()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:1.3rem; line-height:1; cursor:pointer; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:0.2s;">&times;</button>
+          <button type="button" id="btnCloseStep2" onclick="document.getElementById('durationModal').style.display='none';document.getElementById('durationModal').classList.remove('active');closeDurationModal();" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#fff; font-size:1.4rem; line-height:1; cursor:pointer; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:0.2s; -webkit-tap-highlight-color:transparent;">&times;</button>
         </div>
 
         <!-- Loading state -->
@@ -1046,7 +1046,7 @@
 
           <!-- Secondary Links -->
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
-            <button type="button" onclick="backToStep1()" style="background:transparent; border:none; color:#6a7a8a; font-size:11px; cursor:pointer; padding:4px;">
+            <button type="button" onclick="document.getElementById('modalStep1').style.display='block';document.getElementById('modalStep2').style.display='none';backToStep1();" style="background:transparent; border:none; color:#6a7a8a; font-size:11px; cursor:pointer; padding:4px;">
               <i class="fas fa-arrow-left"></i> Ganti Paket
             </button>
             <a href="#" id="qrisHelpWa" target="_blank" style="color:#25d366; font-size:11px; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px;">
@@ -1066,7 +1066,7 @@
           <button onclick="retryTripayCreate()" style="padding:8px 18px; background:rgba(0,255,65,0.1); border:1px solid rgba(0,255,65,0.3); color:#00ff41; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer; font-family:var(--font-mono);">
             <i class="fas fa-redo"></i> Coba Lagi
           </button>
-          <button onclick="backToStep1()" style="margin-left:8px; padding:8px 18px; background:transparent; border:1px solid rgba(255,255,255,0.1); color:#8a99ad; border-radius:8px; font-size:11px; cursor:pointer;">
+          <button onclick="document.getElementById('modalStep1').style.display='block';document.getElementById('modalStep2').style.display='none';backToStep1();" style="margin-left:8px; padding:8px 18px; background:transparent; border:1px solid rgba(255,255,255,0.1); color:#8a99ad; border-radius:8px; font-size:11px; cursor:pointer;">
             Kembali
           </button>
         </div>
@@ -1136,7 +1136,7 @@
           </div>
         </div>
 
-        <button onclick="closeDurationModal()" style="width:100%; padding:10px; background:transparent; border:1px solid rgba(255,255,255,0.08); color:#64748b; font-weight:600; font-size:12px; font-family:var(--font-mono); border-radius:10px; cursor:pointer;">
+        <button type="button" onclick="document.getElementById('durationModal').style.display='none';document.getElementById('durationModal').classList.remove('active');closeDurationModal();" style="width:100%; padding:10px; background:transparent; border:1px solid rgba(255,255,255,0.08); color:#64748b; font-weight:600; font-size:12px; font-family:var(--font-mono); border-radius:10px; cursor:pointer;">
           Tutup
         </button>
       </div>
