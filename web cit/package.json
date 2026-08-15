@@ -1,0 +1,10 @@
+{
+  "name": "raxzy-store-qris-bot",
+  "version": "1.0.0",
+  "description": "Raxzy Store Automatic QRIS Payment and Key Delivery",
+  "main": "index.html",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "cheerio": "^1.0.0"
+  }
+}
