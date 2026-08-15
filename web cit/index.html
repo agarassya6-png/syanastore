@@ -1718,6 +1718,10 @@
 
       const orderRef = 'RXZ-' + Date.now().toString(36).toUpperCase();
 
+      // Generate unique 2-digit code for 100% automatic matching
+      const uniqueCode = Math.floor(Math.random() * 80) + 11; // 11-90
+      const finalAmount = cleanBase + uniqueCode;
+
       currentQrisOrder = {
         orderId: orderRef,
         reference: null,
@@ -1725,13 +1729,31 @@
         productName: p.name,
         duration: durationLabel,
         baseAmount: cleanBase,
-        amount: cleanBase,
+        amount: finalAmount,
         price: priceStr,
         buyerName: custName,
         buyerWa: custWa,
         itemType: p.itemType || 'key',
         downloadUrl: p.downloadUrl || 'https://www.mediafire.com/'
       };
+
+      // Register pending order to server for real-time webhook matching
+      try {
+        fetch('/api/check-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId: orderRef,
+            amount: finalAmount,
+            productName: p.name,
+            duration: durationLabel,
+            buyerName: custName,
+            buyerWa: custWa,
+            itemType: p.itemType || 'key',
+            downloadUrl: p.downloadUrl || 'https://www.mediafire.com/'
+          })
+        }).catch(() => {});
+      } catch (e) {}
 
       // Show Step 2 in Loading State
       document.getElementById('modalStep1').style.display = 'none';
@@ -1749,14 +1771,14 @@
       // Setup Help WA link
       const s = loadSettings();
       const cleanWa = (s.whatsappNumber || '6281234567890').replace(/[^0-9]/g, '');
-      const helpMsg = `Halo Admin, saya sedang melakukan pembayaran untuk ${p.name} (${durationLabel}) via QRIS (Ref: ${orderRef}).`;
+      const helpMsg = `Halo Admin, saya sedang melakukan pembayaran untuk ${p.name} (${durationLabel}) via QRIS sebesar Rp ${finalAmount.toLocaleString('id-ID')} (Ref: ${orderRef}).`;
       const helpWaEl = document.getElementById('qrisHelpWa');
       if (helpWaEl) helpWaEl.href = `https://wa.me/${cleanWa}?text=${encodeURIComponent(helpMsg)}`;
 
       const proxyWaBtn = document.getElementById('qrisProxyDirectWa');
       if (proxyWaBtn) {
         if (p.itemType === 'proxy_wa') {
-          const proxyDirectMsg = `Halo Admin, saya sudah transfer pesanan ${p.name} sebesar Rp ${cleanBase.toLocaleString('id-ID')} (Ref: ${orderRef}). Berikut bukti transfer saya:`;
+          const proxyDirectMsg = `Halo Admin, saya sudah transfer pesanan ${p.name} sebesar Rp ${finalAmount.toLocaleString('id-ID')} (Ref: ${orderRef}). Berikut bukti transfer saya:`;
           proxyWaBtn.style.display = 'block';
           proxyWaBtn.href = `https://wa.me/${cleanWa}?text=${encodeURIComponent(proxyDirectMsg)}`;
         } else {
@@ -1764,105 +1786,17 @@
         }
       }
 
-      const saweriaBtn = document.getElementById('btnSaweriaDirect');
-      if (saweriaBtn) {
-        const saweriaUser = s.saweriaUser || 'rxzyxit';
-        saweriaBtn.href = `https://saweria.co/${encodeURIComponent(saweriaUser)}`;
-      }
-
-      // 1. Try Paydisini Create first if configured
-      if (s.paydisiniApiKey) {
-        try {
-          const pdRes = await fetch('/api/paydisini-create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              orderId: orderRef,
-              productName: p.name,
-              duration: durationLabel,
-              amount: cleanBase,
-              buyerName: custName,
-              buyerWa: custWa,
-              itemType: p.itemType || 'key',
-              downloadUrl: p.downloadUrl || 'https://www.mediafire.com/',
-              apiKey: s.paydisiniApiKey,
-              serviceCode: s.paydisiniService || '11'
-            })
-          });
-          const pdData = await pdRes.json();
-          if (pdRes.ok && pdData && pdData.success && pdData.qr_url) {
-            currentQrisOrder.reference = pdData.orderId || orderRef;
-            currentQrisOrder.amount = pdData.amount || cleanBase;
-            currentQrisOrder.gateway = 'paydisini';
-
-            if (loadingEl) loadingEl.style.display = 'none';
-            if (qrAreaEl) qrAreaEl.style.display = 'block';
-
-            document.getElementById('qrisTotalAmount').textContent = 'Rp ' + (pdData.amount || cleanBase).toLocaleString('id-ID');
-            document.getElementById('qrisOrderRef').textContent = pdData.orderId || orderRef;
-            document.getElementById('qrisStatusText').textContent = '⚡ QRIS Paydisini Aktif — Auto-Detect 1 Detik';
-            document.getElementById('qrisQrImg').src = pdData.qr_url;
-
-            startCountdownAndPolling(1800);
-            return;
-          }
-        } catch (err) {
-          console.warn('Paydisini create error:', err);
-        }
-      }
-
-      // 2. Try Tripay Create API
-      try {
-        const response = await fetch('/api/tripay-create', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            orderId: orderRef,
-            productName: p.name,
-            duration: durationLabel,
-            amount: cleanBase,
-            buyerName: custName,
-            buyerWa: custWa,
-            itemType: p.itemType || 'key',
-            downloadUrl: p.downloadUrl || 'https://www.mediafire.com/'
-          })
-        });
-
-        const data = await response.json();
-
-        if (response.ok && data && data.success && (data.qr_url || data.pay_url)) {
-          // TRIPAY SUCCESS
-          currentQrisOrder.reference = data.reference;
-          currentQrisOrder.amount = data.amount || cleanBase;
-          currentQrisOrder.gateway = 'tripay';
-
-          if (loadingEl) loadingEl.style.display = 'none';
-          if (qrAreaEl) qrAreaEl.style.display = 'block';
-
-          document.getElementById('qrisTotalAmount').textContent = 'Rp ' + (data.amount || cleanBase).toLocaleString('id-ID');
-          document.getElementById('qrisOrderRef').textContent = data.reference || orderRef;
-          document.getElementById('qrisStatusText').textContent = '📡 Menunggu pembayaran dari Tripay...';
-          document.getElementById('qrisQrImg').src = data.qr_url;
-
-          let timeLeft = data.expired_time ? Math.max(60, data.expired_time - Math.floor(Date.now() / 1000)) : 3600;
-          startCountdownAndPolling(timeLeft);
-          return;
-        }
-      } catch (err) {
-        console.warn('Tripay create failed, checking fallback...', err);
-      }
-
-      // Fallback Dynamic QRIS if gateways not yet active
-      const dynamicQrisStr = generateDynamicQrisPayload(cleanBase);
+      // Generate dynamic QRIS with unique exact amount
+      const dynamicQrisStr = generateDynamicQrisPayload(finalAmount);
       const dynamicQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=4&data=${encodeURIComponent(dynamicQrisStr)}`;
       
       if (loadingEl) loadingEl.style.display = 'none';
       if (qrAreaEl) qrAreaEl.style.display = 'block';
 
-      document.getElementById('qrisTotalAmount').textContent = 'Rp ' + cleanBase.toLocaleString('id-ID');
+      document.getElementById('qrisTotalAmount').textContent = 'Rp ' + finalAmount.toLocaleString('id-ID');
       document.getElementById('qrisOrderRef').textContent = orderRef;
       document.getElementById('qrisQrImg').src = dynamicQrUrl;
-      document.getElementById('qrisStatusText').textContent = '📡 Sistem scanner siap mendeteksi pembayaran...';
+      document.getElementById('qrisStatusText').textContent = '📡 Scanner aktif mendeteksi pembayaran...';
 
       startCountdownAndPolling(600);
     }
@@ -1885,7 +1819,7 @@
       if (qrisPollInterval) clearInterval(qrisPollInterval);
       qrisPollInterval = setInterval(async () => {
         checkQrisPaymentStatus(false);
-      }, 2500);
+      }, 1500);
     }
 
     function confirmPaymentPaid() {
