@@ -4,14 +4,13 @@
     { "source": "/api/(.*)", "destination": "/api/$1" }
   ],
   "functions": {
-    "api/tripay-callback.js": {
-      "maxDuration": 10
-    },
-    "api/tripay-create.js": {
-      "maxDuration": 15
-    },
-    "api/tripay-check.js": {
-      "maxDuration": 10
-    }
+    "api/tripay-callback.js": { "maxDuration": 10 },
+    "api/tripay-create.js": { "maxDuration": 15 },
+    "api/tripay-check.js": { "maxDuration": 10 },
+    "api/paydisini-create.js": { "maxDuration": 15 },
+    "api/paydisini-check.js": { "maxDuration": 10 },
+    "api/paydisini-callback.js": { "maxDuration": 10 },
+    "api/check-payment.js": { "maxDuration": 10 },
+    "api/mutasi-webhook.js": { "maxDuration": 10 }
   }
 }

@@ -911,17 +911,65 @@
         <!-- TAB 7: MONITOR MUTASI & TRANSAKSI QRIS -->
         <div class="tab-panel" id="panel-mutasi">
             <div class="panel-card" style="border-color:rgba(0,255,65,0.3);">
-                <div class="panel-title"><i class="fas fa-money-bill-wave" style="color:#00ff41"></i> Monitor Mutasi QRIS & Transaksi Live</div>
-                <div class="panel-subtitle">Sistem mendeteksi uang masuk secara otomatis melalui pencocokan 3 digit kode unik.</div>
+                <div class="panel-title"><i class="fas fa-money-bill-wave" style="color:#00ff41"></i> Konfigurasi Payment Gateway &amp; Monitor Transaksi Otomatis</div>
+                <div class="panel-subtitle">Sistem otomatis mendeteksi pembayaran QRIS detik demi detik dan langsung mengirimkan License Key / Link Mod ke layar pembeli.</div>
+
+                <!-- PAYMENT GATEWAY CONFIGURATION -->
+                <div style="background:rgba(0,255,65,0.03); border:1px solid rgba(0,255,65,0.2); border-radius:10px; padding:18px; margin:20px 0;">
+                    <div style="font-size:0.85rem; color:#00ff41; font-weight:800; letter-spacing:1px; margin-bottom:12px;">
+                        <i class="fas fa-plug"></i> 🔌 KONEKSI GATEWAY OTOMATIS (PAYDISINI / TRIPAY)
+                    </div>
+                    
+                    <form onsubmit="saveGatewaySettings(event)">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+                            <div>
+                                <label style="font-size:11px; color:#8a99ad; display:block; margin-bottom:4px; font-weight:700;">PAYDISINI API KEY (Daftar di paydisini.co.id)</label>
+                                <input type="text" id="setPaydisiniKey" class="form-control" placeholder="Contoh: a89bf928c0349..." style="font-family:monospace; font-size:12px;" />
+                            </div>
+                            <div>
+                                <label style="font-size:11px; color:#8a99ad; display:block; margin-bottom:4px; font-weight:700;">PAYDISINI SERVICE CODE (11 = QRIS Real-Time)</label>
+                                <input type="text" id="setPaydisiniService" class="form-control" value="11" style="font-family:monospace; font-size:12px;" />
+                            </div>
+                        </div>
+
+                        <!-- TRIPAY OPTIONAL CREDENTIALS -->
+                        <div style="border-top:1px dashed rgba(255,255,255,0.1); padding-top:12px; margin-bottom:14px;">
+                            <div style="font-size:11px; color:#60a5fa; font-weight:700; margin-bottom:8px;">(Opsional) TriPay Credentials:</div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+                                <div>
+                                    <label style="font-size:10px; color:#8a99ad; display:block; margin-bottom:2px;">TRIPAY API KEY</label>
+                                    <input type="text" id="setTripayKey" class="form-control" placeholder="DEV-..." style="font-family:monospace; font-size:11px;" />
+                                </div>
+                                <div>
+                                    <label style="font-size:10px; color:#8a99ad; display:block; margin-bottom:2px;">TRIPAY PRIVATE KEY</label>
+                                    <input type="text" id="setTripayPrivateKey" class="form-control" placeholder="Private Key..." style="font-family:monospace; font-size:11px;" />
+                                </div>
+                                <div>
+                                    <label style="font-size:10px; color:#8a99ad; display:block; margin-bottom:2px;">MERCHANT CODE</label>
+                                    <input type="text" id="setTripayMerchant" class="form-control" placeholder="T0000" style="font-family:monospace; font-size:11px;" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                            <button type="submit" style="background:#00ff41; color:#000; border:none; padding:10px 20px; border-radius:8px; font-weight:800; font-size:13px; cursor:pointer;">
+                                <i class="fas fa-save"></i> Simpan Koneksi Gateway
+                            </button>
+                            <span style="font-size:11px; color:#8a99ad;">
+                                URL Webhook Callback: <code style="color:#00ff41;">https://raxzy-store.vercel.app/api/paydisini-callback</code>
+                            </span>
+                        </div>
+                    </form>
+                </div>
 
                 <!-- SIMULATOR MUTASI MASUK -->
                 <div style="background:rgba(0,255,65,0.05); border:1px solid rgba(0,255,65,0.25); border-radius:8px; padding:16px; margin:20px 0;">
-                    <div style="font-size:0.8rem; color:#00ff41; font-weight:800; letter-spacing:1px; margin-bottom:8px;">⚡ SIMULASI MUTASI MASUK (TESTING ROBOT)</div>
-                    <div style="font-size:12px; color:#8a99ad; margin-bottom:12px;">Ketik nominal transfer yang masuk (contoh: <code style="color:#00ff41;">32842</code>) untuk mengetes robot pembuka key otomatis:</div>
+                    <div style="font-size:0.8rem; color:#00ff41; font-weight:800; letter-spacing:1px; margin-bottom:8px;">⚡ SIMULASI TRANSAKSI MASUK (TESTING AUTO-DELIVERY)</div>
+                    <div style="font-size:12px; color:#8a99ad; margin-bottom:12px;">Ketik nominal transfer atau klik tombol di bawah untuk mengetes sistem pembuka key / file otomatis:</div>
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <input type="number" id="simMutasiNominal" class="form-control" placeholder="Contoh: 32842" style="max-width:240px;" />
+                        <input type="number" id="simMutasiNominal" class="form-control" placeholder="Contoh: 25000" style="max-width:240px;" />
                         <button onclick="triggerSimulateMutasi()" style="background:#00ff41; color:#000; border:none; padding:10px 20px; border-radius:6px; font-weight:800; font-size:13px; cursor:pointer;">
-                            <i class="fas fa-bolt"></i> Kirim Mutasi Masuk
+                            <i class="fas fa-bolt"></i> Kirim Sinyal Lunas
                         </button>
                         <button onclick="fetchPendingOrders()" style="background:transparent; border:1px solid rgba(0,255,65,0.3); color:#00ff41; padding:10px 16px; border-radius:6px; font-weight:700; font-size:13px; cursor:pointer;">
                             <i class="fas fa-sync-alt"></i> Refresh Antrian
@@ -941,7 +989,7 @@
                             <thead>
                                 <tr>
                                     <th>Ref / Waktu</th>
-                                    <th>Produk & Durasi</th>
+                                    <th>Produk &amp; Durasi</th>
                                     <th>Pembeli</th>
                                     <th>Nominal Unik Transfer</th>
                                     <th>Status Mutasi</th>
@@ -1122,7 +1170,12 @@
             footerText: 'Dominate every lobby.',
             footerDisclaimer: 'Nama produk, logo, gambar, dan merek dagang yang disebutkan di situs ini adalah milik pemiliknya masing-masing. All products are for educational purposes only.',
             accentColor: '#00ff41',
-            bgColor: '#000000'
+            bgColor: '#000000',
+            paydisiniApiKey: '',
+            paydisiniService: '11',
+            tripayApiKey: '',
+            tripayPrivateKey: '',
+            tripayMerchantCode: ''
         };
 
         const defaultProducts = [{
@@ -1238,6 +1291,24 @@
 
             document.getElementById('setAccentColor').value = s.accentColor;
             document.getElementById('setBgColor').value = s.bgColor;
+
+            if (document.getElementById('setPaydisiniKey')) document.getElementById('setPaydisiniKey').value = s.paydisiniApiKey || '';
+            if (document.getElementById('setPaydisiniService')) document.getElementById('setPaydisiniService').value = s.paydisiniService || '11';
+            if (document.getElementById('setTripayKey')) document.getElementById('setTripayKey').value = s.tripayApiKey || '';
+            if (document.getElementById('setTripayPrivateKey')) document.getElementById('setTripayPrivateKey').value = s.tripayPrivateKey || '';
+            if (document.getElementById('setTripayMerchant')) document.getElementById('setTripayMerchant').value = s.tripayMerchantCode || '';
+        }
+
+        function saveGatewaySettings(e) {
+            e.preventDefault();
+            const s = loadSettings();
+            s.paydisiniApiKey = (document.getElementById('setPaydisiniKey').value || '').trim();
+            s.paydisiniService = (document.getElementById('setPaydisiniService').value || '11').trim();
+            s.tripayApiKey = (document.getElementById('setTripayKey').value || '').trim();
+            s.tripayPrivateKey = (document.getElementById('setTripayPrivateKey').value || '').trim();
+            s.tripayMerchantCode = (document.getElementById('setTripayMerchant').value || '').trim();
+            saveSettings(s);
+            alert('✅ Pengaturan Payment Gateway (Paydisini / TriPay) berhasil disimpan! Sistem QRIS otomatis sudah aktif.');
         }
 
         function saveStoreSettings(e) {

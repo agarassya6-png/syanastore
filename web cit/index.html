@@ -1776,7 +1776,48 @@
         }
       }
 
-      // 1. Call Tripay Create API
+      // 1. Try Paydisini Create first if configured
+      if (s.paydisiniApiKey) {
+        try {
+          const pdRes = await fetch('/api/paydisini-create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              orderId: orderRef,
+              productName: p.name,
+              duration: durationLabel,
+              amount: cleanBase,
+              buyerName: custName,
+              buyerWa: custWa,
+              itemType: p.itemType || 'key',
+              downloadUrl: p.downloadUrl || 'https://www.mediafire.com/',
+              apiKey: s.paydisiniApiKey,
+              serviceCode: s.paydisiniService || '11'
+            })
+          });
+          const pdData = await pdRes.json();
+          if (pdRes.ok && pdData && pdData.success && pdData.qr_url) {
+            currentQrisOrder.reference = pdData.orderId || orderRef;
+            currentQrisOrder.amount = pdData.amount || cleanBase;
+            currentQrisOrder.gateway = 'paydisini';
+
+            if (loadingEl) loadingEl.style.display = 'none';
+            if (qrAreaEl) qrAreaEl.style.display = 'block';
+
+            document.getElementById('qrisTotalAmount').textContent = 'Rp ' + (pdData.amount || cleanBase).toLocaleString('id-ID');
+            document.getElementById('qrisOrderRef').textContent = pdData.orderId || orderRef;
+            document.getElementById('qrisStatusText').textContent = '⚡ QRIS Paydisini Aktif — Auto-Detect 1 Detik';
+            document.getElementById('qrisQrImg').src = pdData.qr_url;
+
+            startCountdownAndPolling(1800);
+            return;
+          }
+        } catch (err) {
+          console.warn('Paydisini create error:', err);
+        }
+      }
+
+      // 2. Try Tripay Create API
       try {
         const response = await fetch('/api/tripay-create', {
           method: 'POST',
@@ -1799,6 +1840,7 @@
           // TRIPAY SUCCESS
           currentQrisOrder.reference = data.reference;
           currentQrisOrder.amount = data.amount || cleanBase;
+          currentQrisOrder.gateway = 'tripay';
 
           if (loadingEl) loadingEl.style.display = 'none';
           if (qrAreaEl) qrAreaEl.style.display = 'block';
@@ -1808,35 +1850,15 @@
           document.getElementById('qrisStatusText').textContent = '📡 Menunggu pembayaran dari Tripay...';
           document.getElementById('qrisQrImg').src = data.qr_url;
 
-          // Start Countdown timer (e.g. 1 hour or 60m)
           let timeLeft = data.expired_time ? Math.max(60, data.expired_time - Math.floor(Date.now() / 1000)) : 3600;
-          if (qrisTimerInterval) clearInterval(qrisTimerInterval);
-          qrisTimerInterval = setInterval(() => {
-            timeLeft--;
-            if (timeLeft <= 0) {
-              clearInterval(qrisTimerInterval);
-              document.getElementById('qrisCountdown').textContent = 'EXPIRED';
-              document.getElementById('qrisStatusText').textContent = 'Waktu pembayaran telah habis.';
-            } else {
-              const mins = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-              const secs = String(timeLeft % 60).padStart(2, '0');
-              document.getElementById('qrisCountdown').textContent = `${mins}:${secs}`;
-            }
-          }, 1000);
-
-          // Auto poll status from Tripay every 3 seconds
-          if (qrisPollInterval) clearInterval(qrisPollInterval);
-          qrisPollInterval = setInterval(async () => {
-            checkQrisPaymentStatus(false);
-          }, 3000);
-
+          startCountdownAndPolling(timeLeft);
           return;
         }
       } catch (err) {
         console.warn('Tripay create failed, checking fallback...', err);
       }
 
-      // Fallback Dynamic QRIS if Tripay credentials not yet configured
+      // Fallback Dynamic QRIS if gateways not yet active
       const dynamicQrisStr = generateDynamicQrisPayload(cleanBase);
       const dynamicQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=4&data=${encodeURIComponent(dynamicQrisStr)}`;
       
@@ -1848,7 +1870,11 @@
       document.getElementById('qrisQrImg').src = dynamicQrUrl;
       document.getElementById('qrisStatusText').textContent = '📡 Sistem scanner siap mendeteksi pembayaran...';
 
-      let timeLeft = 300;
+      startCountdownAndPolling(600);
+    }
+
+    function startCountdownAndPolling(seconds) {
+      let timeLeft = seconds;
       if (qrisTimerInterval) clearInterval(qrisTimerInterval);
       qrisTimerInterval = setInterval(() => {
         timeLeft--;
@@ -1865,7 +1891,7 @@
       if (qrisPollInterval) clearInterval(qrisPollInterval);
       qrisPollInterval = setInterval(async () => {
         checkQrisPaymentStatus(false);
-      }, 3000);
+      }, 2500);
     }
 
     function confirmPaymentPaid() {
@@ -2019,12 +2045,27 @@
 
     async function checkQrisPaymentStatus(manualTrigger) {
       if (!currentQrisOrder) return;
+      const s = loadSettings();
 
       if (manualTrigger) {
         document.getElementById('qrisStatusText').textContent = 'Memeriksa status pembayaran...';
       }
 
-      // 1. Check Tripay Check Endpoint
+      // 1. Check Paydisini status
+      if (currentQrisOrder.gateway === 'paydisini' || s.paydisiniApiKey) {
+        try {
+          const pdRes = await fetch(`/api/paydisini-check?orderId=${encodeURIComponent(currentQrisOrder.orderId)}&apiKey=${encodeURIComponent(s.paydisiniApiKey || '')}`);
+          if (pdRes.ok) {
+            const pdData = await pdRes.json();
+            if (pdData && pdData.status === 'PAID') {
+              unlockPaidOrder(pdData);
+              return;
+            }
+          }
+        } catch (e) {}
+      }
+
+      // 2. Check Tripay Check Endpoint
       try {
         const tripayRes = await fetch(`/api/tripay-check?reference=${encodeURIComponent(currentQrisOrder.reference || currentQrisOrder.orderId)}`);
         if (tripayRes.ok) {
@@ -2036,7 +2077,7 @@
         }
       } catch (e) {}
 
-      // 2. Secondary check to check-payment backend
+      // 3. Secondary check to check-payment backend (Mutasi / Shared store)
       try {
         const response = await fetch('/api/check-payment', {
           method: 'POST',
