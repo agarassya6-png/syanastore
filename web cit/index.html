@@ -943,14 +943,14 @@
   </div>
 
   <!-- MULTI-STEP AUTOMATED QRIS & KEY DELIVERY MODAL -->
-  <div class="duration-modal" id="durationModal" onclick="closeDurationModal()">
-    <div class="duration-box" id="qrisModalBox" onclick="event.stopPropagation()">
+  <div class="duration-modal" id="durationModal">
+    <div class="duration-box" id="qrisModalBox">
       
       <!-- STEP 1: PILIH PAKET -->
       <div id="modalStep1">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
           <h2 style="font-family:var(--font-mono); font-size:0.9rem; font-weight:900; color:var(--accent-color); letter-spacing:2px; text-transform:uppercase;">Pilih Paket</h2>
-          <button type="button" onclick="closeDurationModal()" style="background:rgba(255,255,255,0.06); border:none; color:#8a99ad; font-size:1rem; cursor:pointer; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center;">&times;</button>
+          <button type="button" id="btnCloseStep1" onclick="closeDurationModal()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:1.3rem; line-height:1; cursor:pointer; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:0.2s;">&times;</button>
         </div>
         <div class="pname-badge" id="modalProductName">RAPID CORE</div>
         <form id="durationForm" onsubmit="startQrisPayment(event)">
@@ -991,13 +991,13 @@
       <!-- STEP 2: SCAN & BAYAR QRIS -->
       <div id="modalStep2" style="display:none; text-align:center;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-          <button type="button" onclick="backToStep1()" title="Kembali" style="background:rgba(255,255,255,0.06); border:none; color:#8a99ad; font-size:0.95rem; cursor:pointer; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:0.2s;">
+          <button type="button" id="btnBackStep2" onclick="backToStep1()" title="Kembali" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:0.95rem; cursor:pointer; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:0.2s;">
             <i class="fas fa-arrow-left"></i>
           </button>
           <div style="font-size:0.85rem; font-weight:900; color:#00ff41; letter-spacing:1.5px; text-transform:uppercase;">
             <i class="fas fa-qrcode"></i> Scan QRIS
           </div>
-          <button type="button" onclick="closeDurationModal()" style="background:rgba(255,255,255,0.06); border:none; color:#8a99ad; font-size:1.1rem; cursor:pointer; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center;">&times;</button>
+          <button type="button" id="btnCloseStep2" onclick="closeDurationModal()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:1.3rem; line-height:1; cursor:pointer; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:0.2s;">&times;</button>
         </div>
 
         <!-- Loading state -->
@@ -1677,9 +1677,12 @@
       document.getElementById('modalStep3').style.display = 'none';
 
       const modal = document.getElementById('durationModal');
-      modal.style.display = '';
-      modal.classList.add('active');
+      if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.add('active');
+      }
     }
+    window.openDurationModal = openDurationModal;
 
     function backToStep1() {
       if (qrisTimerInterval) clearInterval(qrisTimerInterval);
@@ -1688,26 +1691,31 @@
       document.getElementById('modalStep2').style.display = 'none';
       document.getElementById('modalStep3').style.display = 'none';
     }
+    window.backToStep1 = backToStep1;
 
     function closeDurationModal() {
       if (qrisTimerInterval) clearInterval(qrisTimerInterval);
       if (qrisPollInterval) clearInterval(qrisPollInterval);
       orderUnlocked = false;
       currentQrisOrder = null;
-      // Directly hide modal - most bulletproof approach
+      
       const modal = document.getElementById('durationModal');
       if (modal) {
         modal.classList.remove('active');
         modal.style.display = 'none';
       }
-      setTimeout(() => {
-        document.getElementById('modalStep1').style.display = 'block';
-        document.getElementById('modalStep2').style.display = 'none';
-        document.getElementById('modalStep3').style.display = 'none';
-        const btn = document.getElementById('btnConfirmPaid');
-        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-check-circle"></i> SAYA SUDAH TRANSFER'; }
-      }, 50);
+      
+      document.getElementById('modalStep1').style.display = 'block';
+      document.getElementById('modalStep2').style.display = 'none';
+      document.getElementById('modalStep3').style.display = 'none';
+      
+      const btn = document.getElementById('btnConfirmPaid');
+      if (btn) { 
+        btn.disabled = false; 
+        btn.innerHTML = '<i class="fas fa-check-circle"></i> SAYA SUDAH TRANSFER'; 
+      }
     }
+    window.closeDurationModal = closeDurationModal;
 
     async function startQrisPayment(event) {
       if (event && event.preventDefault) event.preventDefault();
@@ -2180,6 +2188,16 @@
         }
       }
     });
+
+    // Backdrop click listener to close modal
+    const durationModalEl = document.getElementById('durationModal');
+    if (durationModalEl) {
+      durationModalEl.addEventListener('click', function(e) {
+        if (e.target === durationModalEl) {
+          closeDurationModal();
+        }
+      });
+    }
 
     // INIT
     applySettings();
