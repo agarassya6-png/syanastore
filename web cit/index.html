@@ -987,100 +987,75 @@
         </div>
       </div>
 
-      <!-- STEP 2: BAYAR VIA TRIPAY QRIS -->
+      <!-- STEP 2: SCAN & BAYAR QRIS -->
       <div id="modalStep2" style="display:none; text-align:center;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-          <button type="button" onclick="backToStep1()" title="Kembali" style="background:rgba(255,255,255,0.06); border:none; color:#8a99ad; font-size:0.95rem; cursor:pointer; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:0.2s;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <button type="button" onclick="backToStep1()" title="Kembali" style="background:rgba(255,255,255,0.06); border:none; color:#8a99ad; font-size:0.95rem; cursor:pointer; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:0.2s;">
             <i class="fas fa-arrow-left"></i>
           </button>
-          <div style="font-size:0.8rem; font-weight:800; color:var(--accent-color); letter-spacing:1px;"><i class="fas fa-qrcode"></i> SCAN &amp; BAYAR QRIS</div>
-          <button type="button" onclick="closeDurationModal()" style="background:rgba(255,255,255,0.06); border:none; color:#8a99ad; font-size:1.1rem; cursor:pointer; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center;">&times;</button>
+          <div style="font-size:0.85rem; font-weight:900; color:#00ff41; letter-spacing:1.5px; text-transform:uppercase;">
+            <i class="fas fa-qrcode"></i> Scan QRIS
+          </div>
+          <button type="button" onclick="closeDurationModal()" style="background:rgba(255,255,255,0.06); border:none; color:#8a99ad; font-size:1.1rem; cursor:pointer; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center;">&times;</button>
         </div>
 
-        <!-- Loading Tripay -->
+        <!-- Loading state -->
         <div id="tripayLoading" style="padding:40px 0; display:flex; flex-direction:column; align-items:center; gap:12px;">
-          <div style="width:48px;height:48px;border:3px solid rgba(0,255,65,0.2);border-top-color:#00ff41;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
-          <div style="color:#00ff41;font-size:12px;font-weight:700;font-family:var(--font-mono);">Membuat tagihan Tripay...</div>
+          <div style="width:40px;height:40px;border:3px solid rgba(0,255,65,0.2);border-top-color:#00ff41;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+          <div style="color:#00ff41;font-size:12px;font-weight:700;font-family:var(--font-mono);">Menyiapkan QRIS...</div>
         </div>
 
-        <!-- Tripay QR area (hidden until loaded) -->
+        <!-- Main QR area -->
         <div id="tripayQrArea" style="display:none;">
-          <!-- Merchant + Amount Info -->
-          <div style="background:rgba(0,255,65,0.05); border:1px solid rgba(0,255,65,0.12); border-radius:14px; padding:14px 16px; margin-bottom:14px; text-align:left;">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
-              <div>
-                <div style="font-size:9px; color:#4a7a4a; letter-spacing:1.5px; text-transform:uppercase;">Merchant</div>
-                <div style="font-size:0.95rem; font-weight:900; color:#00ff41;">Raxzy Store</div>
-                <div style="font-size:9px; color:#2a5a2a; margin-top:2px;">via Tripay Payment</div>
-              </div>
-              <div style="text-align:right;">
-                <div style="font-size:9px; color:#4a7a4a; letter-spacing:1px;">REF ORDER</div>
-                <div id="qrisOrderRef" style="font-size:10px; color:#2a6a2a; font-weight:800; font-family:var(--font-mono);">RXZ-XXXXX</div>
-              </div>
+          
+          <!-- Summary Box -->
+          <div style="background:linear-gradient(180deg, rgba(0,255,65,0.08) 0%, rgba(0,255,65,0.02) 100%); border:1px solid rgba(0,255,65,0.2); border-radius:14px; padding:12px 16px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="text-align:left;">
+              <div style="font-size:9px; color:#6a9a6a; letter-spacing:1px; text-transform:uppercase; font-weight:700;">Total Pembayaran</div>
+              <div id="qrisTotalAmount" style="font-size:1.5rem; font-weight:900; color:#00ff41; font-family:var(--font-mono); text-shadow:0 0 15px rgba(0,255,65,0.4); line-height:1.1;">Rp 0</div>
             </div>
-            <div style="border-top:1px solid rgba(0,255,65,0.08); padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
-              <div>
-                <div style="font-size:9px; color:#4a7a4a; letter-spacing:1px; text-transform:uppercase;">Total Bayar</div>
-                <div id="qrisTotalAmount" style="font-size:1.6rem; font-weight:900; color:#00ff41; text-shadow:0 0 20px rgba(0,255,65,0.4); line-height:1;">Rp 0</div>
-              </div>
-              <button onclick="copyQrisAmount()" id="btnCopyNominal" style="background:rgba(0,255,65,0.1); border:1px solid rgba(0,255,65,0.25); color:#00ff41; padding:7px 14px; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer; font-family:var(--font-mono); display:inline-flex; align-items:center; gap:5px;">
+            <div style="text-align:right;">
+              <button onclick="copyQrisAmount()" id="btnCopyNominal" style="background:rgba(0,255,65,0.12); border:1px solid rgba(0,255,65,0.3); color:#00ff41; padding:6px 12px; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer; font-family:var(--font-mono); display:inline-flex; align-items:center; gap:5px; transition:0.2s;">
                 <i class="fas fa-copy"></i> Salin
               </button>
+              <div id="qrisOrderRef" style="font-size:9px; color:#4a7a4a; font-family:var(--font-mono); margin-top:4px;">RXZ-XXXXX</div>
             </div>
           </div>
 
-          <!-- QR Code from Tripay -->
-          <div style="background:#fff; padding:14px 14px 10px; border-radius:16px; display:inline-block; margin-bottom:14px; box-shadow:0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,255,65,0.15);">
-            <img id="qrisQrImg" src="" alt="QRIS Tripay" style="width:210px; height:210px; display:block; border-radius:6px;" />
-            <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center; padding:0 2px;">
-              <span style="font-size:11px; font-weight:900; color:#000; letter-spacing:1.5px; font-family:sans-serif;">QRIS</span>
-              <span style="font-size:8px; font-weight:700; color:#00aa28; font-family:sans-serif;">PEMBAYARAN NASIONAL</span>
+          <!-- QR Container -->
+          <div style="background:#ffffff; padding:12px; border-radius:16px; display:inline-block; margin-bottom:12px; box-shadow:0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(0,255,65,0.15);">
+            <img id="qrisQrImg" src="" alt="QRIS" style="width:210px; height:210px; display:block; border-radius:8px;" />
+            <div style="margin-top:6px; display:flex; justify-content:space-between; align-items:center; padding:0 4px;">
+              <span style="font-size:11px; font-weight:900; color:#000; letter-spacing:1px; font-family:sans-serif;">QRIS</span>
+              <span style="font-size:8px; font-weight:700; color:#00aa28; font-family:sans-serif;">SEMUA E-WALLET &amp; BANK</span>
             </div>
           </div>
 
-          <!-- Scanner Status -->
-          <div style="background:rgba(0,255,65,0.04); border:1px solid rgba(0,255,65,0.1); border-radius:12px; padding:10px 14px; margin-bottom:12px;">
-            <div style="display:flex; align-items:center; justify-content:center; gap:8px; font-size:12px; color:#00ff41;">
-              <span style="width:7px; height:7px; background:#00ff41; border-radius:50%; box-shadow:0 0 10px #00ff41; animation:pulse 1.5s infinite; display:inline-block; flex-shrink:0;"></span>
-              <span id="qrisStatusText">📡 Menunggu pembayaran dari Tripay...</span>
-            </div>
-            <div style="font-size:10px; color:#4a7a4a; margin-top:4px;">
-              Bayar sebelum <span id="qrisCountdown" style="color:#00ff41; font-weight:800;">60:00</span>
-            </div>
+          <!-- Live Pulse Status -->
+          <div style="display:flex; align-items:center; justify-content:center; gap:8px; font-size:11.5px; color:#00ff41; margin-bottom:14px;">
+            <span style="width:7px; height:7px; background:#00ff41; border-radius:50%; box-shadow:0 0 8px #00ff41; animation:pulse 1.5s infinite;"></span>
+            <span id="qrisStatusText">Sistem siap mendeteksi pembayaran...</span>
+            <span style="color:#4a7a4a;">(<span id="qrisCountdown" style="color:#00ff41; font-weight:800; font-family:var(--font-mono);">60:00</span>)</span>
           </div>
 
-          <!-- SAWERIA QUICK PAYMENT (QRIS INSTAN TANPA KTP) -->
-          <div style="background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.25); border-radius:12px; padding:12px; margin-bottom:12px; text-align:left;">
-            <div style="font-size:11px; font-weight:800; color:#f59e0b; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-              <i class="fas fa-cat"></i> Bayar Cepat via Saweria (QRIS Semua Bank)
-            </div>
-            <div style="font-size:10px; color:#8a99ad; margin-bottom:8px; line-height:1.4;">
-              Klik tombol di bawah lalu bayar sesuai nominal. Pesanan otomatis terverifikasi lunas!
-            </div>
-            <a id="btnSaweriaDirect" href="https://saweria.co/rxzyxit" target="_blank" style="width:100%; box-sizing:border-box; padding:10px 14px; background:linear-gradient(135deg, #f59e0b, #d97706); color:#000; font-weight:900; font-size:11.5px; font-family:var(--font-mono); border-radius:10px; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 4px 15px rgba(245,158,11,0.3);">
-              <i class="fas fa-external-link-alt"></i> Buka Saweria &amp; Bayar Sekarang
-            </a>
-          </div>
-
-          <!-- TOMBOL KONFIRMASI PEMBAYARAN -->
-          <button type="button" id="btnConfirmPaid" onclick="confirmPaymentPaid()" style="width:100%; padding:13px; background:linear-gradient(135deg, #00ff41, #00b336); color:#000; border:none; font-weight:900; font-size:12px; font-family:var(--font-mono); border-radius:12px; cursor:pointer; letter-spacing:1px; margin-bottom:10px; box-shadow:0 4px 20px rgba(0,255,65,0.35); text-transform:uppercase; transition:0.2s; display:flex; align-items:center; justify-content:center; gap:8px;">
-            <i class="fas fa-check-circle"></i> SAYA SUDAH TRANSFER (VERIFIKASI)
+          <!-- Primary Confirmation Button -->
+          <button type="button" id="btnConfirmPaid" onclick="confirmPaymentPaid()" style="width:100%; padding:13px; background:linear-gradient(135deg, #00ff41 0%, #00cc33 100%); color:#000; border:none; font-weight:900; font-size:12.5px; font-family:var(--font-mono); border-radius:12px; cursor:pointer; letter-spacing:1px; margin-bottom:10px; box-shadow:0 4px 20px rgba(0,255,65,0.35); text-transform:uppercase; transition:0.2s; display:flex; align-items:center; justify-content:center; gap:8px;">
+            <i class="fas fa-check-circle"></i> SAYA SUDAH TRANSFER
           </button>
 
-          <div style="display:flex; gap:8px;">
-            <button type="button" onclick="checkQrisPaymentStatus(true)" style="flex:1; padding:9px; background:rgba(0,255,65,0.06); border:1px solid rgba(0,255,65,0.2); color:#00ff41; font-weight:800; font-size:11px; font-family:var(--font-mono); border-radius:10px; cursor:pointer; transition:0.2s;">
-              <i class="fas fa-sync-alt"></i> Cek Ulang
+          <!-- Secondary Links -->
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+            <button type="button" onclick="backToStep1()" style="background:transparent; border:none; color:#6a7a8a; font-size:11px; cursor:pointer; padding:4px;">
+              <i class="fas fa-arrow-left"></i> Ganti Paket
             </button>
-            <a href="#" id="qrisHelpWa" target="_blank" style="padding:9px 14px; background:rgba(37,211,102,0.08); border:1px solid rgba(37,211,102,0.2); color:#25d366; font-weight:800; font-size:11px; font-family:var(--font-mono); border-radius:10px; text-decoration:none; display:inline-flex; align-items:center; gap:5px;">
-              <i class="fab fa-whatsapp"></i> Bantuan WA
+            <a href="#" id="qrisHelpWa" target="_blank" style="color:#25d366; font-size:11px; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px;">
+              <i class="fab fa-whatsapp"></i> Bantuan Admin
             </a>
           </div>
-          <a id="qrisProxyDirectWa" href="#" target="_blank" style="display:none; width:100%; margin-top:8px; padding:11px; background:#25d366; color:#000; font-weight:800; font-size:12px; font-family:var(--font-mono); border-radius:10px; text-decoration:none; text-align:center; box-shadow:0 4px 15px rgba(37,211,102,0.3);">
-            <i class="fab fa-whatsapp"></i> Sudah Transfer? Kirim Bukti ke WA Admin
+
+          <a id="qrisProxyDirectWa" href="#" target="_blank" style="display:none; width:100%; margin-top:10px; padding:11px; background:#25d366; color:#000; font-weight:800; font-size:12px; font-family:var(--font-mono); border-radius:10px; text-decoration:none; text-align:center;">
+            <i class="fab fa-whatsapp"></i> Kirim Bukti ke WA Admin
           </a>
-          <button type="button" onclick="backToStep1()" style="width:100%; margin-top:10px; padding:9px; background:transparent; border:1px solid rgba(255,255,255,0.08); color:#8a99ad; font-size:11px; font-weight:700; font-family:var(--font-mono); border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; transition:0.2s;">
-            <i class="fas fa-arrow-left"></i> Ubah Pilihan Paket / Kembali
-          </button>
         </div>
 
         <!-- Tripay Error State -->
