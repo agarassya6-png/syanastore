@@ -943,9 +943,8 @@
   </div>
 
   <!-- MULTI-STEP AUTOMATED QRIS & KEY DELIVERY MODAL -->
-  <div class="cart-overlay" id="durationOverlay" onclick="closeDurationModal()"></div>
-  <div class="duration-modal" id="durationModal">
-    <div class="duration-box" id="qrisModalBox">
+  <div class="duration-modal" id="durationModal" onclick="closeDurationModal()">
+    <div class="duration-box" id="qrisModalBox" onclick="event.stopPropagation()">
       
       <!-- STEP 1: PILIH PAKET -->
       <div id="modalStep1">
@@ -1677,7 +1676,6 @@
       document.getElementById('modalStep2').style.display = 'none';
       document.getElementById('modalStep3').style.display = 'none';
 
-      document.getElementById('durationOverlay').classList.add('active');
       document.getElementById('durationModal').classList.add('active');
     }
 
@@ -1692,15 +1690,13 @@
     function closeDurationModal() {
       if (qrisTimerInterval) clearInterval(qrisTimerInterval);
       if (qrisPollInterval) clearInterval(qrisPollInterval);
-      orderUnlocked = false; // reset for next purchase
+      orderUnlocked = false;
       currentQrisOrder = null;
-      document.getElementById('durationOverlay').classList.remove('active');
       document.getElementById('durationModal').classList.remove('active');
       setTimeout(() => {
         document.getElementById('modalStep1').style.display = 'block';
         document.getElementById('modalStep2').style.display = 'none';
         document.getElementById('modalStep3').style.display = 'none';
-        // Reset confirm button
         const btn = document.getElementById('btnConfirmPaid');
         if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-check-circle"></i> SAYA SUDAH TRANSFER'; }
       }, 200);
