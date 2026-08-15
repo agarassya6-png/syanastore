@@ -595,12 +595,12 @@
     /* DURATION SELECTION MODAL HACKER */
     .duration-modal {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      z-index: 1000; display: flex; align-items: center; justify-content: center;
+      z-index: 1000; display: none; align-items: center; justify-content: center;
       background: rgba(0,0,0,0.88);
-      padding: 20px; opacity: 0; pointer-events: none; transition: 0.2s ease;
+      padding: 20px;
     }
 
-    .duration-modal.active { opacity: 1; pointer-events: auto; }
+    .duration-modal.active { display: flex; }
 
     .duration-box {
       background: rgba(4, 12, 5, 0.98);
@@ -1676,7 +1676,9 @@
       document.getElementById('modalStep2').style.display = 'none';
       document.getElementById('modalStep3').style.display = 'none';
 
-      document.getElementById('durationModal').classList.add('active');
+      const modal = document.getElementById('durationModal');
+      modal.style.display = '';
+      modal.classList.add('active');
     }
 
     function backToStep1() {
@@ -1692,14 +1694,19 @@
       if (qrisPollInterval) clearInterval(qrisPollInterval);
       orderUnlocked = false;
       currentQrisOrder = null;
-      document.getElementById('durationModal').classList.remove('active');
+      // Directly hide modal - most bulletproof approach
+      const modal = document.getElementById('durationModal');
+      if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+      }
       setTimeout(() => {
         document.getElementById('modalStep1').style.display = 'block';
         document.getElementById('modalStep2').style.display = 'none';
         document.getElementById('modalStep3').style.display = 'none';
         const btn = document.getElementById('btnConfirmPaid');
         if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-check-circle"></i> SAYA SUDAH TRANSFER'; }
-      }, 200);
+      }, 50);
     }
 
     async function startQrisPayment(event) {
