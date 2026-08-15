@@ -914,20 +914,61 @@
                 <div class="panel-title"><i class="fas fa-money-bill-wave" style="color:#00ff41"></i> Konfigurasi Payment Gateway &amp; Monitor Transaksi Otomatis</div>
                 <div class="panel-subtitle">Sistem otomatis mendeteksi pembayaran QRIS detik demi detik dan langsung mengirimkan License Key / Link Mod ke layar pembeli.</div>
 
+                <!-- SAWERIA CONFIGURATION (TANPA KTP) -->
+                <div style="background:rgba(245,158,11,0.05); border:1px solid rgba(245,158,11,0.3); border-radius:10px; padding:18px; margin:20px 0;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
+                        <div style="font-size:0.85rem; color:#f59e0b; font-weight:800; letter-spacing:1px;">
+                            <i class="fas fa-cat"></i> 🐱 SAWERIA WEBHOOK (100% TANPA KTP — INSTAN)
+                        </div>
+                        <span style="font-size:11px; background:#f59e0b; color:#000; font-weight:800; padding:2px 8px; border-radius:4px;">AKTIF</span>
+                    </div>
+
+                    <div style="font-size:12px; color:#8a99ad; margin-bottom:14px; line-height:1.5;">
+                        Menggunakan akun Saweria kamu (<b>saweria.co/rxzyxit</b>). Begitu pembeli bayar via QRIS Saweria, server Saweria akan otomatis menembak Webhook dan membuka produk di layar pembeli seketika!
+                    </div>
+
+                    <form onsubmit="saveSaweriaSettings(event)">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+                            <div>
+                                <label style="font-size:11px; color:#8a99ad; display:block; margin-bottom:4px; font-weight:700;">SAWERIA USERNAME</label>
+                                <input type="text" id="setSaweriaUser" class="form-control" placeholder="rxzyxit" value="rxzyxit" style="font-size:13px; font-weight:700;" />
+                            </div>
+                            <div>
+                                <label style="font-size:11px; color:#8a99ad; display:block; margin-bottom:4px; font-weight:700;">URL WEBHOOK SAWERIA (Salin ke menu Integrasi/Webhook di Saweria)</label>
+                                <div style="display:flex; gap:6px;">
+                                    <input type="text" id="saweriaWebhookUrl" class="form-control" value="https://raxzy-store.vercel.app/api/saweria-webhook" readonly style="font-family:monospace; font-size:11px; color:#00ff41;" />
+                                    <button type="button" onclick="navigator.clipboard.writeText('https://raxzy-store.vercel.app/api/saweria-webhook'); alert('✅ URL Webhook berhasil disalin!');" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; padding:0 12px; border-radius:6px; font-size:12px; cursor:pointer;">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                            <button type="submit" style="background:#f59e0b; color:#000; border:none; padding:10px 20px; border-radius:8px; font-weight:800; font-size:13px; cursor:pointer;">
+                                <i class="fas fa-save"></i> Simpan Pengaturan Saweria
+                            </button>
+                            <a href="https://saweria.co/rxzyxit" target="_blank" style="color:#f59e0b; font-size:12px; text-decoration:none; font-weight:700;">
+                                <i class="fas fa-external-link-alt"></i> Buka Halaman Saweria
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
                 <!-- PAYMENT GATEWAY CONFIGURATION -->
                 <div style="background:rgba(0,255,65,0.03); border:1px solid rgba(0,255,65,0.2); border-radius:10px; padding:18px; margin:20px 0;">
                     <div style="font-size:0.85rem; color:#00ff41; font-weight:800; letter-spacing:1px; margin-bottom:12px;">
-                        <i class="fas fa-plug"></i> 🔌 KONEKSI GATEWAY OTOMATIS (PAYDISINI / TRIPAY)
+                        <i class="fas fa-plug"></i> 🔌 KONEKSI GATEWAY LAIN (PAYDISINI / TRIPAY)
                     </div>
                     
                     <form onsubmit="saveGatewaySettings(event)">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
                             <div>
-                                <label style="font-size:11px; color:#8a99ad; display:block; margin-bottom:4px; font-weight:700;">PAYDISINI API KEY (Daftar di paydisini.co.id)</label>
+                                <label style="font-size:11px; color:#8a99ad; display:block; margin-bottom:4px; font-weight:700;">PAYDISINI API KEY (Jika ada)</label>
                                 <input type="text" id="setPaydisiniKey" class="form-control" placeholder="Contoh: a89bf928c0349..." style="font-family:monospace; font-size:12px;" />
                             </div>
                             <div>
-                                <label style="font-size:11px; color:#8a99ad; display:block; margin-bottom:4px; font-weight:700;">PAYDISINI SERVICE CODE (11 = QRIS Real-Time)</label>
+                                <label style="font-size:11px; color:#8a99ad; display:block; margin-bottom:4px; font-weight:700;">PAYDISINI SERVICE CODE</label>
                                 <input type="text" id="setPaydisiniService" class="form-control" value="11" style="font-family:monospace; font-size:12px;" />
                             </div>
                         </div>
@@ -1175,7 +1216,8 @@
             paydisiniService: '11',
             tripayApiKey: '',
             tripayPrivateKey: '',
-            tripayMerchantCode: ''
+            tripayMerchantCode: '',
+            saweriaUser: 'rxzyxit'
         };
 
         const defaultProducts = [{
@@ -1292,11 +1334,20 @@
             document.getElementById('setAccentColor').value = s.accentColor;
             document.getElementById('setBgColor').value = s.bgColor;
 
+            if (document.getElementById('setSaweriaUser')) document.getElementById('setSaweriaUser').value = s.saweriaUser || 'rxzyxit';
             if (document.getElementById('setPaydisiniKey')) document.getElementById('setPaydisiniKey').value = s.paydisiniApiKey || '';
             if (document.getElementById('setPaydisiniService')) document.getElementById('setPaydisiniService').value = s.paydisiniService || '11';
             if (document.getElementById('setTripayKey')) document.getElementById('setTripayKey').value = s.tripayApiKey || '';
             if (document.getElementById('setTripayPrivateKey')) document.getElementById('setTripayPrivateKey').value = s.tripayPrivateKey || '';
             if (document.getElementById('setTripayMerchant')) document.getElementById('setTripayMerchant').value = s.tripayMerchantCode || '';
+        }
+
+        function saveSaweriaSettings(e) {
+            e.preventDefault();
+            const s = loadSettings();
+            s.saweriaUser = (document.getElementById('setSaweriaUser').value || 'rxzyxit').trim();
+            saveSettings(s);
+            alert('✅ Pengaturan Saweria berhasil disimpan! Username: ' + s.saweriaUser);
         }
 
         function saveGatewaySettings(e) {
