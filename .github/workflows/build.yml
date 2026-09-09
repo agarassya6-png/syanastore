@@ -8,11 +8,23 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: maxim-lobanov/setup-xcode@v1
         with: { xcode-version: latest-stable }
-      - run: ./build_unsigned.sh
-      - run: ./build_esign_ready_ipa.sh build/HYper-Regedit-Key-Enabled-unsigned.ipa
+
+      - name: Build unsigned IPA
+        run: |
+          cd "Tele @khatri_ashok04"
+          chmod +x build_unsigned.sh build_esign_ready_ipa.sh
+          ./build_unsigned.sh
+
+      - name: Verify eSign-ready IPA
+        run: |
+          cd "Tele @khatri_ashok04"
+          ./build_esign_ready_ipa.sh build/HYper-Regedit-Key-Enabled-unsigned.ipa
+
       - uses: actions/upload-artifact@v4
         with:
           name: HYper-Regedit-Key-Enabled-unsigned-ipa
-          path: build/HYper-Regedit-Key-Enabled-unsigned.ipa
+          path: "Tele @khatri_ashok04/build/HYper-Regedit-Key-Enabled-unsigned.ipa"
+          retention-days: 7
