@@ -5,23 +5,47 @@ on:
     branches: [main]
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
 
       - uses: maxim-lobanov/setup-xcode@v1
-        with: { xcode-version: latest-stable }
+        with:
+          xcode-version: '16.0'
 
       - name: Build unsigned IPA
         run: |
-          cd "Tele @khatri_ashok04"
+          set -euo pipefail
+          PROJECT_DIR="Tele @khatri_ashok04"
+          cd "${PROJECT_DIR}"
           chmod +x build_unsigned.sh build_esign_ready_ipa.sh
-          ./build_unsigned.sh
 
-      - name: Verify eSign-ready IPA
-        run: |
-          cd "Tele @khatri_ashok04"
-          ./build_esign_ready_ipa.sh build/HYper-Regedit-Key-Enabled-unsigned.ipa
+          ROOT="$(pwd)"
+          BUILD_DIR="${ROOT}/build"
+          ARCHIVE="${BUILD_DIR}/HYperRegedit-original-identity.xcarchive"
+          IPA="${BUILD_DIR}/HYper-Regedit-Key-Enabled-unsigned.ipa"
+
+          rm -rf "${BUILD_DIR}"
+          mkdir -p "${BUILD_DIR}"
+
+          xcodebuild \
+            -project "${ROOT}/ThreeOneOSFive.xcodeproj" \
+            -scheme OGIOS \
+            -configuration Release \
+            -sdk iphoneos \
+            -archivePath "${ARCHIVE}" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY='' \
+            DEVELOPMENT_TEAM='' \
+            archive 2>&1 | tail -50
+
+          APP="${ARCHIVE}/Products/Applications/OGIOS.app"
+          mkdir -p "${BUILD_DIR}/Payload"
+          cp -R "${APP}" "${BUILD_DIR}/Payload/"
+          (cd "${BUILD_DIR}" && /usr/bin/zip -qry "${IPA}" Payload && rm -rf Payload)
+          echo "IPA created: ${IPA}"
+          ls -lh "${IPA}"
 
       - uses: actions/upload-artifact@v4
         with:
