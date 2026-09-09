@@ -25,6 +25,7 @@ APP="$ARCHIVE/Products/Applications/OGIOS.app"
 test -d "$APP"
 PATCH_DIR="$APP/Patches"
 mkdir -p "$PATCH_DIR"
+cp -R "$ROOT/ThreeOneOSFive/Patches/"*.3105 "$PATCH_DIR/" 2>/dev/null || true
 for package in "$APP"/*.3105; do
   [ -e "$package" ] || continue
   mv "$package" "$PATCH_DIR/"

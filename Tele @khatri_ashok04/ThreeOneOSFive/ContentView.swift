@@ -148,13 +148,13 @@ struct ContentView: View {
             }
 
             LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
-                patchCard(name: "Aim Drag", target: "FREE FIRE • NORMAL", package: "OGIOS File (6).3105", color: AppTheme.accent, state: $aimDragEnabled)
-                patchCard(name: "Aim Neck", target: "FREE FIRE • NORMAL", package: "OGIOS File (7).3105", color: AppTheme.accent, state: $aimNeckEnabled)
-                patchCard(name: "Antenna", target: "FREE FIRE • NORMAL", package: "OGIOS File (8).3105", color: AppTheme.accent, state: $hspeitoffEnabled)
-                patchCard(name: "144 FPS", target: "FREE FIRE • NORMAL", package: "OGIOS File (10).3105", color: AppTheme.accent, state: $hyperBalamagicaEnabled)
-                patchCard(name: "Aim Body", target: "FREE FIRE • NORMAL", package: "OGIOS File (12).3105", color: AppTheme.accent, state: $aimBodyPackageEnabled)
-                patchCard(name: "Aim Chest", target: "FREE FIRE • NORMAL", package: "OGIOS File (2).3105", color: AppTheme.accent, state: $aimChestPackageEnabled)
-                patchCard(name: "Magic", target: "FREE FIRE • NORMAL", package: "OGIOS File (14).3105", color: AppTheme.accent, state: $magicEnabled)
+                patchCard(name: "Aim Drag", target: "FREE FIRE • NORMAL", packages: ["Aim Drag.3105", "OGIOS File (6).3105"], color: AppTheme.accent, state: $aimDragEnabled)
+                patchCard(name: "Aim Neck", target: "FREE FIRE • NORMAL", packages: ["NECK HS FFTH.3105", "OGIOS File (7).3105"], color: AppTheme.accent, state: $aimNeckEnabled)
+                patchCard(name: "Antenna", target: "FREE FIRE • NORMAL", packages: ["OGIOS File (8).3105"], color: AppTheme.accent, state: $hspeitoffEnabled)
+                patchCard(name: "144 FPS", target: "FREE FIRE • NORMAL", packages: ["144 Fps.3105", "OGIOS File (10).3105"], color: AppTheme.accent, state: $hyperBalamagicaEnabled)
+                patchCard(name: "Aim Body", target: "FREE FIRE • NORMAL", packages: ["FFTH AIMBODY.3105", "OGIOS File (12).3105"], color: AppTheme.accent, state: $aimBodyPackageEnabled)
+                patchCard(name: "Aim Chest", target: "FREE FIRE • NORMAL", packages: ["Aim chest.3105", "OGIOS File (2).3105"], color: AppTheme.accent, state: $aimChestPackageEnabled)
+                patchCard(name: "Magic", target: "FREE FIRE • NORMAL", packages: ["OGIOS File (14).3105"], color: AppTheme.accent, state: $magicEnabled)
             }
 
             HStack(spacing: 8) {
@@ -173,9 +173,9 @@ struct ContentView: View {
         }
     }
 
-    private func patchCard(name: String, target: String, package: String, color: Color, state: Binding<Bool>) -> some View {
+    private func patchCard(name: String, target: String, packages: [String], color: Color, state: Binding<Bool>) -> some View {
         PatchOptionCard(name: name, target: target, color: color, isEnabled: state, isBusy: patchOperationBusy) {
-            togglePatch(packageFilename: package, state: state)
+            togglePatch(packageFilenames: packages, state: state)
         }
     }
 
@@ -308,19 +308,28 @@ struct ContentView: View {
         .padding(.top, 14)
     }
 
-    private func syncPatchStates() {
-        aimDragEnabled = isPatchActive("OGIOS File (6).3105")
-        aimNeckEnabled = isPatchActive("OGIOS File (7).3105")
-        hspeitoffEnabled = isPatchActive("OGIOS File (8).3105")
-        hyperBalamagicaEnabled = isPatchActive("OGIOS File (10).3105")
-        aimBodyPackageEnabled = isPatchActive("OGIOS File (12).3105")
-        aimChestPackageEnabled = isPatchActive("OGIOS File (2).3105")
-        magicEnabled = isPatchActive("OGIOS File (14).3105")
+    private func findPatchItem(for filenames: [String]) -> PatchLibraryItem? {
+        for fn in filenames {
+            if let item = patchStore.items.first(where: { $0.packageURL.lastPathComponent.caseInsensitiveCompare(fn) == .orderedSame }) {
+                return item
+            }
+        }
+        return nil
     }
 
-    private func isPatchActive(_ packageFilename: String) -> Bool {
-        patchStore.items.first(where: { $0.packageURL.lastPathComponent.caseInsensitiveCompare(packageFilename) == .orderedSame })
-            .flatMap { DevicePatchService.latestReceipt(projectID: $0.id) } != nil
+    private func syncPatchStates() {
+        aimDragEnabled = isPatchActive(["Aim Drag.3105", "OGIOS File (6).3105"])
+        aimNeckEnabled = isPatchActive(["NECK HS FFTH.3105", "OGIOS File (7).3105"])
+        hspeitoffEnabled = isPatchActive(["OGIOS File (8).3105"])
+        hyperBalamagicaEnabled = isPatchActive(["144 Fps.3105", "OGIOS File (10).3105"])
+        aimBodyPackageEnabled = isPatchActive(["FFTH AIMBODY.3105", "OGIOS File (12).3105"])
+        aimChestPackageEnabled = isPatchActive(["Aim chest.3105", "OGIOS File (2).3105"])
+        magicEnabled = isPatchActive(["OGIOS File (14).3105"])
+    }
+
+    private func isPatchActive(_ filenames: [String]) -> Bool {
+        guard let item = findPatchItem(for: filenames) else { return false }
+        return DevicePatchService.latestReceipt(projectID: item.id) != nil
     }
 
     private enum PatchActionResult {
@@ -329,30 +338,33 @@ struct ContentView: View {
         case unavailable(String)
     }
 
-    private func setPatchState(for packageFilename: String, enabled: Bool) {
-        switch packageFilename {
-        case "OGIOS File (6).3105": aimDragEnabled = enabled
-        case "OGIOS File (7).3105": aimNeckEnabled = enabled
-        case "OGIOS File (8).3105": hspeitoffEnabled = enabled
-        case "OGIOS File (10).3105": hyperBalamagicaEnabled = enabled
-        case "OGIOS File (12).3105": aimBodyPackageEnabled = enabled
-        case "OGIOS File (2).3105": aimChestPackageEnabled = enabled
-        case "OGIOS File (14).3105": magicEnabled = enabled
-        default: break
+    private func setPatchState(for filenames: [String], enabled: Bool) {
+        for fn in filenames {
+            switch fn {
+            case "Aim Drag.3105", "OGIOS File (6).3105": aimDragEnabled = enabled
+            case "NECK HS FFTH.3105", "OGIOS File (7).3105": aimNeckEnabled = enabled
+            case "OGIOS File (8).3105": hspeitoffEnabled = enabled
+            case "144 Fps.3105", "OGIOS File (10).3105": hyperBalamagicaEnabled = enabled
+            case "FFTH AIMBODY.3105", "OGIOS File (12).3105": aimBodyPackageEnabled = enabled
+            case "Aim chest.3105", "OGIOS File (2).3105": aimChestPackageEnabled = enabled
+            case "OGIOS File (14).3105": magicEnabled = enabled
+            default: break
+            }
         }
     }
 
-    private func togglePatch(packageFilename: String, state: Binding<Bool>) {
+    private func togglePatch(packageFilenames: [String], state: Binding<Bool>) {
         guard !patchOperationBusy else { return }
-        guard let item = patchStore.items.first(where: { $0.packageURL.lastPathComponent.caseInsensitiveCompare(packageFilename) == .orderedSame }) else {
+        guard let item = findPatchItem(for: packageFilenames) else {
             patchMessage = "ERROR — PACKAGE NOT FOUND"
-            log("patch: package not found: \(packageFilename)")
+            log("patch: package not found for candidates: \(packageFilenames)")
             return
         }
 
+        let mainFilename = item.packageURL.lastPathComponent
         let wasEnabled = state.wrappedValue
         patchOperationBusy = true
-        patchMessage = "PROCESSING — \(packageFilename)"
+        patchMessage = "PROCESSING — \(mainFilename)"
         let project = item.project
         let projectID = item.id
 
@@ -363,7 +375,7 @@ struct ContentView: View {
                     guard let receipt = DevicePatchService.latestReceipt(projectID: projectID) else {
                         result = .unavailable("NO ACTIVE RECEIPT — NOTHING TO RESTORE")
                         DispatchQueue.main.async {
-                            self.setPatchState(for: packageFilename, enabled: false)
+                            self.setPatchState(for: packageFilenames, enabled: false)
                             self.patchMessage = "OFF — NO ACTIVE PATCH FOUND"
                             self.patchOperationBusy = false
                         }
@@ -391,12 +403,12 @@ struct ContentView: View {
             DispatchQueue.main.async {
                 switch result {
                 case .applied:
-                    self.setPatchState(for: packageFilename, enabled: true)
-                    self.patchMessage = "Inject Successful — \(packageFilename)"
+                    self.setPatchState(for: packageFilenames, enabled: true)
+                    self.patchMessage = "Inject Successful — \(mainFilename)"
                     PatchAudioFeedback.bypassActivated()
                 case .restored:
-                    self.setPatchState(for: packageFilename, enabled: false)
-                    self.patchMessage = "Restore Successful — \(packageFilename)"
+                    self.setPatchState(for: packageFilenames, enabled: false)
+                    self.patchMessage = "Restore Successful — \(mainFilename)"
                     PatchAudioFeedback.originalRestored()
                 case .unavailable(let message):
                     self.patchMessage = message

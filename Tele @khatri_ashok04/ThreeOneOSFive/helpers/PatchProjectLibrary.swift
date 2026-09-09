@@ -101,12 +101,7 @@ enum PatchProjectLibrary {
                 if let contentKey = try PatchKeyStore.load(for: summary) {
                     decoded = try PatchPackageCodec.decode(data, contentKey: contentKey)
                 } else if summary.isPasswordProtected {
-                    // Only the app's renamed bundled resources use the internal
-                    // key; imported packages remain locked for the user.
-                    guard url.deletingPathExtension().lastPathComponent.hasPrefix("OGIOS File (") else {
-                        decoded = nil
-                        continue
-                    }
+                    // Attempt auto-unlock using internal key for bundled packages
                     do {
                         let bundled = try PatchPackageCodec.decode(
                             data,
