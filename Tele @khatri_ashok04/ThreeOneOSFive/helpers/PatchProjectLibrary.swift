@@ -56,8 +56,17 @@ enum PatchProjectLibrary {
         // Xcode may flatten folder references into the app bundle. Resolve both
         // the intended Patches subdirectory and the flattened bundle root so
         // standalone builds remain self-contained across packaging layouts.
-        let nestedURLs = bundle.urls(forResourcesWithExtension: "OGIOS", subdirectory: "Patches") ?? []
-        let flattenedURLs = bundle.urls(forResourcesWithExtension: "OGIOS", subdirectory: nil) ?? []
+        let extensions = ["3105", "OGIOS", "ogios"]
+        var nestedURLs: [URL] = []
+        var flattenedURLs: [URL] = []
+        for ext in extensions {
+            if let urls = bundle.urls(forResourcesWithExtension: ext, subdirectory: "Patches") {
+                nestedURLs.append(contentsOf: urls)
+            }
+            if let urls = bundle.urls(forResourcesWithExtension: ext, subdirectory: nil) {
+                flattenedURLs.append(contentsOf: urls)
+            }
+        }
         var seen = Set<String>()
         let bundledURLs = (nestedURLs + flattenedURLs).filter { seen.insert($0.standardizedFileURL.path).inserted }
 
@@ -83,7 +92,8 @@ enum PatchProjectLibrary {
               ) else { return [] }
 
         var byID: [UUID: PatchLibraryItem] = [:]
-        for url in urls where url.pathExtension.lowercased() == "OGIOS" {
+        let validExtensions = Set(["3105", "ogios"])
+        for url in urls where validExtensions.contains(url.pathExtension.lowercased()) {
             do {
                 let data = try readPackage(at: url)
                 let summary = try PatchPackageCodec.inspect(data)
