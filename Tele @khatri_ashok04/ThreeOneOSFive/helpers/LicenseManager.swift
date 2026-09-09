@@ -4,7 +4,7 @@ import Security
 
 @MainActor
 final class LicenseManager: ObservableObject {
-    static let accessKey = "OGIOS"
+    static let accessKey = "raxzyios"
 
     @Published private(set) var expirationDate: Date?
     @Published private(set) var isActive = false
@@ -13,7 +13,7 @@ final class LicenseManager: ObservableObject {
     @Published private(set) var contactOwner: String?
     @Published var rememberKey = true
 
-    private let service = "com.OGIOS.external-ios.activation"
+    private let service = "com.RAXZYIOS.external-ios.activation"
     private let keyAccount = "license-key"
     private var lastAttemptAt: Date?
 
@@ -21,7 +21,10 @@ final class LicenseManager: ObservableObject {
         isActive = hasRememberedKey
     }
 
-    var hasRememberedKey: Bool { string(for: keyAccount) == Self.accessKey }
+    var hasRememberedKey: Bool {
+        guard let saved = string(for: keyAccount) else { return false }
+        return saved.lowercased() == Self.accessKey.lowercased()
+    }
 
     func beginLaunchSession() {
         isActive = hasRememberedKey
@@ -42,12 +45,12 @@ final class LicenseManager: ObservableObject {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.isBusy = false
-            guard trimmed == Self.accessKey else {
+            guard trimmed.lowercased() == Self.accessKey.lowercased() else {
                 self.isActive = false
                 self.message = "Invalid access key"
                 return
             }
-            if self.rememberKey { self.save(Self.accessKey, for: self.keyAccount) }
+            if self.rememberKey { self.save(trimmed, for: self.keyAccount) }
             self.isActive = true
             self.message = "Activated successfully"
         }

@@ -1,12 +1,12 @@
 import SwiftUI
 
 enum AppTheme {
-    // Dark red, white and black palette shared by every primary screen.
-    static let accent = Color(red: 0.58, green: 0.015, blue: 0.025)
-    static let secondaryAccent = Color.white
-    static let pageBackground = Color.black
-    static let consoleBackground = Color(red: 0.035, green: 0.008, blue: 0.010)
-    static let referenceCard = Color(red: 0.16, green: 0.012, blue: 0.018).opacity(0.78)
+    // Electric Cyberpunk Crimson & Neon theme
+    static let accent = Color(red: 0.92, green: 0.12, blue: 0.22)
+    static let secondaryAccent = Color(red: 0.98, green: 0.85, blue: 0.90)
+    static let pageBackground = Color(red: 0.04, green: 0.04, blue: 0.06)
+    static let consoleBackground = Color(red: 0.05, green: 0.03, blue: 0.05)
+    static let referenceCard = Color(red: 0.12, green: 0.05, blue: 0.07).opacity(0.85)
     static let pageInset: CGFloat = 16
     static let rowIconSize: CGFloat = 17
     static let rowIconFrame: CGFloat = 28

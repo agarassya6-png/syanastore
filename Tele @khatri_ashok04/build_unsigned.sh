@@ -30,6 +30,8 @@ for package in "$APP"/*.3105; do
   mv "$package" "$PATCH_DIR/"
 done
 
+/usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName 'RAXZY IOS'" "$APP/Info.plist" || true
+/usr/libexec/PlistBuddy -c "Set :CFBundleName 'RAXZY IOS'" "$APP/Info.plist" || true
 /usr/libexec/PlistBuddy -c "Set :CFBundleExecutable OGIOS" "$APP/Info.plist" || true
 /usr/libexec/PlistBuddy -c "Set :CFBundlePackageType APPL" "$APP/Info.plist" || true
 mkdir -p "$BUILD_DIR/Payload"
