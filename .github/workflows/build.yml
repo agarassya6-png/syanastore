@@ -5,24 +5,21 @@ on:
     branches: [main]
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
 
-      - uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: '16.0'
+      - name: Show Xcode version
+        run: xcodebuild -version
 
       - name: Build unsigned IPA
         run: |
           set -euo pipefail
-          PROJECT_DIR="Tele @khatri_ashok04"
-          cd "${PROJECT_DIR}"
-          chmod +x build_unsigned.sh build_esign_ready_ipa.sh
+          cd "Tele @khatri_ashok04"
 
           ROOT="$(pwd)"
           BUILD_DIR="${ROOT}/build"
-          ARCHIVE="${BUILD_DIR}/HYperRegedit-original-identity.xcarchive"
+          ARCHIVE="${BUILD_DIR}/OGIOS.xcarchive"
           IPA="${BUILD_DIR}/HYper-Regedit-Key-Enabled-unsigned.ipa"
 
           rm -rf "${BUILD_DIR}"
@@ -38,13 +35,15 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY='' \
             DEVELOPMENT_TEAM='' \
-            archive 2>&1 | tail -50
+            archive
 
-          APP="${ARCHIVE}/Products/Applications/OGIOS.app"
+          APP=$(find "${ARCHIVE}/Products/Applications" -maxdepth 1 -name '*.app' -type d | head -1)
           mkdir -p "${BUILD_DIR}/Payload"
           cp -R "${APP}" "${BUILD_DIR}/Payload/"
-          (cd "${BUILD_DIR}" && /usr/bin/zip -qry "${IPA}" Payload && rm -rf Payload)
-          echo "IPA created: ${IPA}"
+          cd "${BUILD_DIR}"
+          /usr/bin/zip -qry "${IPA}" Payload
+          rm -rf Payload
+          echo "✅ IPA ready:"
           ls -lh "${IPA}"
 
       - uses: actions/upload-artifact@v4
